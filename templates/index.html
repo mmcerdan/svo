@@ -1,0 +1,125 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="page-header">
+    <h2>Dashboard</h2>
+    <small class="text-muted">Visão geral do sistema</small>
+</div>
+
+<div class="row g-3 mb-4">
+    <div class="col-md-3">
+        <div class="stat-card blue">
+            <div class="stat-number">{{ total_obitos }}</div>
+            <div class="stat-label">Total de Óbitos</div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="stat-card green">
+            <div class="stat-number">{{ total_investigacoes }}</div>
+            <div class="stat-label">Investigações</div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="stat-card orange">
+            <div class="stat-number">{{ pendentes }}</div>
+            <div class="stat-label">Aguardando</div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="stat-card purple">
+            <div class="stat-number">{{ concluidas }}</div>
+            <div class="stat-label">Concluídas</div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-3">
+    <div class="col-md-7">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                Últimos Óbitos Registrados
+                <a href="{{ url_for('novo_obito') }}" class="btn btn-primary btn-sm">
+                    <i class="bi bi-plus-lg"></i> Novo
+                </a>
+            </div>
+            <div class="card-body p-0">
+                <table class="table table-hover mb-0">
+                    <thead>
+<tr>
+                            <th>Nome</th>
+                            <th>Data do Óbito</th>
+                            <th>DO</th>
+                            <th>Tipo</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for obito in ultimos_obitos %}
+                        <tr>
+                            <td>{{ obito.nome }}</td>
+                            <td>{{ obito.data_obito.strftime('%d/%m/%Y') if obito.data_obito else '-' }}</td>
+                            <td>{{ obito.numero_dob or '-' }}</td>
+                            <td>
+                                {% set ultima_inv = obito.ultima_investigacao() %}
+                                {% if ultima_inv %}
+                                <span class="tipo-inv-badge tipo-{{ ultima_inv.tipo }}">{{ ultima_inv.tipo_display() }}</span>
+                                {% else %}
+                                <span class="text-muted">-</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <a href="{{ url_for('detalhe_obito', id=obito.id) }}" class="btn btn-info btn-sm" title="Visualizar">
+                                    <i class="bi bi-eye"></i>
+                                </a>
+                                {% if ultima_inv %}
+                                <a href="{{ url_for('imprimir_investigacao', id=ultima_inv.id) }}" target="_blank" class="btn btn-secondary btn-sm" title="Imprimir última investigação">
+                                    <i class="bi bi-printer"></i>
+                                </a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="5" class="text-center text-muted py-4">
+                                <i class="bi bi-inbox" style="font-size: 24px;"></i><br>
+                                Nenhum óbito cadastrado ainda.
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-5">
+        <div class="card">
+            <div class="card-header">Investigações por Tipo</div>
+            <div class="card-body p-0">
+                <table class="table table-hover mb-0">
+                    <thead>
+                        <tr>
+                            <th>Tipo</th>
+                            <th class="text-center">Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for inv in inv_tipos %}
+                        <tr>
+                            <td>
+                                <span class="tipo-inv-badge tipo-{{ inv.tipo }}">{{ inv.descricao }}</span>
+                            </td>
+                            <td class="text-center">{{ inv.count }}</td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="2" class="text-center text-muted py-3">
+                                Nenhuma investigação cadastrada.
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

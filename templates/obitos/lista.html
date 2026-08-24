@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="page-header">
+    <h2>Óbitos</h2>
+    <a href="{{ url_for('novo_obito') }}" class="btn btn-primary">
+        <i class="bi bi-plus-lg"></i> Novo Óbito
+    </a>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <form method="GET" class="row g-2 mb-3">
+            <div class="col-md-8">
+                <input type="text" name="busca" class="form-control" placeholder="Buscar por nome, DO ou nome da mãe..."
+                       value="{{ busca }}">
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-primary w-100">
+                    <i class="bi bi-search"></i> Buscar
+                </button>
+            </div>
+            <div class="col-md-2">
+                <a href="{{ url_for('lista_obitos') }}" class="btn btn-outline-secondary w-100">Limpar</a>
+            </div>
+        </form>
+
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Nome</th>
+                        <th>Data Óbito</th>
+                        <th>Sexo</th>
+                        <th>Nº DO</th>
+                        <th>Investigações</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for obito in obitos.items %}
+                    <tr>
+                        <td><strong>{{ obito.nome }}</strong></td>
+                        <td>{{ obito.data_obito.strftime('%d/%m/%Y') if obito.data_obito else '-' }}</td>
+                        <td>{{ 'Masculino' if obito.sexo == 'M' else 'Feminino' if obito.sexo == 'F' else '-' }}</td>
+                        <td>{{ obito.numero_dob or '-' }}</td>
+                        <td>
+                            {% set inv_count = obito.investigacoes.count() %}
+                            {% if inv_count > 0 %}
+                            <span class="badge bg-info">{{ inv_count }}</span>
+                            {% else %}
+                            <span class="badge bg-secondary">0</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <a href="{{ url_for('detalhe_obito', id=obito.id) }}" class="btn btn-info btn-sm">
+                                <i class="bi bi-eye"></i>
+                            </a>
+                            <a href="{{ url_for('editar_obito', id=obito.id) }}" class="btn btn-warning btn-sm">
+                                <i class="bi bi-pencil"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="6" class="text-center text-muted py-4">
+                            <i class="bi bi-inbox" style="font-size: 32px;"></i><br>
+                            Nenhum óbito encontrado.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        {% if obitos.pages > 1 %}
+        <nav class="mt-3">
+            <ul class="pagination pagination-sm justify-content-center">
+                {% for page_num in obitos.iter_pages() %}
+                {% if page_num %}
+                <li class="page-item {% if page_num == obitos.page %}active{% endif %}">
+                    <a class="page-link" href="{{ url_for('lista_obitos', page=page_num, busca=busca) }}">{{ page_num }}</a>
+                </li>
+                {% else %}
+                <li class="page-item disabled"><span class="page-link">...</span></li>
+                {% endif %}
+                {% endfor %}
+            </ul>
+        </nav>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

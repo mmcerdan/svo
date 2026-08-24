@@ -1,0 +1,165 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="page-header">
+    <h2>{{ inv.tipo_display() }}</h2>
+    <div>
+        <a href="{{ url_for('detalhe_obito', id=inv.obito.id) }}" class="btn btn-outline-secondary btn-sm">
+            <i class="bi bi-arrow-left"></i> Dados do Óbito
+        </a>
+        <a href="{{ url_for('editar_investigacao', id=inv.id) }}" class="btn btn-warning btn-sm">
+            <i class="bi bi-pencil"></i> Editar
+        </a>
+        <a href="{{ url_for('imprimir_investigacao', id=inv.id) }}" target="_blank" class="btn btn-secondary btn-sm">
+            <i class="bi bi-printer"></i> Imprimir
+        </a>
+        {% if inv.status != 'CONCLUIDA' %}
+        <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#modalFinalizar">
+            <i class="bi bi-check2-square"></i> Finalizar
+        </button>
+        {% endif %}
+    </div>
+</div>
+
+{% if inv.status != 'CONCLUIDA' %}
+<div class="modal fade" id="modalFinalizar" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form method="POST" action="{{ url_for('finalizar_investigacao', id=inv.id) }}">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <div class="modal-header">
+                    <h5 class="modal-title">Finalizar Investigação</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p><strong>{{ inv.obito.nome }}</strong> — {{ inv.tipo_display() }}</p>
+                    <div class="mb-3">
+                        <label class="form-label">Conclusão / Resumo da investigação</label>
+                        <textarea name="conclusao" class="form-control" rows="5" required>{{ inv.conclusao or '' }}</textarea>
+                    </div>
+                    <div class="alert alert-info mb-0">
+                        <i class="bi bi-info-circle"></i> A investigação será marcada como <strong>Concluída</strong> e a data de conclusão será {{ now.strftime('%d/%m/%Y') if now else 'hoje' }}.
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-success">
+                        <i class="bi bi-check2-square"></i> Confirmar Finalização
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<div class="row g-3">
+    <div class="col-md-5">
+        <div class="card">
+            <div class="card-header">Informações da Investigação</div>
+            <div class="card-body">
+                <table class="table table-sm">
+                    <tr><th style="width:140px">Falecido:</th><td><strong>{{ inv.obito.nome }}</strong></td></tr>
+                    <tr><th>Tipo:</th><td><span class="tipo-inv-badge tipo-{{ inv.tipo }}">{{ inv.tipo_display() }}</span></td></tr>
+                    <tr><th>Status:</th>
+                        <td>
+                            <span class="badge bg-{{ 'warning' if inv.status == 'AGUARDANDO' else 'info' if inv.status == 'EM_ANDAMENTO' else 'success' if inv.status == 'CONCLUIDA' else 'secondary' }}">
+                                {{ inv.status_display() }}
+                            </span>
+                        </td>
+                    </tr>
+                    <tr><th>Responsável:</th><td>{{ inv.responsavel or '-' }}</td></tr>
+                    <tr><th>Abertura:</th><td>{{ inv.data_abertura.strftime('%d/%m/%Y') if inv.data_abertura else '-' }}</td></tr>
+                    <tr><th>Conclusão:</th><td>{{ inv.data_conclusao.strftime('%d/%m/%Y') if inv.data_conclusao else '-' }}</td></tr>
+                    <tr><th>Cadastrado por:</th><td>{{ inv.usuario.nome if inv.usuario else '-' }}</td></tr>
+                </table>
+            </div>
+        </div>
+
+        {% if inv.conclusao %}
+        <div class="card">
+            <div class="card-header">Conclusão</div>
+            <div class="card-body">{{ inv.conclusao }}</div>
+        </div>
+        {% endif %}
+
+        <div class="card">
+            <div class="card-header">Anexos</div>
+            <div class="card-body">
+                <form method="POST" action="{{ url_for('anexar_arquivo', id=inv.id) }}" enctype="multipart/form-data" class="mb-3">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <div class="input-group input-group-sm">
+                        <input type="file" name="arquivo" class="form-control" required accept=".pdf,.jpg,.jpeg,.png">
+                        <button type="submit" class="btn btn-success">
+                            <i class="bi bi-upload"></i> Anexar
+                        </button>
+                    </div>
+                </form>
+                {% if inv.anexos.count() > 0 %}
+                <ul class="list-group list-group-flush">
+                    {% for anexo in inv.anexos %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center py-2">
+                        <a href="{{ url_for('download_anexo', nome_arquivo=anexo.nome_arquivo) }}" target="_blank">
+                            <i class="bi bi-file-earmark-pdf"></i> {{ anexo.nome_original }}
+                        </a>
+                        <form method="POST" action="{{ url_for('excluir_anexo', id=anexo.id) }}" style="display:inline">
+                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                            <button type="submit" class="btn btn-danger btn-sm"
+                                    onclick="return confirm('Excluir este anexo?')">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </form>
+                    </li>
+                    {% endfor %}
+                </ul>
+                {% else %}
+                <p class="text-muted small mb-0">Nenhum arquivo anexado.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-7">
+        <div class="card">
+            <div class="card-header">
+                Campos da Investigação - {{ inv.tipo_display() }}
+                <button class="btn btn-primary btn-sm float-end" onclick="document.getElementById('form-campos').submit()">
+                    <i class="bi bi-check-lg"></i> Salvar Campos
+                </button>
+            </div>
+            <div class="card-body">
+                <form method="POST" action="{{ url_for('salvar_campos_investigacao', id=inv.id) }}" id="form-campos">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <div class="investigacao-campos">
+                        {% set grupos = agrupar_campos(inv.campos) %}
+                        {% for grupo in grupos %}
+                        {% if grupo.tipo == 'grupo' %}
+                        <div class="campo-grupo">
+                            <div class="grupo-titulo">{{ grupo.titulo }}</div>
+                            <div class="grupo-opcoes">
+                                {% for campo in grupo.campos %}
+                                {% set opcao = campo.nome_campo.split(': ', 1)[-1].split('? (', 1)[-1].rstrip(')') if ': ' in campo.nome_campo or '? (' in campo.nome_campo else campo.nome_campo %}
+                                <div class="checkbox-wrapper">
+                                    <input type="checkbox" name="campo_{{ campo.id }}" value="X"
+                                           id="campo_{{ campo.id }}"
+                                           {% if campo.valor == 'X' %}checked{% endif %}>
+                                    <label for="campo_{{ campo.id }}" class="checkbox-label">{{ opcao }}</label>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        {% else %}
+                        <div class="campo-item">
+                            <label>{{ grupo.campo.nome_campo }}</label>
+                            <textarea name="campo_{{ grupo.campo.id }}" class="form-control" rows="2">{{ grupo.campo.valor or '' }}</textarea>
+                        </div>
+                        {% endif %}
+                        {% else %}
+                        <p class="text-muted">Nenhum campo definido para este tipo de investigação.</p>
+                        {% endfor %}
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

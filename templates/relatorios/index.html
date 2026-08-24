@@ -1,0 +1,151 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="page-header">
+    <h2>Relatórios</h2>
+</div>
+
+<div class="row g-3 mb-4">
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <h6 class="mb-0">Período</h6>
+                </div>
+                <div class="row g-2">
+                    <div class="col-6">
+                        <label class="form-label" style="font-size:12px;">Data Início</label>
+                        <input type="date" id="data_inicio" class="form-control form-control-sm">
+                    </div>
+                    <div class="col-6">
+                        <label class="form-label" style="font-size:12px;">Data Fim</label>
+                        <input type="date" id="data_fim" class="form-control form-control-sm">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex gap-2">
+                    <button class="btn btn-outline-primary btn-sm active" onclick="carregarDados('geral')" id="btn-geral">
+                        <i class="bi bi-table"></i> Visão Geral
+                    </button>
+                    <button class="btn btn-outline-primary btn-sm" onclick="carregarDados('investigacoes')" id="btn-investigacoes">
+                        <i class="bi bi-search"></i> Investigações
+                    </button>
+                    <button class="btn btn-outline-primary btn-sm" onclick="carregarDados('causas')" id="btn-causas">
+                        <i class="bi bi-heart-pulse"></i> Causas
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-3">
+    <div class="col-md-7">
+        <div class="card">
+            <div class="card-header">Gráfico</div>
+            <div class="card-body">
+                <canvas id="graficoPrincipal" height="250"></canvas>
+                <p class="text-muted text-center small mt-2" id="grafico-label">Selecione um tipo de relatório</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-5">
+        <div class="card">
+            <div class="card-header">Resumo</div>
+            <div class="card-body" id="resumo-dados">
+                <p class="text-muted text-center py-4">Clique em um tipo de relatório para visualizar os dados.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+let graficoAtual = null;
+
+function carregarDados(tipo) {
+    document.querySelectorAll('[id^="btn-"]').forEach(b => b.classList.remove('active'));
+    document.getElementById('btn-' + tipo).classList.add('active');
+
+    const data_inicio = document.getElementById('data_inicio').value;
+    const data_fim = document.getElementById('data_fim').value;
+
+    fetch(`/relatorios/dados?tipo=${tipo}&data_inicio=${data_inicio}&data_fim=${data_fim}`)
+        .then(r => r.json())
+        .then(dados => {
+            const resumo = document.getElementById('resumo-dados');
+            const lbl = document.getElementById('grafico-label');
+
+            if (tipo === 'geral') {
+                lbl.textContent = 'Óbitos por Categoria';
+                let html = `<h3 class="text-center mb-3">Total: ${dados.total}</h3>`;
+                html += '<h6>Por Sexo</h6><table class="table table-sm">';
+                dados.por_sexo.forEach(item => {
+                    html += `<tr><td>${item.label}</td><td class="text-end"><strong>${item.value}</strong></td></tr>`;
+                });
+                html += '</table><h6>Por Local</h6><table class="table table-sm">';
+                dados.por_local.forEach(item => {
+                    html += `<tr><td>${item.label}</td><td class="text-end"><strong>${item.value}</strong></td></tr>`;
+                });
+                html += '</table>';
+                resumo.innerHTML = html;
+                renderGrafico(dados.por_sexo);
+            } else if (tipo === 'investigacoes') {
+                lbl.textContent = 'Investigações por Tipo';
+                let html = `<h3 class="text-center mb-3">Total: ${dados.total}</h3>`;
+                html += '<h6>Por Tipo</h6><table class="table table-sm">';
+                dados.por_tipo.forEach(item => {
+                    html += `<tr><td>${item.label}</td><td class="text-end"><strong>${item.value}</strong></td></tr>`;
+                });
+                html += '</table><h6>Por Status</h6><table class="table table-sm">';
+                dados.por_status.forEach(item => {
+                    html += `<tr><td>${item.label}</td><td class="text-end"><strong>${item.value}</strong></td></tr>`;
+                });
+                html += '</table>';
+                resumo.innerHTML = html;
+                renderGrafico(dados.por_tipo);
+            } else if (tipo === 'causas') {
+                lbl.textContent = 'Principais Causas (CID)';
+                let html = '<h6>Principais CID</h6><table class="table table-sm">';
+                dados.causas.forEach(item => {
+                    html += `<tr><td>${item.label}</td><td class="text-end"><strong>${item.value}</strong></td></tr>`;
+                });
+                html += '</table>';
+                resumo.innerHTML = html;
+                renderGrafico(dados.causas);
+            }
+        });
+}
+
+function renderGrafico(dados) {
+    if (graficoAtual) graficoAtual.destroy();
+    const ctx = document.getElementById('graficoPrincipal').getContext('2d');
+    const cores = ['#1a5276', '#2e86c1', '#27ae60', '#f39c12', '#e74c3c', '#8e44ad', '#16a085'];
+    graficoAtual = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: dados.map(d => d.label),
+            datasets: [{
+                data: dados.map(d => d.value),
+                backgroundColor: dados.map((_, i) => cores[i % cores.length]),
+                borderRadius: 4,
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { display: false },
+            },
+            scales: {
+                y: { beginAtZero: true, ticks: { stepSize: 1 } }
+            }
+        }
+    });
+}
+
+carregarDados('geral');
+</script>
+{% endblock %}

@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="page-header">
+    <h2>{{ obito.nome }}</h2>
+    <div>
+        <a href="{{ url_for('lista_obitos') }}" class="btn btn-outline-secondary btn-sm">
+            <i class="bi bi-arrow-left"></i> Voltar
+        </a>
+        <a href="{{ url_for('editar_obito', id=obito.id) }}" class="btn btn-warning btn-sm">
+            <i class="bi bi-pencil"></i> Editar
+        </a>
+        <a href="{{ url_for('nova_investigacao', obito_id=obito.id) }}" class="btn btn-success btn-sm">
+            <i class="bi bi-plus-lg"></i> Nova Investigação
+        </a>
+        <form method="POST" action="{{ url_for('excluir_obito', id=obito.id) }}" style="display:inline"
+              onsubmit="return confirm('Excluir permanentemente este óbito e todas as investigações relacionadas?')">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button type="submit" class="btn btn-danger btn-sm">
+                <i class="bi bi-trash"></i> Excluir
+            </button>
+        </form>
+    </div>
+</div>
+
+<div class="row g-3">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">Dados do Óbito</div>
+            <div class="card-body">
+                <table class="table table-sm">
+                    <tr><th style="width:180px">Nome:</th><td>{{ obito.nome }}</td></tr>
+                    <tr><th>Data de Nascimento:</th><td>{{ obito.data_nascimento.strftime('%d/%m/%Y') if obito.data_nascimento else '-' }}</td></tr>
+                    <tr><th>Data do Óbito:</th><td>{{ obito.data_obito.strftime('%d/%m/%Y') if obito.data_obito else '-' }}</td></tr>
+                    <tr><th>Sexo:</th><td>{{ 'Masculino' if obito.sexo == 'M' else 'Feminino' if obito.sexo == 'F' else '-' }}</td></tr>
+                    <tr><th>Idade no Óbito:</th><td>{{ obito.idade_obito() }} anos</td></tr>
+                    <tr><th>Nome da Mãe:</th><td>{{ obito.nome_mae or '-' }}</td></tr>
+                    <tr><th>Nome do Pai:</th><td>{{ obito.nome_pai or '-' }}</td></tr>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">Causa e Local</div>
+            <div class="card-body">
+                <table class="table table-sm">
+                    <tr><th style="width:180px">Nº DO:</th><td>{{ obito.numero_dob or '-' }}</td></tr>
+                    <tr><th>Causa da Morte:</th><td>{{ obito.causa_morte or '-' }}</td></tr>
+                    <tr><th>CID:</th><td><strong>{{ obito.causa_morte_cid or '-' }}</strong></td></tr>
+                    <tr><th>Local do Óbito:</th><td>{{ obito.local_obito or '-' }}</td></tr>
+                    <tr><th>Município:</th><td>{{ obito.municipio_ocorrencia or '-' }}</td></tr>
+                    <tr><th>Endereço:</th><td>{{ obito.endereco or '-' }}</td></tr>
+                </table>
+            </div>
+        </div>
+        {% if obito.observacoes %}
+        <div class="card">
+            <div class="card-header">Observações</div>
+            <div class="card-body">
+                {{ obito.observacoes }}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<div class="card mt-3">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        Investigações
+        <a href="{{ url_for('nova_investigacao', obito_id=obito.id) }}" class="btn btn-success btn-sm">
+            <i class="bi bi-plus-lg"></i> Nova Investigação
+        </a>
+    </div>
+    <div class="card-body p-0">
+        <table class="table table-hover mb-0">
+            <thead>
+                <tr>
+                    <th>Tipo</th>
+                    <th>Status</th>
+                    <th>Responsável</th>
+                    <th>Abertura</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for inv in obito.investigacoes %}
+                <tr>
+                    <td><span class="tipo-inv-badge tipo-{{ inv.tipo }}">{{ inv.tipo_display() }}</span></td>
+                    <td><span class="badge badge-{{ inv.status.lower()|replace('_','-') }}">{{ inv.status_display() }}</span></td>
+                    <td>{{ inv.responsavel or '-' }}</td>
+                    <td>{{ inv.data_abertura.strftime('%d/%m/%Y') if inv.data_abertura else '-' }}</td>
+                    <td>
+                        <a href="{{ url_for('detalhe_investigacao', id=inv.id) }}" class="btn btn-info btn-sm">
+                            <i class="bi bi-eye"></i>
+                        </a>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="5" class="text-center text-muted py-3">
+                        Nenhuma investigação cadastrada para este óbito.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

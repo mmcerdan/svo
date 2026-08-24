@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="page-header">
+    <h2>Investigações</h2>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <form method="GET" class="row g-2 mb-3">
+            <div class="col-md-4">
+                <input type="text" name="busca" class="form-control" placeholder="Buscar por nome do falecido..."
+                       value="{{ busca }}">
+            </div>
+            <div class="col-md-3">
+                <select name="tipo" class="form-select">
+                    <option value="">Todos os tipos</option>
+                    {% for k, v in tipos_inv %}
+                    <option value="{{ k }}" {% if tipo == k %}selected{% endif %}>{{ v }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-3">
+                <select name="status" class="form-select">
+                    <option value="">Todos os status</option>
+                    {% for k, v in status_inv %}
+                    <option value="{{ k }}" {% if status == k %}selected{% endif %}>{{ v }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-primary w-100">
+                    <i class="bi bi-search"></i> Filtrar
+                </button>
+            </div>
+        </form>
+
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Falecido</th>
+                        <th>Tipo</th>
+                        <th>Status</th>
+                        <th>Responsável</th>
+                        <th>Abertura</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for inv in investigacoes.items %}
+                    <tr>
+                        <td><strong>{{ inv.obito.nome }}</strong></td>
+                        <td><span class="tipo-inv-badge tipo-{{ inv.tipo }}">{{ inv.tipo_display() }}</span></td>
+                        <td>
+                            <span class="badge bg-{{ 'warning' if inv.status == 'AGUARDANDO' else 'info' if inv.status == 'EM_ANDAMENTO' else 'success' if inv.status == 'CONCLUIDA' else 'secondary' }}">
+                                {{ inv.status_display() }}
+                            </span>
+                        </td>
+                        <td>{{ inv.responsavel or '-' }}</td>
+                        <td>{{ inv.data_abertura.strftime('%d/%m/%Y') if inv.data_abertura else '-' }}</td>
+                        <td>
+                            <a href="{{ url_for('detalhe_investigacao', id=inv.id) }}" class="btn btn-info btn-sm">
+                                <i class="bi bi-eye"></i>
+                            </a>
+                            <a href="{{ url_for('editar_investigacao', id=inv.id) }}" class="btn btn-warning btn-sm">
+                                <i class="bi bi-pencil"></i>
+                            </a>
+                            <a href="{{ url_for('imprimir_investigacao', id=inv.id) }}" target="_blank" class="btn btn-secondary btn-sm">
+                                <i class="bi bi-printer"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="6" class="text-center text-muted py-4">
+                            <i class="bi bi-inbox" style="font-size: 32px;"></i><br>
+                            Nenhuma investigação encontrada.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        {% if investigacoes.pages > 1 %}
+        <nav class="mt-3">
+            <ul class="pagination pagination-sm justify-content-center">
+                {% for page_num in investigacoes.iter_pages() %}
+                {% if page_num %}
+                <li class="page-item {% if page_num == investigacoes.page %}active{% endif %}">
+                    <a class="page-link" href="{{ url_for('lista_investigacoes', page=page_num, tipo=tipo, status=status, busca=busca) }}">{{ page_num }}</a>
+                </li>
+                {% else %}
+                <li class="page-item disabled"><span class="page-link">...</span></li>
+                {% endif %}
+                {% endfor %}
+            </ul>
+        </nav>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

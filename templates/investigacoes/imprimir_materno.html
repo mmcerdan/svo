@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>M1 - Ficha de Investigação de Óbito Materno</title>
+<style>
+@page { margin: 12mm 10mm 15mm; size: A4 portrait; }
+body { font-family: Helvetica, Arial, sans-serif; font-size: 9pt; color: #222; line-height: 1.35; margin: 0; padding: 0; }
+
+.header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 6px; margin-bottom: 10px; border-bottom: 2px solid #1a5276; }
+.header-left, .header-right { display: flex; align-items: center; gap: 8px; }
+.header-logo { max-height: 48px; max-width: 130px; }
+.header-text { font-size: 7.5pt; color: #222; line-height: 1.2; }
+.header-text strong { font-size: 8.5pt; color: #1a5276; }
+
+.section { margin-bottom: 10px; }
+.section-title { background: #1a5276; color: #fff; padding: 2px 7px; font-size: 9.5pt; font-weight: 600; margin-bottom: 5px; border-radius: 2px; }
+
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1px 10px; }
+.row-full { grid-column: 1 / -1; }
+.row { display: flex; align-items: baseline; border-bottom: 1px solid #ccc; padding: 2px 3px; }
+.row .label { color: #555; font-weight: 600; min-width: 120px; flex-shrink: 0; font-size: 7.5pt; }
+.row .value { flex: 1; color: #000; padding-left: 3px; word-break: break-word; white-space: pre-wrap; }
+
+.sub-title { font-size: 7.5pt; font-weight: 600; color: #1a5276; padding: 2px 3px; border-bottom: 1px solid #1a5276; margin: 6px 0 2px; }
+
+.check-row { display: flex; flex-wrap: wrap; align-items: center; gap: 3px 12px; border-bottom: 1px solid #ccc; padding: 2px 3px; }
+.check-row .ck-item { display: inline-flex; align-items: center; gap: 2px; font-size: 7.5pt; color: #333; line-height: 1.2; }
+.check-row .ck-item .box { width: 12px; height: 12px; border: 1.5px solid #555; display: inline-flex; align-items: center; justify-content: center; font-size: 8pt; font-weight: bold; color: #000; flex-shrink: 0; }
+
+.inline-flex-container { display: inline-flex; flex-wrap: wrap; gap: 0.3em 1em; align-items: center; }
+.inline-flex-container .ck-item { display: inline-flex; align-items: center; gap: 0.15em; font-size: 7.5pt; color: #333; }
+.inline-flex-container .ck-item .box { width: 12px; height: 12px; border: 1.5px solid #555; display: inline-flex; align-items: center; justify-content: center; font-size: 8pt; font-weight: bold; color: #000; flex-shrink: 0; }
+
+.long-text { border: 1px solid #ccc; border-radius: 2px; padding: 4px 6px; min-height: 50px; word-break: break-word; white-space: pre-wrap; line-height: 1.4; font-size: 8pt; }
+
+.clin-table { width: 100%; border-collapse: collapse; font-size: 7.5pt; margin-top: 3px; table-layout: fixed; }
+.clin-table thead th { background: #e8edf2; padding: 2px 3px; text-align: left; font-weight: 600; border: 1px solid #bbb; font-size: 6.5pt; }
+.clin-table tbody tr { height: auto; }
+.clin-table tbody td { padding: 2px 3px; border: 1px solid #ddd; vertical-align: top; word-break: break-word; line-height: 1.3; }
+
+.exam-table { width: 100%; border-collapse: collapse; font-size: 7pt; margin-top: 3px; table-layout: fixed; }
+.exam-table thead th { background: #e8edf2; padding: 2px 2px; text-align: left; font-weight: 600; border: 1px solid #bbb; font-size: 6.5pt; }
+.exam-table tbody tr { height: auto; }
+.exam-table tbody td { padding: 2px 2px; border: 1px solid #ddd; vertical-align: middle; word-break: break-word; font-size: 7pt; }
+.exam-table .box { width: 11px; height: 11px; border: 1.5px solid #555; display: inline-flex; align-items: center; justify-content: center; font-size: 7pt; font-weight: bold; color: #000; flex-shrink: 0; }
+
+.sig-block { page-break-inside: avoid; border-top: 1px solid #ddd; margin-top: 8px; padding-top: 6px; }
+
+.footer { text-align: center; font-size: 6.5pt; color: #999; margin-top: 10px; border-top: 1px solid #ddd; padding-top: 4px; }
+
+@media print { .no-print { display: none; } }
+</style>
+</head>
+<body>
+
+<div class="no-print" style="text-align:center;margin-bottom:8px;">
+<button onclick="window.print()" style="padding:5px 18px;font-size:13px;cursor:pointer;background:#1a5276;color:#fff;border:none;border-radius:4px;margin-right:4px;">Imprimir</button>
+<button onclick="window.close()" style="padding:5px 18px;font-size:13px;cursor:pointer;background:#6c757d;color:#fff;border:none;border-radius:4px;">Fechar</button>
+</div>
+
+<div class="header">
+<div class="header-left">
+<img src="{{ url_for('static', filename='logo-ms.png') }}" alt="MS" class="header-logo" onerror="this.style.display='none'">
+<div class="header-text">
+<strong>MINISTÉRIO DA SAÚDE</strong><br>
+Secretaria de Vigilância em Saúde<br>
+Departamento de Análise de Situação de Saúde
+</div>
+</div>
+<div class="header-right">
+<div class="header-text" style="text-align:right;">
+<strong>FUNDO MUNICIPAL DE SAÚDE DE GOIANIRA</strong><br>
+Secretaria Municipal de Saúde<br>
+Sistema de Informações de Óbito
+</div>
+<img src="{{ url_for('static', filename='logo.png') }}" alt="Goianira" class="header-logo" onerror="this.style.display='none'">
+</div>
+</div>
+
+<div class="section">
+<div class="section-title">IDENTIFICAÇÃO DO CASO</div>
+<div class="form-grid">
+<div class="row row-full"><span class="label">Nº do Caso:</span><span class="value">{{ inv.id }} &mdash; {{ c.get('Nome da falecida', inv.obito.nome or '') }}</span></div>
+<div class="row"><span class="label">Responsável:</span><span class="value">{{ inv.responsavel or '' }}</span></div>
+<div class="row"><span class="label">Status:</span><span class="value">{{ inv.status_display() }}</span></div>
+</div>
+</div>
+
+<div class="section">
+<div class="section-title">1. IDENTIFICAÇÃO DA FALECIDA</div>
+<div class="form-grid">
+<div class="row row-full"><span class="label">1. Nome da falecida:</span><span class="value">{{ c.get('Nome da falecida', inv.obito.nome or '') }}</span></div>
+<div class="row"><span class="label">2. Nº da DO:</span><span class="value">{{ c.get('N\u00ba da DO', inv.obito.numero_dob or '') }}</span></div>
+<div class="row"><span class="label">3. Data do óbito:</span><span class="value">{{ inv.obito.data_obito.strftime('%d/%m/%Y') if inv.obito.data_obito else '' }}</span></div>
+<div class="row row-full"><span class="label">Endereço (rua/av):</span><span class="value">{{ c.get('Endere\u00e7o', '') }}</span></div>
+<div class="row"><span class="label">Número:</span><span class="value">{{ c.get('N\u00famero', '') }}</span></div>
+<div class="row"><span class="label">Complemento:</span><span class="value">{{ c.get('Complemento', '') }}</span></div>
+<div class="row"><span class="label">Bairro:</span><span class="value">{{ c.get('Bairro', '') }}</span></div>
+<div class="row"><span class="label">Distrito/Povoado:</span><span class="value">{{ c.get('Distrito/Povoado', '') }}</span></div>
+<div class="row row-full">
+<span class="label">Zona:</span>
+<span class="inline-flex-container">
+<span class="ck-item"><span class="box">{{ 'X' if c.get('Zona: Urbana') else '' }}</span> Urbana</span>
+<span class="ck-item"><span class="box">{{ 'X' if c.get('Zona: Rural') else '' }}</span> Rural</span>
+</span>
+</div>
+<div class="row"><span class="label">5. Tipo seguro saúde:</span><span class="value">{{ c.get('Tipo seguro saude', '') }}</span></div>
+<div class="row"><span class="label">6. Centro Saúde/UBS:</span><span class="value">{{ c.get('Centro de Sa\u00fade/UBS', '') }}</span></div>
+<div class="row row-full">
+<span class="label">7. Equipe/PACS/PSF:</span>
+<span class="value">{{ c.get('Equipe/PACS/PSF - nome', '') }}</span>
+<span class="ck-item" style="margin-left:8px;"><span class="box">{{ 'X' if c.get('Sem cobertura ESF') else '' }}</span> Sem cobertura ESF</span>
+</div>
+<div class="row"><span class="label">8. Distrito Sanitário:</span><span class="value">{{ c.get('Distrito Sanit\u00e1rio', '') }}</span></div>
+</div>
+</div>
+
+<div class="section">
+<div class="section-title">2. ASSISTÊNCIA PRÉ-NATAL</div>
+<div class="form-grid">
+<div class="row row-full"><span class="label">9. Nome do serviço:</span><span class="value">{{ c.get('Nome servico pre-natal', '') }}</span></div>
+<div class="row"><span class="label">Código CNES:</span><span class="value">{{ c.get('Codigo CNES (pre-natal)', '') }}</span></div>
+<div class="row row-full">
+<span class="label">Tipo de serviço:</span>
+<span class="inline-flex-container">
+<span class="ck-item"><span class="box">{{ 'X' if c.get('Tipo servico: CS SUS') else '' }}</span> CS/SUS</span>
+<span class="ck-item"><span class="box">{{ 'X' if c.get('Tipo servico: Convenio') else '' }}</span> Convênio</span>
+<span class="ck-item"><span class="box">{{ 'X' if c.get('Tipo servico: Particular') else '' }}</span> Particular</span>
+<span class="ck-item"><span class="box">{{ 'X' if c.get('Nao fez pre-natal') else '' }}</span> Não fez PN</span>
+</span>
+</div>
+<div class="row"><span class="label">10. IG 1ª consulta:</span><span class="value">{{ c.get('IG 1\u00aa consulta (semanas)', '') }} sem</span></div>
+<div class="row"><span class="label">IG 1ª consulta (meses):</span><span class="value">{{ c.get('IG 1\u00aa consulta (meses)', '') }}</span></div>
+<div class="row"><span class="label">IG 1ª consulta SR:</span><span class="ck-item"><span class="box">{{ 'X' if c.get('IG 1\u00aa consulta SR') else '' }}</span></span></div>
+<div class="row"><span class="label">11. IG última consulta:</span><span class="value">{{ c.get('IG ultima consulta (semanas)', '') }} sem</span></div>
+<div class="row"><span class="label">IG última consulta (meses):</span><span class="value">{{ c.get('IG \u00faltima consulta (meses)', '') }}</span></div>
+<div class="row"><span class="label">IG última consulta SR:</span><span class="ck-item"><span class="box">{{ 'X' if c.get('IG \u00faltima consulta SR') else '' }}</span></span></div>
+<div class="row"><span class="label">12. Nº consultas:</span><span class="value">{{ c.get('N\u00ba consultas pre-natal', '') }}</span></div>
+<div class="row"><span class="label">Nº consultas SR:</span><span class="ck-item"><span class="box">{{ 'X' if c.get('N\u00ba consultas SR') else '' }}</span></span></div>
+<div class="row row-full">
+<span class="label">13. Cadastrada Sisprenatal?</span>
+<span class="inline-flex-container">
+<span class="ck-item"><span class="box">{{ 'X' if c.get('Cadastrada no Sisprenatal? (Sim)') else '' }}</span> Sim</span>
+<span class="ck-item"><span class="box">{{ 'X' if c.get('Cadastrada no Sisprenatal? (Nao)') else '' }}</span> Não</span>
+<span class="ck-item"><span class="box">{{ 'X' if c.get('Cadastrada no Sisprenatal? (SR)') else '' }}</span> SR</span>
+</span>
+</div>
+<div class="row row-full">
+<span class="label">14. Já esteve grávida antes?</span>
+<span class="inline-flex-container">
+<span class="ck-item"><span class="box">{{ 'X' if c.get('Ja esteve gravida antes? (Sim)') else '' }}</span> Sim</span>
+<span class="ck-item"><span class="box">{{ 'X' if c.get('Ja esteve gravida antes? (Nao)') else '' }}</span> Não</span>
+<span class="ck-item"><span class="box">{{ 'X' if c.get('Ja esteve gravida antes? (SR)') else '' }}</span> SR</span>
+</span>
+</div>
+<div class="row"><span class="label">Nº gestações:</span><span class="value">{{ c.get('N\u00ba gestacoes', '') }}</span></div>
+<div class="row"><span class="label">Nº partos:</span><span class="value">{{ c.get('N\u00ba partos', '') }}</span></div>
+<div class="row"><span class="label">Nº abortos:</span><span class="value">{{ c.get('N\u00ba abortos', '') }}</span></div>
+<div class="row"><span class="label">Histórico gestações SR:</span><span class="ck-item"><span class="box">{{ 'X' if c.get('Hist\u00f3rico gesta\u00e7\u00f5es SR') else '' }}</span></span></div>
+<div class="row row-full">
+<span class="label">Tipos de parto:</span>
+<span class="inline-flex-container">
+<span class="ck-item"><span class="box">{{ 'X' if c.get('Partos normais') else '' }}</span> Normal</span>
+<span class="ck-item"><span class="box">{{ 'X' if c.get('Partos forceps') else '' }}</span> Fórceps</span>
+<span class="ck-item"><span class="box">{{ 'X' if c.get('Partos cesareos') else '' }}</span> Cesáreo</span>
+<span class="ck-item"><span class="box">{{ 'X' if c.get('Tipos parto SR') else '' }}</span> SR</span>
+</span>
+</div>
+<div class="row row-full">
+<span class="label">15. Gestante alto risco?</span>
+<span class="inline-flex-container">
+<span class="ck-item"><span class="box">{{ 'X' if c.get('Gestante alto risco? (Sim)') else '' }}</span> Sim</span>
+<span class="ck-item"><span class="box">{{ 'X' if c.get('Gestante alto risco? (Nao)') else '' }}</span> Não</span>
+<span class="ck-item"><span class="box">{{ 'X' if c.get('Gestante alto risco? (SR)') else '' }}</span> SR</span>
+</span>
+</div>
+<div class="row row-full">
+<span class="label">Acompanhada PNAR?</span>
+<span class="inline-flex-container">
+<span class="ck-item"><span class="box">{{ 'X' if c.get('Acompanhada PNAR? (Sim/Qual)') else '' }}</span> Sim/Qual</span>
+<span class="ck-item"><span class="box">{{ 'X' if c.get('Acompanhada PNAR? (N\u00e3o)') else '' }}</span> Não</span>
+<span class="ck-item"><span class="box">{{ 'X' if c.get('Acompanhada PNAR? (SR)') else '' }}</span> SR</span>
+</span>
+</div>
+<div class="row"><span class="label">A partir de semanas:</span><span class="value">{{ c.get('A partir de semanas (PNAR)', '') }}</span></div>
+<div class="row row-full"><span class="label">Acompanhamento AB mantido?</span>
+<span class="inline-flex-container">
+<span class="ck-item"><span class="box">{{ 'X' if c.get('Acompanhamento AB mantido? (Sim)') else '' }}</span> Sim</span>
+<span class="ck-item"><span class="box">{{ 'X' if c.get('Acompanhamento AB mantido? (Nao)') else '' }}</span> Não</span>
+<span class="ck-item"><span class="box">{{ 'X' if c.get('Acompanhamento AB mantido? (SR)') else '' }}</span> SR</span>
+</span>
+</div>
+<div class="row row-full">
+<span class="label">16. Internada na gestação?</span>
+<span class="inline-flex-container">
+<span class="ck-item"><span class="box">{{ 'X' if c.get('Internada na gestacao? (Sim)') else '' }}</span> Sim</span>
+<span class="ck-item"><span class="box">{{ 'X' if c.get('Internada na gestacao? (Nao)') else '' }}</span> Não</span>
+<span class="ck-item"><span class="box">{{ 'X' if c.get('Internada na gestacao? (SR)') else '' }}</span> SR</span>
+</span>
+</div>
+<div class="row"><span class="label">Quantas internações?</span><span class="value">{{ c.get('Quantas internacoes?', '') }}</span></div>
+<div class="row row-full"><span class="label">Motivos da internação:</span><span class="value">{{ c.get('Motivos da internacao', '') }}</span></div>
+<div class="row"><span class="label">1ª int. (semanas):</span><span class="value">{{ c.get('1\u00aa internacao (semanas)', '') }}</span></div>
+<div class="row"><span class="label">1ª int. (local):</span><span class="value">{{ c.get('1\u00aa internacao (local)', '') }}</span></div>
+<div class="row"><span class="label">2ª int. (semanas):</span><span class="value">{{ c.get('2\u00aa internacao (semanas)', '') }}</span></div>
+<div class="row"><span class="label">2ª int. (local):</span><span class="value">{{ c.get('2\u00aa internacao (local)', '') }}</span></div>
+<div class="row row-full"><span class="label">17. Patologias/fatores de risco:</span><span class="value">{{ c.get('Patologias/fatores de risco', '') }}</span></div>
+<div class="row row-full">
+<span class="label">18. Uso de medicação?</span>
+<span class="inline-flex-container">
+<span class="ck-item"><span class="box">{{ 'X' if c.get('Uso de medicacao? (Sim)') else '' }}</span> Sim</span>
+<span class="ck-item"><span class="box">{{ 'X' if c.get('Uso de medicacao? (Nao)') else '' }}</span> Não</span>
+<span class="ck-item"><span class="box">{{ 'X' if c.get('Uso de medicacao? (SR)') else '' }}</span> SR</span>
+</span>
+</div>
+<div class="row row-full"><span class="label">Quais medicamentos?</span><span class="value">{{ c.get('Quais medicamentos?', '') }}</span></div>
+</div>
+</div>
+
+<div class="section">
+<div class="sub-title">Quadro da Assistência Pré-Natal (Campo 19)</div>
+<table class="clin-table">
+<thead>
+<tr>
+<th style="width:9%;">Data</th>
+<th style="width:8%;">IG (sem)</th>
+<th style="width:6%;">Peso</th>
+<th style="width:8%;">PA</th>
+<th style="width:8%;">AU (cm)</th>
+<th style="width:6%;">BCF</th>
+<th style="width:6%;">MF</th>
+<th style="width:6%;">Edema</th>
+<th style="width:35%;">Queixas/Conduta</th>
+<th style="width:8%;">Prof.</th>
+</tr>
+</thead>
+<tbody>
+{% for i in range(1, 7) %}
+<tr>
+<td>{{ c.get('Quadro PN M - data_' ~ i, '') }}</td>
+<td>{{ c.get('Quadro PN M - ig_' ~ i, '') }}</td>
+<td>{{ c.get('Quadro PN M - peso_' ~ i, '') }}</td>
+<td>{{ c.get('Quadro PN M - pa_' ~ i, '') }}</td>
+<td>{{ c.get('Quadro PN M - au_' ~ i, '') }}</td>
+<td>{{ c.get('Quadro PN M - bcf_' ~ i, '') }}</td>
+<td>{{ c.get('Quadro PN M - mf_' ~ i, '') }}</td>
+<td>{{ c.get('Quadro PN M - edema_' ~ i, '') }}</td>
+<td>{{ c.get('Quadro PN M - queixas_' ~ i, '') }}</td>
+<td>{{ c.get('Quadro PN M - prof_' ~ i, '') }}</td>
+</tr>
+{% endfor %}
+</tbody>
+</table>
+</div>
+
+<div class="section">
+<div class="sub-title">Esquema de Vacinação Antitetânica (Campo 20)</div>
+<div class="check-row">
+<span class="ck-item"><span class="box">{{ 'X' if c.get('Vacinacao tetano: 1\u00aa dose') else '' }}</span> 1ª dose</span>
+<span class="ck-item"><span class="box">{{ 'X' if c.get('Vacinacao tetano: 2\u00aa dose') else '' }}</span> 2ª dose</span>
+<span class="ck-item"><span class="box">{{ 'X' if c.get('Vacinacao tetano: 3\u00aa dose') else '' }}</span> 3ª dose</span>
+<span class="ck-item"><span class="box">{{ 'X' if c.get('Vacinacao tetano: Reforco') else '' }}</span> Reforço</span>
+<span class="ck-item"><span class="box">{{ 'X' if c.get('Vacinacao tetano: Imune') else '' }}</span> Imune</span>
+<span class="ck-item"><span class="box">{{ 'X' if c.get('Vacinacao tetano: SR') else '' }}</span> SR</span>
+</div>
+
+<div class="check-row" style="margin-top:4px;">
+<span style="font-weight:600;color:#555;font-size:7.5pt;min-width:160px;">21. Visita domiciliar PN?</span>
+<span class="ck-item"><span class="box">{{ 'X' if c.get('Visita domiciliar pre-natal? (Sim)') else '' }}</span> Sim</span>
+<span class="ck-item"><span class="box">{{ 'X' if c.get('Visita domiciliar pre-natal? (Nao)') else '' }}</span> Não</span>
+<span class="ck-item"><span class="box">{{ 'X' if c.get('Visita domiciliar pre-natal? (SR)') else '' }}</span> SR</span>
+</div>
+<div class="row-full" style="border-bottom:1px solid #ccc;padding:2px 3px;margin-top:2px;"><span style="font-weight:600;color:#555;font-size:7.5pt;">Motivo da visita:</span> <span style="font-size:8pt;">{{ c.get('Motivo da visita domiciliar', '') }}</span></div>
+</div>
+
+<div class="section">
+<div class="sub-title">Exames Pré-Natal (Campo 24)</div>
+<table class="exam-table">
+<thead>
+<tr><th style="width:34%;">Exame</th><th style="width:40px;">1º Tri</th><th style="width:40px;">2º Tri</th><th style="width:40px;">3º Tri</th><th>Resultado</th></tr>
+</thead>
+<tbody>
+{% set exames_m1 = [
+  ('Hb/Ht', 'hb_ht'), ('Grupo sanguíneo ABO', 'grupo_sanguineo_abo'), ('Fator Rh', 'fator_rh'),
+  ('Coombs indireto', 'coombs_indireto'), ('Glicemia jejum', 'glicemia_jejum'), ('Toxoplasmose IgM', 'toxoplasmose_igm'),
+  ('Curva tolerância glicose', 'curva_tolerancia_glicose'), ('Urina rotina', 'urina_rotina'),
+  ('Urocultura', 'urocultura'), ('HBsAg', 'hbsag'), ('Teste HIV', 'teste_hiv'),
+  ('VDRL', 'vdrl'), ('Ultrassom', 'ultrassom'), ('Outros exames', 'outros_exames')
+] %}
+{% for nome, key in exames_m1 %}
+<tr>
+  <td style="font-weight:600;">{{ nome }}</td>
+  <td><span class="box">{{ 'X' if c.get('Exame M - ' ~ key ~ ' - 1tri') else '' }}</span></td>
+  <td><span class="box">{{ 'X' if c.get('Exame M - ' ~ key ~ ' - 2tri') else '' }}</span></td>
+  <td><span class="box">{{ 'X' if c.get('Exame M - ' ~ key ~ ' - 3tri') else '' }}</span></td>
+  <td>{{ c.get('Exame M - ' ~ key ~ ' - resultado', '') }}</td>
+</tr>
+{% endfor %}
+</tbody>
+</table>
+</div>
+
+<div class="section">
+<div class="form-grid">
+<div class="row row-full"><span class="label">25. Observações do pré-natal:</span><span class="value">{{ c.get('Observacoes do pre-natal', '') }}</span></div>
+<div class="row"><span class="label">26. Resp. investigação PN:</span><span class="value">{{ c.get('Resp. investigacao PN - nome', '') }}</span></div>
+<div class="row"><span class="label">Profissão:</span><span class="value">{{ c.get('Resp. investigacao PN - profissao', '') }}</span></div>
+</div>
+</div>
+
+<div class="section">
+<div class="section-title">3. ASSISTÊNCIA À MULHER / CENTRO DE SAÚDE / URGÊNCIA</div>
+<div class="sub-title">Atendimentos Realizados (Campo 27)</div>
+<table class="clin-table">
+<thead>
+<tr>
+<th style="width:9%;">Data</th>
+<th style="width:11%;">Tipo</th>
+<th style="width:12%;">Local</th>
+<th style="width:5%;">Idade</th>
+<th style="width:5%;">Peso</th>
+<th style="width:35%;">Queixa/Diagnóstico</th>
+<th style="width:15%;">Exames</th>
+<th style="width:8%;">Conduta</th>
+</tr>
+</thead>
+<tbody>
+{% for i in range(1, 5) %}
+<tr>
+<td>{{ c.get('Atendimento M - data_' ~ i, '') }}</td>
+<td>{{ c.get('Atendimento M - tipo_' ~ i, '') }}</td>
+<td>{{ c.get('Atendimento M - local_' ~ i, '') }}</td>
+<td>{{ c.get('Atendimento M - idade_' ~ i, '') }}</td>
+<td>{{ c.get('Atendimento M - peso_' ~ i, '') }}</td>
+<td>{{ c.get('Atendimento M - queixa_' ~ i, '') }}</td>
+<td>{{ c.get('Atendimento M - exames_' ~ i, '') }}</td>
+<td>{{ c.get('Atendimento M - conduta_' ~ i, '') }}</td>
+</tr>
+{% endfor %}
+</tbody>
+</table>
+</div>
+
+<div class="section" style="page-break-inside:auto;">
+<div class="form-grid">
+<div class="row row-full"><span class="label">28. Causa do óbito no prontuário:</span><span class="value">{{ c.get('Causa do obito no prontuario', '') }}</span></div>
+<div class="row row-full"><span class="label">29. Observações gerais:</span><span class="value">{{ c.get('Observacoes gerais', '') }}</span></div>
+<div class="row row-full"><span class="label">30. O que aconteceu (investigador):</span><span class="value">{{ c.get('O que aconteceu (investigador)', '') }}</span></div>
+<div class="row"><span class="label">31. Data de encerramento:</span><span class="value">{{ c.get('Data de encerramento', '') }}</span></div>
+</div>
+
+<div class="sig-block">
+<div class="form-grid">
+<div class="row row-full"><span class="label">32. Resp. investigação - nome:</span><span class="value">{{ c.get('Resp. investigacao geral - nome', inv.responsavel or '') }}</span></div>
+<div class="row row-full"><span class="label">Carimbo/rubrica:</span><span class="value">{{ c.get('Resp. investigacao geral - carimbo', '') }}</span></div>
+</div>
+</div>
+</div>
+
+<div class="footer">
+<p>Ficha gerada em {{ now.strftime('%d/%m/%Y às %H:%M') if now else '' }} — Sistema de Informações de Óbito — Prefeitura de Goianira</p>
+</div>
+
+</body>
+</html>

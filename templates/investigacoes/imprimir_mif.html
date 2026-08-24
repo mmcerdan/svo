@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>MIF - Ficha de Investigação de Óbito Materno</title>
+<style>
+@page { margin: 15mm 12mm 18mm; size: A4 portrait; }
+body { font-family: Helvetica, Arial, sans-serif; font-size: 9pt; color: #222; line-height: 1.35; margin: 0; padding: 0; }
+
+.header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 6px; margin-bottom: 10px; border-bottom: 2px solid #1a5276; }
+.header-left, .header-right { display: flex; align-items: center; gap: 8px; }
+.header-logo { max-height: 48px; max-width: 130px; }
+.header-text { font-size: 7.5pt; color: #222; line-height: 1.2; }
+.header-text strong { font-size: 8.5pt; color: #1a5276; }
+
+.section { margin-bottom: 10px; page-break-inside: avoid; }
+.section-title { background: #1a5276; color: #fff; padding: 2px 7px; font-size: 9.5pt; font-weight: 600; margin-bottom: 5px; border-radius: 2px; }
+
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1px 10px; }
+.row-full { grid-column: 1 / -1; }
+.row { display: flex; align-items: baseline; border-bottom: 1px solid #ccc; padding: 2px 3px; }
+.row .label { color: #555; font-weight: 600; min-width: 140px; flex-shrink: 0; font-size: 7.5pt; }
+.row .value { flex: 1; color: #000; padding-left: 3px; word-break: break-word; white-space: pre-wrap; }
+
+.sub-title { font-size: 7.5pt; font-weight: 600; color: #1a5276; padding: 2px 3px; border-bottom: 1px solid #1a5276; margin: 6px 0 2px; }
+
+.check-row { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 16px; border-bottom: 1px solid #ccc; padding: 3px 3px; }
+.check-row .ck-item { display: inline-flex; align-items: center; gap: 3px; font-size: 7.5pt; color: #333; line-height: 1.2; }
+.check-row .ck-item .box { width: 13px; height: 13px; border: 1.5px solid #555; display: inline-flex; align-items: center; justify-content: center; font-size: 9pt; font-weight: bold; color: #000; flex-shrink: 0; }
+
+.resumo-box { border: 1px solid #ccc; border-radius: 2px; padding: 4px 6px; min-height: 80px; word-break: break-word; white-space: pre-wrap; line-height: 1.4; font-size: 8pt; }
+
+.footer { text-align: center; font-size: 7pt; color: #999; margin-top: 12px; border-top: 1px solid #ddd; padding-top: 5px; }
+
+@media print { .no-print { display: none; } }
+</style>
+</head>
+<body>
+
+<div class="no-print" style="text-align:center;margin-bottom:8px;">
+<button onclick="window.print()" style="padding:5px 18px;font-size:13px;cursor:pointer;background:#1a5276;color:#fff;border:none;border-radius:4px;margin-right:4px;">Imprimir</button>
+<button onclick="window.close()" style="padding:5px 18px;font-size:13px;cursor:pointer;background:#6c757d;color:#fff;border:none;border-radius:4px;">Fechar</button>
+</div>
+
+<div class="header">
+<div class="header-left">
+<img src="{{ url_for('static', filename='logo-ms.png') }}" alt="MS" class="header-logo" onerror="this.style.display='none'">
+<div class="header-text">
+<strong>MINISTÉRIO DA SAÚDE</strong><br>
+Secretaria de Vigilância em Saúde<br>
+Departamento de Análise de Situação de Saúde
+</div>
+</div>
+<div class="header-right">
+<div class="header-text" style="text-align:right;">
+<strong>FUNDO MUNICIPAL DE SAÚDE DE GOIANIRA</strong><br>
+Secretaria Municipal de Saúde<br>
+Sistema de Informações de Óbito
+</div>
+<img src="{{ url_for('static', filename='logo.png') }}" alt="Goianira" class="header-logo" onerror="this.style.display='none'">
+</div>
+</div>
+
+<div class="section">
+<div class="section-title">IDENTIFICAÇÃO DO CASO</div>
+<div class="form-grid">
+<div class="row row-full"><span class="label">Nº do Caso:</span><span class="value">{{ inv.id }} &mdash; {{ c.get('Nome da falecida', inv.obito.nome or '') }}</span></div>
+<div class="row"><span class="label">Responsável:</span><span class="value">{{ inv.responsavel or '' }}</span></div>
+<div class="row"><span class="label">Status:</span><span class="value">{{ inv.status_display() }}</span></div>
+</div>
+</div>
+
+<div class="section">
+<div class="section-title">1. IDENTIFICAÇÃO DA FALECIDA</div>
+<div class="form-grid">
+<div class="row row-full"><span class="label">1. Nome da falecida:</span><span class="value">{{ c.get('Nome da falecida', inv.obito.nome or '') }}</span></div>
+<div class="row"><span class="label">2. Nº da DO:</span><span class="value">{{ c.get('N\u00ba da DO', inv.obito.numero_dob or '') }}</span></div>
+<div class="row"><span class="label">3. Data do óbito:</span><span class="value">{{ inv.obito.data_obito.strftime('%d/%m/%Y') if inv.obito.data_obito else '' }}</span></div>
+<div class="row row-full"><span class="label">Endereço (rua/av):</span><span class="value">{{ c.get('Endereco', '') }}</span></div>
+<div class="row"><span class="label">Número:</span><span class="value">{{ c.get('Numero', '') }}</span></div>
+<div class="row"><span class="label">Complemento:</span><span class="value">{{ c.get('Complemento', '') }}</span></div>
+<div class="row"><span class="label">Bairro:</span><span class="value">{{ c.get('Bairro', '') }}</span></div>
+<div class="row"><span class="label">Distrito/Povoado:</span><span class="value">{{ c.get('Distrito/Povoado', '') }}</span></div>
+<div class="row"><span class="label">Município de residência:</span><span class="value">{{ c.get('Municipio de residencia', '') }}</span></div>
+<div class="row"><span class="label">UF residência:</span><span class="value">{{ c.get('UF residencia', '') }}</span></div>
+<div class="row row-full">
+<span class="label">Zona:</span>
+<span class="value">
+<span class="ck-item"><span class="box">{{ 'X' if c.get('Zona: Urbana') else '' }}</span> Urbana</span>
+<span class="ck-item"><span class="box">{{ 'X' if c.get('Zona: Rural') else '' }}</span> Rural</span>
+</span>
+</div>
+<div class="row"><span class="label">6. Cartão SUS:</span><span class="value">{{ c.get('Cartao SUS', '') }}</span></div>
+<div class="row"><span class="label">7. Equipe/PACS/PSF:</span><span class="value">{{ c.get('Equipe/PACS/PSF', '') }}</span></div>
+<div class="row"><span class="label">8. Centro Saúde/UBS:</span><span class="value">{{ c.get('Centro Sa\u00fade/UBS', '') }}</span></div>
+<div class="row"><span class="label">9. Distrito Sanitário:</span><span class="value">{{ c.get('Distrito Sanit\u00e1rio', '') }}</span></div>
+</div>
+</div>
+
+<div class="section">
+<div class="section-title">2. OCORRÊNCIA</div>
+<div class="form-grid">
+<div class="row row-full"><span class="label">10. Local de ocorrência do óbito:</span><span class="value">{{ c.get('Local de ocorrencia', '') }}</span></div>
+<div class="row row-full"><span class="label">11. Nome do estabelecimento:</span><span class="value">{{ c.get('Nome estabelecimento', '') }}</span></div>
+<div class="row"><span class="label">Código CNES:</span><span class="value">{{ c.get('Codigo CNES', '') }}</span></div>
+<div class="row"><span class="label">Município ocorrência:</span><span class="value">{{ c.get('Municipio ocorrencia', '') }}</span></div>
+<div class="row"><span class="label">UF ocorrência:</span><span class="value">{{ c.get('UF ocorrencia', '') }}</span></div>
+</div>
+</div>
+
+<div class="section">
+<div class="section-title">3. IDENTIFICAÇÃO DE ÓBITO MATERNO</div>
+<div class="check-row">
+<span style="font-weight:600;color:#555;font-size:7.5pt;min-width:200px;">12. Estava grávida no momento do óbito?</span>
+<span class="ck-item"><span class="box">{{ 'X' if c.get('Gr\u00e1vida no momento do \u00f3bito? (Sim)') else '' }}</span> Sim</span>
+<span class="ck-item"><span class="box">{{ 'X' if c.get('Gr\u00e1vida no momento do \u00f3bito? (N\u00e3o)') else '' }}</span> Não</span>
+<span class="ck-item"><span class="box">{{ 'X' if c.get('Gr\u00e1vida no momento do \u00f3bito? (N\u00e3o sabe)') else '' }}</span> Não sabe</span>
+</div>
+<div class="check-row">
+<span style="font-weight:600;color:#555;font-size:7.5pt;min-width:200px;">13. Esteve grávida nos 12 meses anteriores?</span>
+<span class="ck-item"><span class="box">{{ 'X' if c.get('Esteve gr\u00e1vida nos 12 meses? (Sim)') else '' }}</span> Sim</span>
+<span class="ck-item"><span class="box">{{ 'X' if c.get('Esteve gr\u00e1vida nos 12 meses? (N\u00e3o)') else '' }}</span> Não</span>
+<span class="ck-item"><span class="box">{{ 'X' if c.get('Esteve gr\u00e1vida nos 12 meses? (N\u00e3o sabe)') else '' }}</span> Não sabe</span>
+</div>
+</div>
+
+<div class="section">
+<div class="section-title">4. CONCLUSÃO E ENCERRAMENTO</div>
+<div class="form-grid">
+<div class="row-full" style="margin-bottom:4px;">
+<span class="label" style="display:block;color:#555;font-weight:600;font-size:7.5pt;margin-bottom:2px;">14. Resumo do caso / justificativa:</span>
+<div class="resumo-box">{{ c.get('Resumo do caso / justificativa', '') }}</div>
+</div>
+<div class="row"><span class="label">15. Data da investigação:</span><span class="value">{{ c.get('Data da investigacao', '') }}</span></div>
+<div class="row row-full"><span class="label">16. Responsável - nome:</span><span class="value">{{ c.get('Responsavel investigacao - nome', inv.responsavel or '') }}</span></div>
+<div class="row row-full"><span class="label">Carimbo/rubrica:</span><span class="value">{{ c.get('Responsavel investigacao - carimbo/rubrica', '') }}</span></div>
+</div>
+</div>
+
+<div class="footer">
+<p>Ficha gerada em {{ now.strftime('%d/%m/%Y às %H:%M') if now else '' }} — Sistema de Informações de Óbito — Prefeitura de Goianira</p>
+</div>
+
+</body>
+</html>

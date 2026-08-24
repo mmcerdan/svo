@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block login_content %}
+<div class="login-page">
+    <div class="login-card">
+        <div class="logo-area">
+            <img src="{{ url_for('static', filename='logo.png') }}" alt="Goianira"
+                 onerror="this.style.display='none'">
+            <h4 style="color: #1a5276; font-weight: 600;">Sistema de Óbito</h4>
+            <p style="color: #888; font-size: 13px;">Prefeitura de Goianira</p>
+        </div>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        {% for category, message in messages %}
+        <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
+        <form method="POST">
+            {{ form.hidden_tag() }}
+            <div class="mb-3">
+                <label class="form-label">Usuário</label>
+                {{ form.usuario(class="form-control", placeholder="Digite seu usuário") }}
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Senha</label>
+                {{ form.senha(class="form-control", placeholder="Digite sua senha") }}
+            </div>
+            <button type="submit" class="btn btn-primary w-100 py-2">Entrar</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

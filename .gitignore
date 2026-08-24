@@ -1,0 +1,28 @@
+'EOF'
+# Python
+__pycache__/
+*.py[cod]
+*.so
+.env
+venv/
+env/
+*.db
+instance/
+
+# Logs
+logs/
+*.log
+
+# Uploads
+uploads/
+backups/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# OS
+Thumbs.db
+.DS_Store
+EOF
