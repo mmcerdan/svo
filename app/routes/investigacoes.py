@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, redirect, url_for, flash, jsonify, send_from_directory
+from flask import Blueprint, render_template, request, redirect, url_for, flash, jsonify, send_from_directory, current_app
 from flask_login import login_required, current_user
 from app.extensions import db
 from app.models import Investigacao, InvestigacaoCampo, Anexo, Obito
@@ -27,8 +27,8 @@ def lista():
     investigacoes = InvestigacaoService.listar(tipo=tipo, status=status, busca=busca, page=page)
     return render_template('investigacoes/lista.html', investigacoes=investigacoes,
                            tipo=tipo, status=status, busca=busca,
-                           tipos_inv=Investigacao.__dict__.get('TIPOS_INVESTIGACAO', []),
-                           status_inv=Investigacao.__dict__.get('STATUS_INVESTIGACAO', []))
+                           tipos_inv=TIPOS_INVESTIGACAO,
+                           status_inv=STATUS_INVESTIGACAO)
 
 @bp.route('/<int:obito_id>/nova', methods=['GET', 'POST'])
 @login_required
@@ -220,7 +220,7 @@ def anexar_arquivo(id):
     
     from app.utils.audit import audit_log
     audit_log(current_user, 'UPLOAD', 'Anexo', anexo.id,
-              None, {'nome': anexo.nome_original, 'tipo': ext}, request)
+              None, {'nome': anexo.nome_original, 'tipo': ext})
     
     flash('Arquivo anexado com sucesso!', 'success')
     return redirect(url_for('investigacoes.detalhe', id=inv.id))
@@ -245,7 +245,7 @@ def excluir_anexo(id):
     
     from app.utils.audit import audit_log
     audit_log(current_user, 'DELETE', 'Anexo', anexo.id,
-              {'nome': anexo.nome_original}, None, request)
+              {'nome': anexo.nome_original}, None)
     
     db.session.delete(anexo)
     db.session.commit()

@@ -26,6 +26,7 @@ def sanitize_input(text: str, max_length: int = 5000) -> str:
     # Remove scripts e eventos
     text = re.sub(r'<script[^>]*>.*?</script>', '', text, flags=re.IGNORECASE | re.DOTALL)
     text = re.sub(r'on\w+\s*=\s*["\'][^"\']*["\']', '', text, flags=re.IGNORECASE)
+    text = re.sub(r'on\w+\s*=\s*\S+', '', text, flags=re.IGNORECASE)
     text = re.sub(r'javascript:', '', text, flags=re.IGNORECASE)
     return text[:max_length]
 
@@ -34,11 +35,11 @@ def sanitize_html(text: str) -> str:
     if not text:
         return ''
     return (text
-        .replace('&', '&')
-        .replace('<', '<')
-        .replace('>', '>')
-        .replace('"', '"')
-        .replace("'", ''')
+        .replace('&', '&amp;')
+        .replace('<', '&lt;')
+        .replace('>', '&gt;')
+        .replace('"', '&quot;')
+        .replace("'", '&#39;')
     )
 
 def validate_file_upload(file, allowed_extensions=None, max_size_mb=16) -> tuple[bool, str]:

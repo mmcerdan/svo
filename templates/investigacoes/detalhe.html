@@ -3,13 +3,13 @@
 <div class="page-header">
     <h2>{{ inv.tipo_display() }}</h2>
     <div>
-        <a href="{{ url_for('detalhe_obito', id=inv.obito.id) }}" class="btn btn-outline-secondary btn-sm">
+        <a href="{{ url_for('obitos.detalhe', id=inv.obito.id) }}" class="btn btn-outline-secondary btn-sm">
             <i class="bi bi-arrow-left"></i> Dados do Óbito
         </a>
-        <a href="{{ url_for('editar_investigacao', id=inv.id) }}" class="btn btn-warning btn-sm">
+        <a href="{{ url_for('investigacoes.editar', id=inv.id) }}" class="btn btn-warning btn-sm">
             <i class="bi bi-pencil"></i> Editar
         </a>
-        <a href="{{ url_for('imprimir_investigacao', id=inv.id) }}" target="_blank" class="btn btn-secondary btn-sm">
+        <a href="{{ url_for('investigacoes.imprimir', id=inv.id) }}" target="_blank" class="btn btn-secondary btn-sm">
             <i class="bi bi-printer"></i> Imprimir
         </a>
         {% if inv.status != 'CONCLUIDA' %}
@@ -24,7 +24,7 @@
 <div class="modal fade" id="modalFinalizar" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form method="POST" action="{{ url_for('finalizar_investigacao', id=inv.id) }}">
+            <form method="POST" action="{{ url_for('investigacoes.finalizar', id=inv.id) }}">
                 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                 <div class="modal-header">
                     <h5 class="modal-title">Finalizar Investigação</h5>
@@ -85,7 +85,7 @@
         <div class="card">
             <div class="card-header">Anexos</div>
             <div class="card-body">
-                <form method="POST" action="{{ url_for('anexar_arquivo', id=inv.id) }}" enctype="multipart/form-data" class="mb-3">
+                <form method="POST" action="{{ url_for('investigacoes.anexar_arquivo', id=inv.id) }}" enctype="multipart/form-data" class="mb-3">
                     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                     <div class="input-group input-group-sm">
                         <input type="file" name="arquivo" class="form-control" required accept=".pdf,.jpg,.jpeg,.png">
@@ -98,10 +98,10 @@
                 <ul class="list-group list-group-flush">
                     {% for anexo in inv.anexos %}
                     <li class="list-group-item d-flex justify-content-between align-items-center py-2">
-                        <a href="{{ url_for('download_anexo', nome_arquivo=anexo.nome_arquivo) }}" target="_blank">
+                        <a href="{{ url_for('investigacoes.download_anexo', nome_arquivo=anexo.nome_arquivo) }}" target="_blank">
                             <i class="bi bi-file-earmark-pdf"></i> {{ anexo.nome_original }}
                         </a>
-                        <form method="POST" action="{{ url_for('excluir_anexo', id=anexo.id) }}" style="display:inline">
+                        <form method="POST" action="{{ url_for('investigacoes.excluir_anexo', id=anexo.id) }}" style="display:inline">
                             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                             <button type="submit" class="btn btn-danger btn-sm"
                                     onclick="return confirm('Excluir este anexo?')">
@@ -127,7 +127,7 @@
                 </button>
             </div>
             <div class="card-body">
-                <form method="POST" action="{{ url_for('salvar_campos_investigacao', id=inv.id) }}" id="form-campos">
+                <form method="POST" action="{{ url_for('investigacoes.salvar_campos', id=inv.id) }}" id="form-campos">
                     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                     <div class="investigacao-campos">
                         {% set grupos = agrupar_campos(inv.campos) %}

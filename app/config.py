@@ -9,7 +9,7 @@ class Config:
         'pool_pre_ping': True,
         'pool_recycle': 300,
     }
-    UPLOAD_FOLDER = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'uploads')
+    UPLOAD_FOLDER = os.environ.get('UPLOAD_FOLDER') or os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'uploads')
     MAX_CONTENT_LENGTH = 16 * 1024 * 1024
     
     # Security

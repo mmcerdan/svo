@@ -2,7 +2,7 @@
 {% block content %}
 <div class="page-header">
     <h2>Óbitos</h2>
-    <a href="{{ url_for('novo_obito') }}" class="btn btn-primary">
+    <a href="{{ url_for('obitos.novo') }}" class="btn btn-primary">
         <i class="bi bi-plus-lg"></i> Novo Óbito
     </a>
 </div>
@@ -20,7 +20,7 @@
                 </button>
             </div>
             <div class="col-md-2">
-                <a href="{{ url_for('lista_obitos') }}" class="btn btn-outline-secondary w-100">Limpar</a>
+                <a href="{{ url_for('obitos.lista') }}" class="btn btn-outline-secondary w-100">Limpar</a>
             </div>
         </form>
 
@@ -52,10 +52,10 @@
                             {% endif %}
                         </td>
                         <td>
-                            <a href="{{ url_for('detalhe_obito', id=obito.id) }}" class="btn btn-info btn-sm">
+                            <a href="{{ url_for('obitos.detalhe', id=obito.id) }}" class="btn btn-info btn-sm">
                                 <i class="bi bi-eye"></i>
                             </a>
-                            <a href="{{ url_for('editar_obito', id=obito.id) }}" class="btn btn-warning btn-sm">
+                            <a href="{{ url_for('obitos.editar', id=obito.id) }}" class="btn btn-warning btn-sm">
                                 <i class="bi bi-pencil"></i>
                             </a>
                         </td>
@@ -78,7 +78,7 @@
                 {% for page_num in obitos.iter_pages() %}
                 {% if page_num %}
                 <li class="page-item {% if page_num == obitos.page %}active{% endif %}">
-                    <a class="page-link" href="{{ url_for('lista_obitos', page=page_num, busca=busca) }}">{{ page_num }}</a>
+                    <a class="page-link" href="{{ url_for('obitos.lista', page=page_num, busca=busca) }}">{{ page_num }}</a>
                 </li>
                 {% else %}
                 <li class="page-item disabled"><span class="page-link">...</span></li>

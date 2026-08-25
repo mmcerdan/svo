@@ -49,7 +49,7 @@ def novo_usuario():
         db.session.commit()
         
         audit_log(current_user, 'CREATE', 'Usuario', u.id,
-                  None, {'nome': nome, 'usuario': usuario, 'cargo': cargo}, request)
+                  None, {'nome': nome, 'usuario': usuario, 'cargo': cargo})
         
         flash('Usuário criado com sucesso!', 'success')
         return redirect(url_for('admin.lista_usuarios'))
@@ -87,7 +87,7 @@ def editar_usuario(id):
         db.session.commit()
         
         audit_log(current_user, 'UPDATE', 'Usuario', u.id,
-                  antes, {'nome': u.nome, 'cargo': u.cargo}, request)
+                  antes, {'nome': u.nome, 'cargo': u.cargo})
         
         flash('Usuário atualizado!', 'success')
         return redirect(url_for('admin.lista_usuarios'))
@@ -106,7 +106,7 @@ def ativar_usuario(id):
         
         from app.utils.audit import audit_log
         audit_log(current_user, 'TOGGLE_ATIVO', 'Usuario', u.id,
-                  antes, {'ativo': u.ativo}, request)
+                  antes, {'ativo': u.ativo})
     
     return redirect(url_for('admin.lista_usuarios'))
 

@@ -2,7 +2,7 @@
 {% block content %}
 <div class="page-header">
     <h2>Usuários</h2>
-    <a href="{{ url_for('novo_usuario') }}" class="btn btn-primary">
+    <a href="{{ url_for('admin.novo_usuario') }}" class="btn btn-primary">
         <i class="bi bi-plus-lg"></i> Novo Usuário
     </a>
 </div>
@@ -33,10 +33,10 @@
                         {% endif %}
                     </td>
                     <td>
-                        <a href="{{ url_for('editar_usuario', id=u.id) }}" class="btn btn-warning btn-sm">
+                        <a href="{{ url_for('admin.editar_usuario', id=u.id) }}" class="btn btn-warning btn-sm">
                             <i class="bi bi-pencil"></i>
                         </a>
-                        <form method="POST" action="{{ url_for('ativar_usuario', id=u.id) }}" style="display:inline">
+                        <form method="POST" action="{{ url_for('admin.ativar_usuario', id=u.id) }}" style="display:inline">
                             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                             <button type="submit" class="btn btn-{{ 'secondary' if u.ativo else 'success' }} btn-sm">
                                 <i class="bi bi-{{ 'pause' if u.ativo else 'play' }}"></i>

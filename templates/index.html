@@ -37,7 +37,7 @@
         <div class="card">
             <div class="card-header d-flex justify-content-between align-items-center">
                 Últimos Óbitos Registrados
-                <a href="{{ url_for('novo_obito') }}" class="btn btn-primary btn-sm">
+                <a href="{{ url_for('obitos.novo') }}" class="btn btn-primary btn-sm">
                     <i class="bi bi-plus-lg"></i> Novo
                 </a>
             </div>
@@ -67,11 +67,11 @@
                                 {% endif %}
                             </td>
                             <td>
-                                <a href="{{ url_for('detalhe_obito', id=obito.id) }}" class="btn btn-info btn-sm" title="Visualizar">
+                                <a href="{{ url_for('obitos.detalhe', id=obito.id) }}" class="btn btn-info btn-sm" title="Visualizar">
                                     <i class="bi bi-eye"></i>
                                 </a>
                                 {% if ultima_inv %}
-                                <a href="{{ url_for('imprimir_investigacao', id=ultima_inv.id) }}" target="_blank" class="btn btn-secondary btn-sm" title="Imprimir última investigação">
+                                <a href="{{ url_for('investigacoes.imprimir', id=ultima_inv.id) }}" target="_blank" class="btn btn-secondary btn-sm" title="Imprimir última investigação">
                                     <i class="bi bi-printer"></i>
                                 </a>
                                 {% endif %}

@@ -20,7 +20,6 @@ class TestCID10:
     ]
     
     codigos_invalidos = [
-        '',  # Vazio é válido (opcional)
         '123', 'ABC', 'I2', 'I21.', 'I21.9.1',
         'I21.9.1.1', '1A1', 'AA1', 'I21.9.1.1.1',
     ]
@@ -80,10 +79,10 @@ class TestSanitizeHtml:
     def test_escapa_html(self):
         entrada = '<b>Negrito</b> & "aspas"'
         resultado = sanitize_html(entrada)
-        assert '<b>' in resultado
-        assert '</b>' in resultado
-        assert '&' in resultado
-        assert '"' in resultado
+        assert '&lt;b&gt;' in resultado
+        assert '&lt;/b&gt;' in resultado
+        assert '&amp;' in resultado
+        assert '&quot;' in resultado
 
 class TestValidateFileUpload:
     def setup_method(self):

@@ -1,6 +1,6 @@
 from app.extensions import db
 from app.models import AuditLog
-from flask import request
+from flask import request, current_app
 import json
 from datetime import datetime
 

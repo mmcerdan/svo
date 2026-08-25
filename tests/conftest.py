@@ -5,7 +5,7 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from app import create_app
 from app.extensions import db
-from app.models import Usuario, Obito, Investigacao
+from app.models import Usuario, Obito, Investigacao, InvestigacaoCampo
 from datetime import date, datetime
 
 @pytest.fixture(scope='session')
@@ -103,17 +103,21 @@ def sample_investigacao(db_session, sample_obito, admin_user):
 @pytest.fixture
 def auth_client(client, admin_user):
     """Cliente autenticado como admin."""
+    with client.session_transaction() as sess:
+        sess['_fresh'] = True
     client.post('/auth/login', data={
         'usuario': 'admin_test',
-        'senha': 'senha123'
+        'senha': 'senha123',
     }, follow_redirects=True)
     return client
 
 @pytest.fixture
 def user_client(client, regular_user):
-    """Cliente autenticado como usuário comum."""
+    """Cliente autenticado como usuario comum."""
+    with client.session_transaction() as sess:
+        sess['_fresh'] = True
     client.post('/auth/login', data={
         'usuario': 'user_test',
-        'senha': 'senha123'
+        'senha': 'senha123',
     }, follow_redirects=True)
     return client

@@ -3,7 +3,7 @@ from app.models import Obito, Investigacao, InvestigacaoCampo, Anexo
 from app.utils.campos import get_campos_padrao_investigacao
 from app.utils.validators import ValidadorInvestigacao
 from app.utils.audit import audit_log, serialize_model
-from flask import request
+from flask import request, current_app
 from datetime import date, datetime
 from typing import Optional, List, Tuple, Dict, Any
 
@@ -54,7 +54,7 @@ class InvestigacaoService:
         db.session.commit()
         
         audit_log(usuario, 'CREATE', 'Investigacao', inv.id,
-                  None, {'tipo': tipo, 'obito_id': obito.id}, request)
+                  None, {'tipo': tipo, 'obito_id': obito.id})
         
         return inv, []
 
@@ -109,7 +109,7 @@ class InvestigacaoService:
         db.session.commit()
         
         depois = {c.nome_campo: c.valor for c in investigacao.campos}
-        audit_log(usuario, 'UPDATE', 'InvestigacaoCampo', investigacao.id, antes, depois, request)
+        audit_log(usuario, 'UPDATE', 'InvestigacaoCampo', investigacao.id, antes, depois)
         
         return []
 
@@ -132,7 +132,7 @@ class InvestigacaoService:
         db.session.commit()
         
         depois = serialize_model(investigacao)
-        audit_log(usuario, 'FINALIZAR', 'Investigacao', investigacao.id, antes, depois, request)
+        audit_log(usuario, 'FINALIZAR', 'Investigacao', investigacao.id, antes, depois)
         
         return []
 
@@ -160,7 +160,7 @@ class InvestigacaoService:
         db.session.commit()
         
         depois = serialize_model(investigacao)
-        audit_log(usuario, 'UPDATE', 'Investigacao', investigacao.id, antes, depois, request)
+        audit_log(usuario, 'UPDATE', 'Investigacao', investigacao.id, antes, depois)
         
         return []
 
@@ -168,7 +168,7 @@ class InvestigacaoService:
     def excluir(investigacao: Investigacao, usuario) -> bool:
         antes = serialize_model(investigacao)
         db.session.delete(investigacao)
-        audit_log(usuario, 'DELETE', 'Investigacao', investigacao.id, antes, None, request)
+        audit_log(usuario, 'DELETE', 'Investigacao', investigacao.id, antes, None)
         return True
 
     @staticmethod
@@ -197,7 +197,7 @@ class InvestigacaoService:
         db.session.commit()
         
         audit_log(usuario, 'UPLOAD', 'Anexo', anexo.id, 
-                  None, {'nome': anexo.nome_original, 'tipo': ext}, request)
+                  None, {'nome': anexo.nome_original, 'tipo': ext})
         
         return anexo, 'Arquivo anexado com sucesso!'
 
@@ -211,7 +211,7 @@ class InvestigacaoService:
             os.remove(caminho)
         
         audit_log(usuario, 'DELETE', 'Anexo', anexo.id, 
-                  {'nome': anexo.nome_original}, None, request)
+                  {'nome': anexo.nome_original}, None)
         
         db.session.delete(anexo)
         db.session.commit()

@@ -3,7 +3,7 @@ from app.models import Obito, Usuario
 from app.utils.validators import validar_data_obito, validar_numero_dob, validar_cid10
 from app.utils.audit import audit_log, serialize_model
 from flask import request
-from datetime import date
+from datetime import date, datetime
 from typing import Optional, Tuple, List
 from sqlalchemy import or_
 
@@ -64,7 +64,7 @@ class ObitoService:
         
         # Auditoria
         audit_log(usuario, 'CREATE', 'Obito', obito.id, 
-                  None, serialize_model(obito), request)
+                  None, serialize_model(obito))
         
         return obito, []
 
@@ -121,7 +121,7 @@ class ObitoService:
         
         # Auditoria
         depois = serialize_model(obito)
-        audit_log(usuario, 'UPDATE', 'Obito', obito.id, antes, depois, request)
+        audit_log(usuario, 'UPDATE', 'Obito', obito.id, antes, depois)
         
         return []
 
@@ -130,7 +130,7 @@ class ObitoService:
         """Exclui óbito (cascata remove investigações e anexos)."""
         antes = serialize_model(obito)
         db.session.delete(obito)
-        audit_log(usuario, 'DELETE', 'Obito', obito.id, antes, None, request)
+        audit_log(usuario, 'DELETE', 'Obito', obito.id, antes, None)
         return True
 
     @staticmethod

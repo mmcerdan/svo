@@ -2,7 +2,7 @@
 {% block content %}
 <div class="page-header">
     <h2>{{ 'Editar' if usuario else 'Novo' }} Usuário</h2>
-    <a href="{{ url_for('lista_usuarios') }}" class="btn btn-outline-secondary">
+    <a href="{{ url_for('admin.lista_usuarios') }}" class="btn btn-outline-secondary">
         <i class="bi bi-arrow-left"></i> Voltar
     </a>
 </div>
@@ -41,7 +41,7 @@
                 <button type="submit" class="btn btn-primary">
                     <i class="bi bi-check-lg"></i> Salvar
                 </button>
-                <a href="{{ url_for('lista_usuarios') }}" class="btn btn-outline-secondary">Cancelar</a>
+                <a href="{{ url_for('admin.lista_usuarios') }}" class="btn btn-outline-secondary">Cancelar</a>
             </div>
         </form>
     </div>

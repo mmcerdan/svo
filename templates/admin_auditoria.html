@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="page-header">
+    <h2>Auditoria</h2>
+    <a href="{{ url_for('admin.lista_usuarios') }}" class="btn btn-outline-secondary btn-sm">
+        <i class="bi bi-arrow-left"></i> Voltar
+    </a>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <form method="GET" class="row g-2 mb-3">
+            <div class="col-md-3">
+                <select name="acao" class="form-select form-select-sm">
+                    <option value="">Todas as ações</option>
+                    <option value="CREATE" {% if acao == 'CREATE' %}selected{% endif %}>Criação</option>
+                    <option value="UPDATE" {% if acao == 'UPDATE' %}selected{% endif %}>Atualização</option>
+                    <option value="DELETE" {% if acao == 'DELETE' %}selected{% endif %}>Exclusão</option>
+                    <option value="LOGIN" {% if acao == 'LOGIN' %}selected{% endif %}>Login</option>
+                    <option value="LOGIN_FAILED" {% if acao == 'LOGIN_FAILED' %}selected{% endif %}>Falha Login</option>
+                    <option value="UPLOAD" {% if acao == 'UPLOAD' %}selected{% endif %}>Upload</option>
+                    <option value="FINALIZAR" {% if acao == 'FINALIZAR' %}selected{% endif %}>Finalização</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <select name="entidade" class="form-select form-select-sm">
+                    <option value="">Todas as entidades</option>
+                    <option value="Obito" {% if entidade == 'Obito' %}selected{% endif %}>Óbito</option>
+                    <option value="Investigacao" {% if entidade == 'Investigacao' %}selected{% endif %}>Investigação</option>
+                    <option value="Anexo" {% if entidade == 'Anexo' %}selected{% endif %}>Anexo</option>
+                    <option value="Usuario" {% if entidade == 'Usuario' %}selected{% endif %}>Usuário</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-primary btn-sm w-100">
+                    <i class="bi bi-search"></i> Filtrar
+                </button>
+            </div>
+        </form>
+
+        <div class="table-responsive">
+            <table class="table table-hover table-sm">
+                <thead>
+                    <tr>
+                        <th>Data/Hora</th>
+                        <th>Usuário</th>
+                        <th>Ação</th>
+                        <th>Entidade</th>
+                        <th>ID</th>
+                        <th>Detalhes</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for log in logs.items %}
+                    <tr>
+                        <td><small>{{ log.criado_em.strftime('%d/%m/%Y %H:%M') if log.criado_em else '-' }}</small></td>
+                        <td>{{ log.usuario.usuario if log.usuario else 'Sistema' }}</td>
+                        <td>
+                            <span class="badge bg-{{ 'success' if log.acao == 'CREATE' else 'warning' if log.acao == 'UPDATE' else 'danger' if log.acao in ('DELETE','LOGIN_FAILED') else 'info' }}">
+                                {{ log.acao }}
+                            </span>
+                        </td>
+                        <td>{{ log.entidade or '-' }}</td>
+                        <td>{{ log.entidade_id or '-' }}</td>
+                        <td><small class="text-muted">{{ log.detalhes|truncate(100) if log.detalhes else '-' }}</small></td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="6" class="text-center text-muted py-3">Nenhum log encontrado.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        {% if logs.pages > 1 %}
+        <nav class="mt-3">
+            <ul class="pagination pagination-sm justify-content-center">
+                {% for page_num in logs.iter_pages() %}
+                {% if page_num %}
+                <li class="page-item {% if page_num == logs.page %}active{% endif %}">
+                    <a class="page-link" href="{{ url_for('admin.auditoria', page=page_num, acao=acao, entidade=entidade) }}">{{ page_num }}</a>
+                </li>
+                {% else %}
+                <li class="page-item disabled"><span class="page-link">...</span></li>
+                {% endif %}
+                {% endfor %}
+            </ul>
+        </nav>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

@@ -20,38 +20,38 @@
             </div>
             <ul class="nav flex-column">
                 <li class="nav-item">
-                    <a class="nav-link {% if request.endpoint == 'index' %}active{% endif %}" href="{{ url_for('index') }}">
+                    <a class="nav-link {% if request.endpoint == 'main.index' %}active{% endif %}" href="{{ url_for('main.index') }}">
                         <i class="bi bi-speedometer2"></i> Dashboard
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link {% if request.endpoint and request.endpoint.startswith('lista_obitos') %}active{% endif %}"
-                       href="{{ url_for('lista_obitos') }}">
+                    <a class="nav-link {% if request.endpoint and request.endpoint.startswith('obitos.') %}active{% endif %}"
+                       href="{{ url_for('obitos.lista') }}">
                         <i class="bi bi-person-fill"></i> Óbitos
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link {% if request.endpoint and request.endpoint.startswith('lista_investigacoes') %}active{% endif %}"
-                       href="{{ url_for('lista_investigacoes') }}">
+                    <a class="nav-link {% if request.endpoint and request.endpoint.startswith('investigacoes.') %}active{% endif %}"
+                       href="{{ url_for('investigacoes.lista') }}">
                         <i class="bi bi-search"></i> Investigações
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link {% if request.endpoint and request.endpoint.startswith('relatorios') %}active{% endif %}"
-                       href="{{ url_for('relatorios') }}">
+                    <a class="nav-link {% if request.endpoint and request.endpoint.startswith('relatorios.') %}active{% endif %}"
+                       href="{{ url_for('relatorios.index') }}">
                         <i class="bi bi-bar-chart-fill"></i> Relatórios
                     </a>
                 </li>
                 {% if current_user.cargo in ('Admin', 'Supervisor') %}
                 <li class="nav-item">
-                    <a class="nav-link {% if request.endpoint and request.endpoint.startswith('lista_usuarios') %}active{% endif %}"
-                       href="{{ url_for('lista_usuarios') }}">
+                    <a class="nav-link {% if request.endpoint and request.endpoint.startswith('admin.') %}active{% endif %}"
+                       href="{{ url_for('admin.lista_usuarios') }}">
                         <i class="bi bi-people-fill"></i> Usuários
                     </a>
                 </li>
                 {% endif %}
                 <li class="nav-item mt-4">
-                    <a class="nav-link" href="{{ url_for('logout') }}">
+                    <a class="nav-link" href="{{ url_for('auth.logout') }}">
                         <i class="bi bi-box-arrow-left"></i> Sair
                     </a>
                 </li>

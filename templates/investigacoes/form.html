@@ -4,11 +4,11 @@
     <h2>{{ titulo }}</h2>
     <div>
         {% if obito %}
-        <a href="{{ url_for('detalhe_obito', id=obito.id) }}" class="btn btn-outline-secondary btn-sm">
+        <a href="{{ url_for('obitos.detalhe', id=obito.id) }}" class="btn btn-outline-secondary btn-sm">
             <i class="bi bi-arrow-left"></i> Voltar ao Óbito
         </a>
         {% endif %}
-        <a href="{{ url_for('lista_investigacoes') }}" class="btn btn-outline-secondary btn-sm">
+        <a href="{{ url_for('investigacoes.lista') }}" class="btn btn-outline-secondary btn-sm">
             <i class="bi bi-list"></i> Todas
         </a>
     </div>
@@ -64,7 +64,7 @@
                 <button type="submit" class="btn btn-primary">
                     <i class="bi bi-check-lg"></i> Salvar
                 </button>
-                <a href="{{ url_for('detalhe_obito', id=obito.id) if obito else url_for('lista_investigacoes') }}"
+                <a href="{{ url_for('obitos.detalhe', id=obito.id) if obito else url_for('investigacoes.lista') }}"
                    class="btn btn-outline-secondary">Cancelar</a>
             </div>
         </form>

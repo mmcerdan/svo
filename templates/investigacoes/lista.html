@@ -59,13 +59,13 @@
                         <td>{{ inv.responsavel or '-' }}</td>
                         <td>{{ inv.data_abertura.strftime('%d/%m/%Y') if inv.data_abertura else '-' }}</td>
                         <td>
-                            <a href="{{ url_for('detalhe_investigacao', id=inv.id) }}" class="btn btn-info btn-sm">
+                            <a href="{{ url_for('investigacoes.detalhe', id=inv.id) }}" class="btn btn-info btn-sm">
                                 <i class="bi bi-eye"></i>
                             </a>
-                            <a href="{{ url_for('editar_investigacao', id=inv.id) }}" class="btn btn-warning btn-sm">
+                            <a href="{{ url_for('investigacoes.editar', id=inv.id) }}" class="btn btn-warning btn-sm">
                                 <i class="bi bi-pencil"></i>
                             </a>
-                            <a href="{{ url_for('imprimir_investigacao', id=inv.id) }}" target="_blank" class="btn btn-secondary btn-sm">
+                            <a href="{{ url_for('investigacoes.imprimir', id=inv.id) }}" target="_blank" class="btn btn-secondary btn-sm">
                                 <i class="bi bi-printer"></i>
                             </a>
                         </td>
@@ -88,7 +88,7 @@
                 {% for page_num in investigacoes.iter_pages() %}
                 {% if page_num %}
                 <li class="page-item {% if page_num == investigacoes.page %}active{% endif %}">
-                    <a class="page-link" href="{{ url_for('lista_investigacoes', page=page_num, tipo=tipo, status=status, busca=busca) }}">{{ page_num }}</a>
+                    <a class="page-link" href="{{ url_for('investigacoes.lista', page=page_num, tipo=tipo, status=status, busca=busca) }}">{{ page_num }}</a>
                 </li>
                 {% else %}
                 <li class="page-item disabled"><span class="page-link">...</span></li>

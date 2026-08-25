@@ -1,3 +1,4 @@
+from datetime import datetime
 from flask import Blueprint, render_template
 from flask_login import login_required, current_user
 from app.models import Obito, Investigacao
@@ -25,9 +26,6 @@ def index():
                            pendentes=pendentes, concluidas=concluidas,
                            ultimos_obitos=ultimos_obitos, inv_tipos=inv_tipos)
 
-# Health check endpoint
 @bp.route('/health')
 def health():
     return {'status': 'ok', 'timestamp': datetime.utcnow().isoformat()}, 200
-
-from datetime import datetime
