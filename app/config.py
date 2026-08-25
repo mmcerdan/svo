@@ -38,7 +38,7 @@ class DevelopmentConfig(Config):
 class ProductionConfig(Config):
     DEBUG = False
     FLASK_ENV = 'production'
-    SESSION_COOKIE_SECURE = True
+    SESSION_COOKIE_SECURE = False
 
 class TestingConfig(Config):
     TESTING = True
