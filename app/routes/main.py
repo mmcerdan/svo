@@ -1,8 +1,9 @@
 from datetime import datetime
-from flask import Blueprint, render_template
+from flask import Blueprint, render_template, send_from_directory, current_app
 from flask_login import login_required, current_user
 from app.models import Obito, Investigacao
 from app.services.relatorio_service import RelatorioService
+import os
 
 bp = Blueprint('main', __name__)
 
@@ -29,3 +30,11 @@ def index():
 @bp.route('/health')
 def health():
     return {'status': 'ok', 'timestamp': datetime.utcnow().isoformat()}, 200
+
+@bp.route('/favicon.ico')
+def favicon():
+    return send_from_directory(
+        os.path.join(current_app.root_path, '..', 'static'),
+        'favicon.ico',
+        mimetype='image/x-icon'
+    )
