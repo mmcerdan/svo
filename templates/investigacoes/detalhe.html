@@ -12,6 +12,9 @@
         <a href="{{ url_for('investigacoes.imprimir', id=inv.id) }}" target="_blank" class="btn btn-secondary btn-sm">
             <i class="bi bi-printer"></i> Imprimir
         </a>
+        <a href="{{ url_for('investigacoes.pdf', id=inv.id) }}" target="_blank" class="btn btn-danger btn-sm">
+            <i class="bi bi-file-earmark-pdf"></i> PDF
+        </a>
         {% if inv.status != 'CONCLUIDA' %}
         <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#modalFinalizar">
             <i class="bi bi-check2-square"></i> Finalizar

@@ -126,6 +126,29 @@ def imprimir(id):
     tmpl = template_map.get(inv.tipo, 'investigacoes/imprimir.html')
     return render_template(tmpl, inv=inv, c=campos_dict, now=datetime.now())
 
+@bp.route('/<int:id>/pdf')
+@login_required
+def pdf(id):
+    from flask import make_response
+    from app.utils.pdf import gerar_pdf_investigacao
+    
+    inv = db.session.get(Investigacao, id)
+    if not inv:
+        flash('Investigação não encontrada.', 'danger')
+        return redirect(url_for('investigacoes.lista'))
+    
+    try:
+        pdf_bytes = gerar_pdf_investigacao(inv)
+        
+        response = make_response(pdf_bytes)
+        response.headers['Content-Type'] = 'application/pdf'
+        response.headers['Content-Disposition'] = f'inline; filename=investigacao_{inv.id}_{inv.tipo}.pdf'
+        return response
+    except Exception as e:
+        current_app.logger.error(f'Erro ao gerar PDF: {e}')
+        flash(f'Erro ao gerar PDF: {str(e)}', 'danger')
+        return redirect(url_for('investigacoes.detalhe', id=inv.id))
+
 @bp.route('/<int:id>/editar', methods=['GET', 'POST'])
 @login_required
 def editar(id):
