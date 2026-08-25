@@ -1,6 +1,5 @@
-from flask import render_template, current_app
+from flask import render_template, current_app, url_for
 from weasyprint import HTML
-from io import BytesIO
 from datetime import datetime
 from app.models import Investigacao
 from app.services.investigacao_service import InvestigacaoService
@@ -20,7 +19,8 @@ def gerar_pdf_investigacao(investigacao: Investigacao) -> bytes:
     campos_dict = InvestigacaoService.obter_para_impressao(investigacao)
     tmpl = TEMPLATE_MAP.get(investigacao.tipo, 'investigacoes/imprimir.html')
 
-    with current_app.app_context():
+    app = current_app._get_current_object()
+    with app.test_request_context():
         html_string = render_template(
             tmpl,
             inv=investigacao,
@@ -29,7 +29,7 @@ def gerar_pdf_investigacao(investigacao: Investigacao) -> bytes:
             pdf_mode=True,
         )
 
-    base_url = current_app.static_url_path or '/static'
-    pdf_bytes = HTML(string=html_string, base_url=current_app.root_path + '/..').write_pdf()
+    base_url = app.root_path + '/..'
+    pdf_bytes = HTML(string=html_string, base_url=base_url).write_pdf()
 
     return pdf_bytes
