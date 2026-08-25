@@ -127,6 +127,11 @@
                 </button>
             </div>
             <div class="card-body">
+                {% set campos_auto = ['Nome da falecida', 'Nome do falecido', 'Nome da criança', 'Nome da mãe', 'Nº da DO', 'Data do óbito', 'Data de nascimento', 'Endereço', 'Município ocorrência', 'Causa básica original', 'Causa do óbito no prontuário'] %}
+                <div class="alert alert-light small mb-3">
+                    <i class="bi bi-info-circle text-success"></i>
+                    Campos com <span class="badge bg-success" style="font-size:10px">auto</span> foram preenchidos automaticamente a partir do óbito vinculado.
+                </div>
                 <form method="POST" action="{{ url_for('investigacoes.salvar_campos', id=inv.id) }}" id="form-campos">
                     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                     <div class="investigacao-campos">
@@ -149,7 +154,7 @@
                         </div>
                         {% else %}
                         <div class="campo-item">
-                            <label>{{ grupo.campo.nome_campo }}</label>
+                            <label>{{ grupo.campo.nome_campo }}{% if grupo.campo.nome_campo in campos_auto %} <span class="badge bg-success" style="font-size:10px">auto</span>{% endif %}</label>
                             <textarea name="campo_{{ grupo.campo.id }}" class="form-control" rows="2">{{ grupo.campo.valor or '' }}</textarea>
                         </div>
                         {% endif %}

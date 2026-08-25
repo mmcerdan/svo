@@ -59,10 +59,15 @@ def nova(obito_id):
         db.session.add(inv)
         db.session.flush()
         
-        # Cria campos padrão
+        # Cria campos padrão preenchidos do obito
         campos_padrao = get_campos_padrao_investigacao(inv.tipo)
+        valores = InvestigacaoService._preencher_de_obito(campos_padrao, obito)
         for nome_campo in campos_padrao:
-            campo = InvestigacaoCampo(investigacao_id=inv.id, nome_campo=nome_campo, valor='')
+            campo = InvestigacaoCampo(
+                investigacao_id=inv.id, 
+                nome_campo=nome_campo, 
+                valor=valores.get(nome_campo, '')
+            )
             db.session.add(campo)
         
         db.session.commit()

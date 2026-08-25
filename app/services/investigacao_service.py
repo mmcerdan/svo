@@ -8,6 +8,42 @@ from datetime import date, datetime
 from typing import Optional, List, Tuple, Dict, Any
 
 class InvestigacaoService:
+    # Mapeamento: nome_campo_na_investigacao -> campo_no_obito
+    CAMPOS_OBITO_MAP = {
+        'Nome da falecida': 'nome',
+        'Nome do falecido': 'nome',
+        'Nome da criança': 'nome',
+        'Nome da mãe': 'nome_mae',
+        'Nome da mãe': 'nome_mae',
+        'Nº da DO': 'numero_dob',
+        'Data do óbito': 'data_obito',
+        'Data de nascimento': 'data_nascimento',
+        'Endereço': 'endereco',
+        'Município ocorrência': 'municipio_ocorrencia',
+        'Causa básica original': 'causa_morte',
+        'Causa do óbito no prontuário': 'causa_morte',
+    }
+
+    @staticmethod
+    def _preencher_de_obito(campos_padrao, obito):
+        """Retorna dict {nome_campo: valor} preenchido a partir do obito."""
+        dados = {}
+        mapa = InvestigacaoService.CAMPOS_OBITO_MAP
+        for nome_campo in campos_padrao:
+            coluna = mapa.get(nome_campo)
+            if coluna and hasattr(obito, coluna):
+                val = getattr(obito, coluna)
+                if val is not None:
+                    if isinstance(val, (date, datetime)):
+                        dados[nome_campo] = val.strftime('%d/%m/%Y') if nome_campo.startswith('Data') else str(val)
+                    else:
+                        dados[nome_campo] = str(val)
+                else:
+                    dados[nome_campo] = ''
+            else:
+                dados[nome_campo] = ''
+        return dados
+
     @staticmethod
     def criar(usuario, obito: Obito, tipo: str, dados_campos: dict = None) -> Tuple[Investigacao, List[str]]:
         """Cria nova investigação com campos padrão."""
@@ -26,15 +62,17 @@ class InvestigacaoService:
         db.session.add(inv)
         db.session.flush()
         
-        # Cria campos padrão
+        # Cria campos padrão preenchidos do obito
         campos_padrao = get_campos_padrao_investigacao(tipo)
+        valores_iniciais = InvestigacaoService._preencher_de_obito(campos_padrao, obito)
+        
         for nome_campo in campos_padrao:
-            valor = ''
+            valor = valores_iniciais.get(nome_campo, '')
+            # Sobrescreve com valor do form se fornecido
             if dados_campos:
-                valor = dados_campos.get(f'inv_{nome_campo}', '')
-                # Checkbox: se presente no form = 'X'
-                if valor and valor != 'X':
-                    valor = 'X'
+                form_val = dados_campos.get(f'inv_{nome_campo}', '')
+                if form_val:
+                    valor = form_val
             campo = InvestigacaoCampo(
                 investigacao_id=inv.id,
                 nome_campo=nome_campo,
@@ -42,7 +80,7 @@ class InvestigacaoService:
             )
             db.session.add(campo)
         
-        # Preenche campos do form se fornecidos
+        # Atualiza campos do form se fornecidos (override final)
         if dados_campos:
             for key, value in dados_campos.items():
                 if key.startswith('inv_'):

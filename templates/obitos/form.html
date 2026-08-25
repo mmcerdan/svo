@@ -104,6 +104,49 @@
 </style>
 
 <script>
+const OBITO_CAMPO_MAP = {
+    'Nome da falecida': 'nome',
+    'Nome do falecido': 'nome',
+    'Nome da criança': 'nome',
+    'Nome da mãe': 'nome_mae',
+    'Nº da DO': 'numero_dob',
+    'Data do óbito': 'data_obito',
+    'Data de nascimento': 'data_nascimento',
+    'Endereço': 'endereco',
+    'Município ocorrência': 'municipio_ocorrencia',
+    'Causa básica original': 'causa_morte',
+    'Causa do óbito no prontuário': 'causa_morte',
+};
+
+function formatarDataParaInvestigacao(val) {
+    if (!val) return '';
+    const parts = val.split('-');
+    if (parts.length === 3) return parts[2] + '/' + parts[1] + '/' + parts[0];
+    return val;
+}
+
+function preencherCampoInvestigacao(campoNome, valor) {
+    const el = document.getElementById('inv_' + campoNome);
+    if (el) {
+        el.value = valor;
+        el.style.borderLeft = '3px solid #27ae60';
+        el.title = 'Auto-preenchido do óbito';
+    }
+}
+
+function autoPreencherInvestigacao() {
+    const mapa = OBITO_CAMPO_MAP;
+    for (const [campoInv, campoObito] of Object.entries(mapa)) {
+        const elObito = document.getElementById(campoObito);
+        if (!elObito) continue;
+        let valor = elObito.value || '';
+        if ((campoInv.includes('Data do') || campoInv.includes('Data de nascimento')) && valor) {
+            valor = formatarDataParaInvestigacao(valor);
+        }
+        preencherCampoInvestigacao(campoInv, valor);
+    }
+}
+
 function carregarCamposInvestigacao() {
     const tipo = document.getElementById('tipo-investigacao').value;
     const container = document.getElementById('campos-investigacao-container');
@@ -129,23 +172,26 @@ function carregarCamposInvestigacao() {
                     item.campos.forEach(function(campo) {
                         const opcao = extrairOpcao(campo.nome);
                         const name = 'inv_' + campo.nome;
+                        const isAuto = OBITO_CAMPO_MAP.hasOwnProperty(campo.nome);
                         html += '<div class="checkbox-wrapper">';
                         html += '<input type="checkbox" name="' + esc(name) + '" value="X" id="' + esc(name) + '">';
-                        html += '<label for="' + esc(name) + '">' + esc(opcao) + '</label>';
+                        html += '<label for="' + esc(name) + '">' + esc(opcao) + (isAuto ? ' <span class="badge bg-success" style="font-size:10px">auto</span>' : '') + '</label>';
                         html += '</div>';
                     });
                     html += '</div></div>';
                 } else {
                     const campo = item.campo;
                     const name = 'inv_' + campo.nome;
+                    const isAuto = OBITO_CAMPO_MAP.hasOwnProperty(campo.nome);
                     html += '<div class="campo-inv-item">';
-                    html += '<label for="' + esc(name) + '">' + esc(campo.nome) + '</label>';
+                    html += '<label for="' + esc(name) + '">' + esc(campo.nome) + (isAuto ? ' <span class="badge bg-success" style="font-size:10px">auto-preenchido</span>' : '') + '</label>';
                     html += '<textarea name="' + esc(name) + '" id="' + esc(name) + '" class="form-control" rows="2"></textarea>';
                     html += '</div>';
                 }
             });
             html += '</div>';
             divCampos.innerHTML = html;
+            autoPreencherInvestigacao();
         })
         .catch(function(err) {
             divCampos.innerHTML = '<p class="text-danger text-center mb-0 py-3">Erro ao carregar campos.</p>';
@@ -165,5 +211,16 @@ function extrairOpcao(nome) {
     }
     return nome;
 }
+
+document.addEventListener('DOMContentLoaded', function() {
+    const camposAuto = Object.values(OBITO_CAMPO_MAP);
+    camposAuto.forEach(function(campoId) {
+        const el = document.getElementById(campoId);
+        if (el) {
+            el.addEventListener('input', autoPreencherInvestigacao);
+            el.addEventListener('change', autoPreencherInvestigacao);
+        }
+    });
+});
 </script>
 {% endblock %}
