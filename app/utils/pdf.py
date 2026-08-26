@@ -22,7 +22,8 @@ def _logo_data_uri(filename):
     if filename in _LOGO_CACHE:
         return _LOGO_CACHE[filename]
     app = current_app._get_current_object()
-    path = os.path.join(app.root_path, 'static', filename)
+    static_dir = os.path.join(app.root_path, '..', 'static')
+    path = os.path.join(static_dir, filename)
     if not os.path.isfile(path):
         _LOGO_CACHE[filename] = ''
         return ''

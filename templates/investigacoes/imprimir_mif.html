@@ -21,47 +21,67 @@ body {
     background: #fff;
 }
 
-/* ============ CABEÇALHO ============ */
-.cabecalho { width: 100%; border-collapse: collapse; margin-bottom: 4pt; }
-.cabecalho td { border: none; padding: 2pt 3pt; vertical-align: top; }
-.cabecalho .bloco-esq { width: 42%; }
-.cabecalho .bloco-centro { width: 34%; text-align: center; vertical-align: middle; }
-.cabecalho .bloco-dir { width: 24%; }
+/* ============ CABEÇALHO (2 linhas, 3 blocos) ============ */
+.cabecalho { width: 100%; border-collapse: collapse; margin-bottom: 6pt; }
+.cabecalho td { padding: 2pt 3pt; vertical-align: middle; }
 
-.cabecalho .logo-img { height: 50px; width: auto; }
-.cabecalho .logo-img-small { height: 38px; width: auto; }
+/* Linha 1 */
+.cabecalho .c-esq { width: 35%; vertical-align: top; border: none; }
+.cabecalho .c-centro { width: 45%; vertical-align: top; text-align: center; border: none; }
+.cabecalho .c-dir { width: 20%; vertical-align: top; border: none; }
 
-.cabecalho .ms-text { font-size: 7pt; line-height: 1.25; color: #000; }
-.cabecalho .ms-text b { font-size: 8.5pt; display: block; margin-bottom: 1pt; }
-.cabecalho .ms-text span { display: block; }
+/* Logos */
+.cabecalho .logo-img { height: 55px; width: auto; display: block; }
+.cabecalho .logo-img-centro { height: 45px; width: auto; display: inline-block; margin-bottom: 2pt; }
 
-.cabecalho .centro-titulo { font-size: 9pt; font-weight: bold; color: #000; line-height: 1.3; margin-bottom: 3pt; }
-.cabecalho .centro-sub { font-size: 7.5pt; color: #333; line-height: 1.2; }
+/* Texto MS (esquerda) */
+.cabecalho .ms-texto { font-size: 7pt; line-height: 1.2; color: #000; }
+.cabecalho .ms-texto b { font-size: 8pt; display: block; margin-bottom: 1pt; }
+.cabecalho .ms-texto span { display: block; }
 
+/* Texto Município (centro) */
+.cabecalho .mun-texto { font-size: 7pt; line-height: 1.2; color: #000; }
+.cabecalho .mun-texto b { font-size: 8pt; display: block; margin-bottom: 1pt; }
+.cabecalho .mun-texto span { display: block; }
+
+/* Quadro MIF (direita) */
 .cabecalho .mif-box {
     border: 1.5pt solid #000;
     padding: 3pt 4pt;
     text-align: center;
     width: 100%;
 }
-.cabecalho .mif-box .num-caso-label {
+.cabecalho .mif-box .mif-label {
     font-size: 7pt;
     font-weight: bold;
     color: #000;
-    margin-bottom: 2pt;
 }
-.cabecalho .mif-box .num-caso-linha {
+.cabecalho .mif-box .mif-linha {
     border-bottom: 0.5pt solid #000;
-    height: 12pt;
+    height: 11pt;
     margin: 2pt 0;
-    width: 100%;
 }
 .cabecalho .mif-box .mif-sigla {
-    font-size: 22pt;
+    font-size: 20pt;
     font-weight: bold;
     color: #000;
-    letter-spacing: 3pt;
-    margin-top: 2pt;
+    letter-spacing: 2pt;
+}
+
+/* Linha 2 - Título */
+.cabecalho .titulo-row td {
+    border: none;
+    text-align: center;
+    padding: 3pt 0 0 0;
+}
+.cabecalho .titulo-doc {
+    font-size: 9.5pt;
+    font-weight: bold;
+    color: #000;
+    line-height: 1.3;
+    border-top: 1pt solid #000;
+    border-bottom: 1pt solid #000;
+    padding: 3pt 0;
 }
 
 /* ============ TABELA MESTRA DO FORMULÁRIO ============ */
@@ -175,39 +195,45 @@ body {
     <button onclick="window.close()" style="padding:6px 16px;font-size:11px;background:#6c757d;color:#fff;border:none;border-radius:3px;cursor:pointer;">Fechar</button>
 </div>
 
-<!-- ============ CABEÇALHO: 3 BLOCOS ============ -->
+<!-- ============ CABEÇALHO ============ -->
 <table class="cabecalho">
+<!-- LINHA 1: Logos + Instituições + MIF -->
 <tr>
-    <!-- BLOCO ESQUERDO: Logo MS + Textos -->
-    <td class="bloco-esq">
+    <!-- ESQUERDA: Logo MS + Texto MS -->
+    <td class="c-esq">
         {% if logo_ms %}<img src="{{ logo_ms }}" alt="MS" class="logo-img">{% endif %}
-        <div class="ms-text" style="margin-top:2pt;">
+        <div class="ms-texto">
             <b>MINISTÉRIO DA SAÚDE</b>
             <span>Secretaria de Vigilância em Saúde</span>
             <span>Departamento de Análise de Situação de Saúde</span>
         </div>
     </td>
 
-    <!-- BLOCO CENTRAL: Título + Logo Secretaria -->
-    <td class="bloco-centro">
-        <div class="centro-titulo">
-            Ficha de Investigação de Óbito<br>
-            de Mulher em Idade Fértil
+    <!-- CENTRO: Logo Goianira + Texto Município -->
+    <td class="c-centro">
+        {% if logo_pref %}<img src="{{ logo_pref }}" alt="Goianira" class="logo-img-centro">{% endif %}
+        <div class="mun-texto">
+            <b>FUNDO MUNICIPAL DE SAÚDE DE GOIANIRA</b>
+            <span>Secretaria Municipal de Saúde</span>
+            <span>Sistema de Informações de Óbito</span>
         </div>
-        <div class="centro-sub">Identificação de possível óbito materno</div>
-        {% if logo_pref %}
-        <div style="margin-top:4pt;">
-            <img src="{{ logo_pref }}" alt="Goianira" class="logo-img-small">
-        </div>
-        {% endif %}
     </td>
 
-    <!-- BLOCO DIREITO: Nº Caso + Sigla MIF -->
-    <td class="bloco-dir">
+    <!-- DIREITA: Quadro Nº Caso + MIF -->
+    <td class="c-dir">
         <div class="mif-box">
-            <div class="num-caso-label">Nº do Caso</div>
-            <div class="num-caso-linha"></div>
+            <div class="mif-label">Nº do Caso</div>
+            <div class="mif-linha"></div>
             <div class="mif-sigla">MIF</div>
+        </div>
+    </td>
+</tr>
+<!-- LINHA 2: Título do documento -->
+<tr class="titulo-row">
+    <td colspan="3">
+        <div class="titulo-doc">
+            Ficha de Investigação de Óbito de Mulher em Idade Fértil<br>
+            <span style="font-size:8pt;font-weight:normal;">Identificação de possível óbito materno</span>
         </div>
     </td>
 </tr>
