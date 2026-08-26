@@ -4,403 +4,350 @@
 <meta charset="UTF-8">
 <title>MIF - Ficha de Investigação de Óbito Materno</title>
 <style>
-/* ============ RESET E BASE ============ */
-* { box-sizing: border-box; }
-html, body { margin: 0; padding: 0; height: 100%; }
+/* ============ RESET ============ */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { margin: 0; padding: 0; }
 
-/* ============ FONTE E TAMANHO FIXO A4 ============ */
+/* ============ PÁGINA A4 ============ */
 @page {
-    size: A4 portrait;
-    margin: 10mm 8mm 12mm 8mm;
-}
-@media print {
-    .no-print { display: none !important; }
-    body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    size: 210mm 297mm portrait;
+    margin: 10mm 10mm 12mm 10mm;
 }
 body {
-    font-family: "DejaVu Sans", "Liberation Sans", Arial, Helvetica, sans-serif;
+    font-family: "DejaVu Sans", Arial, Helvetica, sans-serif;
     font-size: 9pt;
-    line-height: 1.25;
+    line-height: 1.3;
     color: #000;
     background: #fff;
-    padding: 0;
 }
 
-/* ============ TABELA MESTRA (Estrutura rígida) ============ */
-.table-master {
-    width: 100%;
-    border-collapse: collapse;
-    table-layout: fixed;
-}
-.table-master td,
-.table-master th {
-    border: 0.5pt solid #000;
-    padding: 2pt 3pt;
-    vertical-align: top;
-    font-size: 9pt;
-}
+/* ============ CABEÇALHO ============ */
+.cabecalho { width: 100%; border-collapse: collapse; margin-bottom: 6pt; }
+.cabecalho td { border: none; padding: 2pt 3pt; vertical-align: top; font-size: 7pt; }
+.cabecalho .logo-cell { width: 70px; vertical-align: middle; }
+.cabecalho .logo-cell img { width: 60px; height: auto; }
+.cabecalho .ms-text { font-size: 8pt; line-height: 1.2; }
+.cabecalho .ms-text b { font-size: 9pt; display: block; }
+.cabecalho .mun-text { font-size: 8pt; line-height: 1.2; text-align: right; }
+.cabecalho .mun-text b { font-size: 9pt; display: block; }
 
-/* ============ CABEÇALHO OFICIAL ============ */
-.header-oficial {
-    border: none !important;
-    padding: 0 !important;
-}
-.header-oficial table {
+.titulo-form {
     width: 100%;
     border-collapse: collapse;
-    margin: 0;
+    border-top: 1.5pt solid #000;
+    border-bottom: 1.5pt solid #000;
+    margin-bottom: 4pt;
 }
-.header-oficial td {
-    border: none !important;
-    padding: 1pt 4pt;
-    vertical-align: middle;
-}
-.header-oficial .logo { width: 70px; height: auto; }
-.header-oficial .ms-text { text-align: left; }
-.header-oficial .mun-text { text-align: right; }
-.header-oficial .title-row td {
-    border-bottom: 1.5pt solid #000 !important;
-    padding-top: 4pt !important;
-    padding-bottom: 2pt !important;
-}
-.header-oficial .ms-text strong { font-size: 9.5pt; font-weight: bold; }
-.header-oficial .ms-text span { font-size: 7pt; display: block; }
-.header-oficial .mun-text strong { font-size: 9pt; font-weight: bold; }
-.header-oficial .mun-text span { font-size: 7pt; display: block; }
-.header-oficial .form-title {
+.titulo-form td {
     text-align: center;
     font-size: 11pt;
     font-weight: bold;
-    border-top: 1.5pt solid #000 !important;
-    border-bottom: 1.5pt solid #000 !important;
-    padding: 3pt 0 !important;
+    padding: 3pt 0;
+    border: none;
 }
 
-/* ============ SEÇÕES NUMERADAS ============ */
-.section-title-row td {
-    background: #f0f0f0 !important;
+/* ============ TABELA MESTRA DO FORMULÁRIO ============ */
+.form-tbl {
+    width: 100%;
+    border-collapse: collapse;
+}
+.form-tbl td {
+    border: 0.5pt solid #000;
+    padding: 2pt 4pt;
+    vertical-align: middle;
+    font-size: 9pt;
+    line-height: 1.3;
+}
+
+/* ============ TÍTULOS DE SEÇÃO ============ */
+.sec-title td {
+    background-color: #e8e8e8 !important;
     font-weight: bold;
     font-size: 9pt;
-    border-top: 1pt solid #000 !important;
-    border-bottom: 1pt solid #000 !important;
-    padding: 3pt 4pt !important;
+    padding: 3pt 4pt;
+    border-top: 1pt solid #000;
+    border-bottom: 1pt solid #000;
 }
 
-/* ============ CAMPOS - LAYOUT EXATO ============ */
-.field-row td { height: 22px; }
-.label-cell {
-    font-weight: bold;
+/* ============ CAMPOS ============ */
+.lbl {
     font-size: 8pt;
+    font-weight: bold;
     color: #000;
     white-space: nowrap;
+    width: 28%;
     padding-right: 4pt;
-    width: 30%;
 }
-.value-cell {
+.val {
     font-size: 9.5pt;
     color: #000;
-    padding-left: 3pt;
 }
-.value-cell-small { font-size: 8.5pt; }
+.val-line {
+    border-top: 0.5pt solid #ccc;
+}
 
-/* Linha cheia (colspan) */
-.full-row td { border-right: none !important; }
-.full-row td:last-child { border-right: 0.5pt solid #000 !important; }
-
-/* ============ CHECKBOXES OFICIAIS ============ */
-.checkbox-group {
-    display: flex;
-    gap: 8pt;
-    align-items: center;
-    flex-wrap: wrap;
+/* ============ CHECKBOXES (tabela inline, sem flex) ============ */
+.ck-tbl {
+    border-collapse: collapse;
+    display: inline-table;
 }
-.checkbox-item {
-    display: inline-flex;
-    align-items: center;
-    gap: 2pt;
-    font-size: 8.5pt;
-    white-space: nowrap;
-}
-.checkbox-box {
-    width: 12pt;
-    height: 12pt;
-    border: 1pt solid #000;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
+.ck-tbl td {
+    border: none !important;
+    padding: 0 8pt 0 0;
     font-size: 9pt;
+    vertical-align: middle;
+}
+.ck-box {
+    display: inline-block;
+    width: 11pt;
+    height: 11pt;
+    border: 1pt solid #000;
+    text-align: center;
+    line-height: 11pt;
+    font-size: 8pt;
     font-weight: bold;
-    flex-shrink: 0;
+    vertical-align: middle;
     margin-right: 2pt;
 }
-.checkbox-label { font-weight: normal; }
 
-/* ============ CAIXA DE TEXTO (Resumo) ============ */
-.textarea-box {
+/* ============ CAIXA DE TEXTO ============ */
+.txt-box {
     border: 0.5pt solid #000;
-    min-height: 70px;
-    padding: 4pt;
+    min-height: 65pt;
+    padding: 3pt;
     font-size: 8.5pt;
-    line-height: 1.35;
-    white-space: pre-wrap;
+    line-height: 1.3;
     word-break: break-word;
+    white-space: pre-wrap;
 }
 
 /* ============ INSTRUÇÃO OFICIAL ============ */
-.instrucao-oficial {
+.instrucao {
     font-size: 7.5pt;
     line-height: 1.3;
     color: #000;
-    margin: 4pt 0;
     padding: 4pt;
     border: 1pt solid #000;
-    background: #fafafa;
+    background: #f5f5f5;
 }
 
 /* ============ RODAPÉ ============ */
-.footer-oficial {
+.rodape td {
     text-align: center;
     font-size: 7pt;
     color: #333;
-    border-top: 1pt solid #000 !important;
-    padding-top: 4pt !important;
+    border-top: 1pt solid #000;
+    padding-top: 4pt;
 }
 
-/* ============ HELPERS ============ */
-.no-print { display: block; }
+/* ============ NO-PRINT (botões browser) ============ */
+.no-print { display: block; text-align: center; margin-bottom: 6pt; padding: 4pt; }
 @media print { .no-print { display: none !important; } }
-.text-center { text-align: center; }
-.text-right { text-align: right; }
-.bold { font-weight: bold; }
-.fs-7 { font-size: 7pt; }
-.fs-8 { font-size: 8pt; }
-.fs-9 { font-size: 9pt; }
 
-/* Forçar quebra de página apenas entre seções grandes */
-.section-block { page-break-inside: avoid; }
+/* ============ QUEBRA DE PAGINA ============ */
+.page-break-before { page-break-before: always; }
+.avoid-break { page-break-inside: avoid; }
 </style>
 </head>
 <body>
 
-<div class="no-print" style="text-align:center;margin-bottom:6px;padding:4px;">
+<!-- BOTOES NAVEGADOR -->
+<div class="no-print">
     <button onclick="window.print()" style="padding:6px 16px;font-size:11px;background:#1a5276;color:#fff;border:none;border-radius:3px;margin-right:4px;cursor:pointer;">Imprimir / Salvar PDF</button>
     <button onclick="window.close()" style="padding:6px 16px;font-size:11px;background:#6c757d;color:#fff;border:none;border-radius:3px;cursor:pointer;">Fechar</button>
 </div>
 
-<!-- ============ TABELA MESTRA DO FORMULÁRIO ============ -->
-<table class="table-master">
-    
-    <!-- CABEÇALHO OFICIAL -->
-    <tr class="header-oficial">
-        <td colspan="4">
-            <table>
-                <tr>
-                    <td class="ms-text" style="width:33%;">
-                        <img src="{{ url_for('static', filename='logo-ms.png') }}" alt="MS" class="logo" onerror="this.style.display='none'">
-                        <strong>MINISTÉRIO DA SAÚDE</strong>
-                        <span>Secretaria de Vigilância em Saúde</span>
-                        <span>Departamento de Análise de Situação de Saúde</span>
-                    </td>
-                    <td class="text-center" style="width:34%;">
-                        <div class="title-row">
-                            FICHA DE INVESTIGAÇÃO DE ÓBITO MATERNO (MIF)
-                        </div>
-                    </td>
-                    <td class="mun-text" style="width:33%;">
-                        <img src="{{ url_for('static', filename='logo.png') }}" alt="Goianira" class="logo" onerror="this.style.display='none'">
-                        <strong>FUNDO MUNICIPAL DE SAÚDE DE GOIANIRA</strong>
-                        <span>Secretaria Municipal de Saúde</span>
-                        <span>Sistema de Informações de Óbito</span>
-                    </td>
-                </tr>
-            </table>
-        </td>
-    </tr>
+<!-- ============ CABEÇALHO ============ -->
+<table class="cabecalho">
+<tr>
+    <td class="logo-cell">
+        <img src="{{ url_for('static', filename='logo-ms.png') }}" alt="MS">
+    </td>
+    <td class="ms-text">
+        <b>MINISTÉRIO DA SAÚDE</b>
+        Secretaria de Vigilância em Saúde<br>
+        Departamento de Análise de Situação de Saúde
+    </td>
+    <td class="mun-text" style="width:35%; text-align:right;">
+        <b>FUNDO MUNICIPAL DE SAÚDE DE GOIANIRA</b>
+        Secretaria Municipal de Saúde<br>
+        Sistema de Informações de Óbito
+    </td>
+    <td class="logo-cell" style="text-align:right;">
+        <img src="{{ url_for('static', filename='logo.png') }}" alt="Goianira">
+    </td>
+</tr>
+</table>
 
-    <!-- IDENTIFICAÇÃO DO CASO -->
-    <tr class="section-title-row section-block">
-        <td colspan="4">IDENTIFICAÇÃO DO CASO</td>
-    </tr>
-    <tr class="field-row">
-        <td class="label-cell">Nº do Caso:</td>
-        <td class="value-cell" colspan="3">{{ inv.id }} — {{ c.get('Nome da falecida', inv.obito.nome or '') }}</td>
-    </tr>
-    <tr class="field-row">
-        <td class="label-cell">Responsável:</td>
-        <td class="value-cell">{{ inv.responsavel or '' }}</td>
-        <td class="label-cell">Status:</td>
-        <td class="value-cell">{{ inv.status_display() }}</td>
-    </tr>
+<!-- ============ TITULO DO FORMULARIO ============ -->
+<table class="titulo-form">
+<tr><td>FICHA DE INVESTIGAÇÃO DE ÓBITO MATERNO (MIF)</td></tr>
+</table>
 
-    <!-- 1. IDENTIFICAÇÃO DA FALECIDA -->
-    <tr class="section-title-row section-block">
-        <td colspan="4">1. IDENTIFICAÇÃO DA FALECIDA</td>
-    </tr>
-    <tr class="field-row">
-        <td class="label-cell">1. Nome da falecida:</td>
-        <td class="value-cell" colspan="3">{{ c.get('Nome da falecida', inv.obito.nome or '') }}</td>
-    </tr>
-    <tr class="field-row">
-        <td class="label-cell">2. Nº da DO:</td>
-        <td class="value-cell">{{ c.get('Nº da DO', inv.obito.numero_dob or '') }}</td>
-        <td class="label-cell">3. Data do óbito:</td>
-        <td class="value-cell">{{ inv.obito.data_obito.strftime('%d/%m/%Y') if inv.obito.data_obito else '' }}</td>
-    </tr>
-    <tr class="field-row full-row">
-        <td class="label-cell">Endereço (rua/av):</td>
-        <td class="value-cell" colspan="3">{{ c.get('Endereco', '') }}</td>
-    </tr>
-    <tr class="field-row">
-        <td class="label-cell">Número:</td>
-        <td class="value-cell">{{ c.get('Numero', '') }}</td>
-        <td class="label-cell">Complemento:</td>
-        <td class="value-cell">{{ c.get('Complemento', '') }}</td>
-    </tr>
-    <tr class="field-row">
-        <td class="label-cell">Bairro:</td>
-        <td class="value-cell">{{ c.get('Bairro', '') }}</td>
-        <td class="label-cell">Distrito/Povoado:</td>
-        <td class="value-cell">{{ c.get('Distrito/Povoado', '') }}</td>
-    </tr>
-    <tr class="field-row">
-        <td class="label-cell">Município de residência:</td>
-        <td class="value-cell">{{ c.get('Municipio de residencia', '') }}</td>
-        <td class="label-cell">UF residência:</td>
-        <td class="value-cell">{{ c.get('UF residencia', '') }}</td>
-    </tr>
-    <tr class="field-row full-row">
-        <td class="label-cell">Zona:</td>
-        <td class="value-cell" colspan="3">
-            <div class="checkbox-group">
-                <div class="checkbox-item">
-                    <span class="checkbox-box">{{ 'X' if c.get('Zona: Urbana') else '' }}</span>
-                    <span class="checkbox-label">Urbana</span>
-                </div>
-                <div class="checkbox-item">
-                    <span class="checkbox-box">{{ 'X' if c.get('Zona: Rural') else '' }}</span>
-                    <span class="checkbox-label">Rural</span>
-                </div>
-            </div>
-        </td>
-    </tr>
-    <tr class="field-row">
-        <td class="label-cell">6. Cartão SUS:</td>
-        <td class="value-cell">{{ c.get('Cartao SUS', '') }}</td>
-        <td class="label-cell">7. Equipe/PACS/PSF:</td>
-        <td class="value-cell">{{ c.get('Equipe/PACS/PSF', '') }}</td>
-    </tr>
-    <tr class="field-row">
-        <td class="label-cell">8. Centro Saúde/UBS:</td>
-        <td class="value-cell">{{ c.get('Centro Saúde/UBS', '') }}</td>
-        <td class="label-cell">9. Distrito Sanitário:</td>
-        <td class="value-cell">{{ c.get('Distrito Sanitário', '') }}</td>
-    </tr>
+<!-- ============ IDENTIFICAÇÃO DO CASO ============ -->
+<table class="form-tbl">
+<tr class="sec-title"><td colspan="4">IDENTIFICAÇÃO DO CASO</td></tr>
+<tr>
+    <td class="lbl">Nº do Caso:</td>
+    <td class="val" colspan="3">{{ inv.id }} — {{ c.get('Nome da falecida', inv.obito.nome or '') }}</td>
+</tr>
+<tr>
+    <td class="lbl">Responsável:</td>
+    <td class="val">{{ inv.responsavel or '' }}</td>
+    <td class="lbl">Status:</td>
+    <td class="val">{{ inv.status_display() }}</td>
+</tr>
+</table>
 
-    <!-- 2. OCORRÊNCIA -->
-    <tr class="section-title-row section-block">
-        <td colspan="4">2. OCORRÊNCIA</td>
-    </tr>
-    <tr class="field-row full-row">
-        <td class="label-cell">10. Local de ocorrência do óbito:</td>
-        <td class="value-cell" colspan="3">{{ c.get('Local de ocorrencia', '') }}</td>
-    </tr>
-    <tr class="field-row full-row">
-        <td class="label-cell">11. Nome do estabelecimento:</td>
-        <td class="value-cell" colspan="3">{{ c.get('Nome estabelecimento', '') }}</td>
-    </tr>
-    <tr class="field-row">
-        <td class="label-cell">Código CNES:</td>
-        <td class="value-cell">{{ c.get('Codigo CNES', '') }}</td>
-        <td class="label-cell">Município ocorrência:</td>
-        <td class="value-cell">{{ c.get('Municipio ocorrencia', '') }}</td>
-    </tr>
-    <tr class="field-row">
-        <td class="label-cell">UF ocorrência:</td>
-        <td class="value-cell">{{ c.get('UF ocorrencia', '') }}</td>
-        <td class="label-cell"></td>
-        <td class="value-cell"></td>
-    </tr>
+<!-- ============ 1. IDENTIFICAÇÃO DA FALECIDA ============ -->
+<table class="form-tbl avoid-break">
+<tr class="sec-title"><td colspan="4">1. IDENTIFICAÇÃO DA FALECIDA</td></tr>
+<tr>
+    <td class="lbl">1. Nome da falecida:</td>
+    <td class="val" colspan="3">{{ c.get('Nome da falecida', inv.obito.nome or '') }}</td>
+</tr>
+<tr>
+    <td class="lbl">2. Nº da DO:</td>
+    <td class="val">{{ c.get('Nº da DO', inv.obito.numero_dob or '') }}</td>
+    <td class="lbl">3. Data do óbito:</td>
+    <td class="val">{{ inv.obito.data_obito.strftime('%d/%m/%Y') if inv.obito.data_obito else '' }}</td>
+</tr>
+<tr>
+    <td class="lbl">Endereço (rua/av):</td>
+    <td class="val" colspan="3">{{ c.get('Endereco', '') }}</td>
+</tr>
+<tr>
+    <td class="lbl">Número:</td>
+    <td class="val">{{ c.get('Numero', '') }}</td>
+    <td class="lbl">Complemento:</td>
+    <td class="val">{{ c.get('Complemento', '') }}</td>
+</tr>
+<tr>
+    <td class="lbl">Bairro:</td>
+    <td class="val">{{ c.get('Bairro', '') }}</td>
+    <td class="lbl">Distrito/Povoado:</td>
+    <td class="val">{{ c.get('Distrito/Povoado', '') }}</td>
+</tr>
+<tr>
+    <td class="lbl">Município de residência:</td>
+    <td class="val">{{ c.get('Municipio de residencia', '') }}</td>
+    <td class="lbl">UF residência:</td>
+    <td class="val">{{ c.get('UF residencia', '') }}</td>
+</tr>
+<tr>
+    <td class="lbl">Zona:</td>
+    <td class="val" colspan="3">
+        <table class="ck-tbl"><tr>
+            <td><span class="ck-box">{{ 'X' if c.get('Zona: Urbana') else '' }}</span> Urbana</td>
+            <td><span class="ck-box">{{ 'X' if c.get('Zona: Rural') else '' }}</span> Rural</td>
+        </tr></table>
+    </td>
+</tr>
+<tr>
+    <td class="lbl">6. Cartão SUS:</td>
+    <td class="val">{{ c.get('Cartao SUS', '') }}</td>
+    <td class="lbl">7. Equipe/PACS/PSF:</td>
+    <td class="val">{{ c.get('Equipe/PACS/PSF', '') }}</td>
+</tr>
+<tr>
+    <td class="lbl">8. Centro Saúde/UBS:</td>
+    <td class="val">{{ c.get('Centro Saúde/UBS', '') }}</td>
+    <td class="lbl">9. Distrito Sanitário:</td>
+    <td class="val">{{ c.get('Distrito Sanitário', '') }}</td>
+</tr>
+</table>
 
-    <!-- 3. IDENTIFICAÇÃO DE ÓBITO MATERNO -->
-    <tr class="section-title-row section-block">
-        <td colspan="4">3. IDENTIFICAÇÃO DE ÓBITO MATERNO</td>
-    </tr>
-    <tr class="field-row full-row section-block">
-        <td class="label-cell" style="width:55%;">12. Estava grávida no momento do óbito?</td>
-        <td class="value-cell" colspan="3">
-            <div class="checkbox-group">
-                <div class="checkbox-item">
-                    <span class="checkbox-box">{{ 'X' if c.get('Grávida no momento do óbito? (Sim)') else '' }}</span>
-                    <span class="checkbox-label">Sim</span>
-                </div>
-                <div class="checkbox-item">
-                    <span class="checkbox-box">{{ 'X' if c.get('Grávida no momento do óbito? (Não)') else '' }}</span>
-                    <span class="checkbox-label">Não</span>
-                </div>
-                <div class="checkbox-item">
-                    <span class="checkbox-box">{{ 'X' if c.get('Grávida no momento do óbito? (Não sabe)') else '' }}</span>
-                    <span class="checkbox-label">Não sabe</span>
-                </div>
-            </div>
-        </td>
-    </tr>
-    <tr class="field-row full-row section-block">
-        <td class="label-cell" style="width:55%;">13. Esteve grávida nos 12 meses anteriores?</td>
-        <td class="value-cell" colspan="3">
-            <div class="checkbox-group">
-                <div class="checkbox-item">
-                    <span class="checkbox-box">{{ 'X' if c.get('Esteve grávida nos 12 meses? (Sim)') else '' }}</span>
-                    <span class="checkbox-label">Sim</span>
-                </div>
-                <div class="checkbox-item">
-                    <span class="checkbox-box">{{ 'X' if c.get('Esteve grávida nos 12 meses? (Não)') else '' }}</span>
-                    <span class="checkbox-label">Não</span>
-                </div>
-                <div class="checkbox-item">
-                    <span class="checkbox-box">{{ 'X' if c.get('Esteve grávida nos 12 meses? (Não sabe)') else '' }}</span>
-                    <span class="checkbox-label">Não sabe</span>
-                </div>
-            </div>
-        </td>
-    </tr>
+<!-- ============ 2. OCORRÊNCIA ============ -->
+<table class="form-tbl avoid-break">
+<tr class="sec-title"><td colspan="4">2. OCORRÊNCIA</td></tr>
+<tr>
+    <td class="lbl">10. Local de ocorrência do óbito:</td>
+    <td class="val" colspan="3">{{ c.get('Local de ocorrencia', '') }}</td>
+</tr>
+<tr>
+    <td class="lbl">11. Nome do estabelecimento:</td>
+    <td class="val" colspan="3">{{ c.get('Nome estabelecimento', '') }}</td>
+</tr>
+<tr>
+    <td class="lbl">Código CNES:</td>
+    <td class="val">{{ c.get('Codigo CNES', '') }}</td>
+    <td class="lbl">Município ocorrência:</td>
+    <td class="val">{{ c.get('Municipio ocorrencia', '') }}</td>
+</tr>
+<tr>
+    <td class="lbl">UF ocorrência:</td>
+    <td class="val">{{ c.get('UF ocorrencia', '') }}</td>
+    <td class="lbl">&nbsp;</td>
+    <td class="val">&nbsp;</td>
+</tr>
+</table>
 
-    <!-- INSTRUÇÃO OFICIAL DO MS - ENTRE 13 E 14 -->
-    <tr class="section-block">
-        <td colspan="4">
-            <div class="instrucao-oficial">
-                <strong>INSTRUÇÃO:</strong> Se a resposta para a questão 12 ou 13 for <strong>"Sim"</strong>, prosseguir com o preenchimento da <strong>Ficha M3 — Investigação de Óbito Materno</strong>. Caso a resposta seja <strong>"Não"</strong> ou <strong>"Não sabe"</strong> para ambas, encaminhar para investigação de <strong>Autópsia Verbal</strong> conforme protocolo do SVS/MS. O não preenchimento desta ficha implica em óbito materno não investigado para fins de vigilância.
-            </div>
-        </td>
-    </tr>
+<!-- ============ 3. IDENTIFICAÇÃO DE ÓBITO MATERNO ============ -->
+<table class="form-tbl avoid-break">
+<tr class="sec-title"><td colspan="4">3. IDENTIFICAÇÃO DE ÓBITO MATERNO</td></tr>
+<tr>
+    <td class="lbl" style="width:40%;">12. Estava grávida no momento do óbito?</td>
+    <td class="val" colspan="3">
+        <table class="ck-tbl"><tr>
+            <td><span class="ck-box">{{ 'X' if c.get('Grávida no momento do óbito? (Sim)') else '' }}</span> Sim</td>
+            <td><span class="ck-box">{{ 'X' if c.get('Grávida no momento do óbito? (Não)') else '' }}</span> Não</td>
+            <td><span class="ck-box">{{ 'X' if c.get('Grávida no momento do óbito? (Não sabe)') else '' }}</span> Não sabe</td>
+        </tr></table>
+    </td>
+</tr>
+<tr>
+    <td class="lbl" style="width:40%;">13. Esteve grávida nos 12 meses anteriores?</td>
+    <td class="val" colspan="3">
+        <table class="ck-tbl"><tr>
+            <td><span class="ck-box">{{ 'X' if c.get('Esteve grávida nos 12 meses? (Sim)') else '' }}</span> Sim</td>
+            <td><span class="ck-box">{{ 'X' if c.get('Esteve grávida nos 12 meses? (Não)') else '' }}</span> Não</td>
+            <td><span class="ck-box">{{ 'X' if c.get('Esteve grávida nos 12 meses? (Não sabe)') else '' }}</span> Não sabe</td>
+        </tr></table>
+    </td>
+</tr>
+<!-- INSTRUÇÃO OFICIAL DO MS - ENTRE 13 E 14 -->
+<tr>
+    <td colspan="4" style="border-top:none; border-bottom:none; padding: 3pt 4pt;">
+        <div class="instrucao">
+            <strong>INSTRUÇÃO:</strong> Se a resposta para a questão 12 ou 13 for <strong>"Sim"</strong>,
+            prosseguir com o preenchimento da <strong>Ficha M3 — Investigação de Óbito Materno</strong>.
+            Caso a resposta seja <strong>"Não"</strong> ou <strong>"Não sabe"</strong> para ambas,
+            encaminhar para investigação de <strong>Autópsia Verbal</strong> conforme protocolo do SVS/MS.
+            O não preenchimento desta ficha implica em óbito materno não investigado para fins de vigilância.
+        </div>
+    </td>
+</tr>
+</table>
 
-    <!-- 4. CONCLUSÃO E ENCERRAMENTO -->
-    <tr class="section-title-row section-block">
-        <td colspan="4">4. CONCLUSÃO E ENCERRAMENTO</td>
-    </tr>
-    <tr class="field-row full-row section-block">
-        <td class="label-cell">14. Resumo do caso / justificativa:</td>
-        <td class="value-cell" colspan="3">
-            <div class="textarea-box">{{ c.get('Resumo do caso / justificativa', '') }}</div>
-        </td>
-    </tr>
-    <tr class="field-row">
-        <td class="label-cell">15. Data da investigação:</td>
-        <td class="value-cell">{{ c.get('Data da investigacao', '') }}</td>
-        <td class="label-cell">16. Responsável - nome:</td>
-        <td class="value-cell">{{ c.get('Responsavel investigacao - nome', inv.responsavel or '') }}</td>
-    </tr>
-    <tr class="field-row full-row">
-        <td class="label-cell">Carimbo / Rubrica do Responsável:</td>
-        <td class="value-cell" colspan="3">{{ c.get('Responsavel investigacao - carimbo/rubrica', '') }}</td>
-    </tr>
+<!-- ============ 4. CONCLUSÃO E ENCERRAMENTO ============ -->
+<table class="form-tbl avoid-break">
+<tr class="sec-title"><td colspan="4">4. CONCLUSÃO E ENCERRAMENTO</td></tr>
+<tr>
+    <td class="lbl" style="vertical-align:top;">14. Resumo do caso / justificativa:</td>
+    <td class="val" colspan="3">
+        <div class="txt-box">{{ c.get('Resumo do caso / justificativa', '') }}</div>
+    </td>
+</tr>
+<tr>
+    <td class="lbl">15. Data da investigação:</td>
+    <td class="val">{{ c.get('Data da investigacao', '') }}</td>
+    <td class="lbl">16. Responsável - nome:</td>
+    <td class="val">{{ c.get('Responsavel investigacao - nome', inv.responsavel or '') }}</td>
+</tr>
+<tr>
+    <td class="lbl">Carimbo / Rubrica do Responsável:</td>
+    <td class="val" colspan="3">{{ c.get('Responsavel investigacao - carimbo/rubrica', '') }}</td>
+</tr>
+</table>
 
-    <!-- RODAPÉ -->
-    <tr class="footer-oficial">
-        <td colspan="4">
-            Ficha gerada em {{ now.strftime('%d/%m/%Y às %H:%M') if now else '' }} — Sistema de Informações de Óbito — Prefeitura de Goianira
-        </td>
-    </tr>
-
+<!-- ============ RODAPÉ ============ -->
+<table class="form-tbl" style="margin-top:8pt;">
+<tr class="rodape">
+    <td colspan="4">
+        Ficha gerada em {{ now.strftime('%d/%m/%Y às %H:%M') if now else '' }}
+        — Sistema de Informações de Óbito — Prefeitura de Goianira
+    </td>
+</tr>
 </table>
 
 </body>
