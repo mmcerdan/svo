@@ -2,193 +2,437 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<title>IOCMD - Ficha de Investigação de Óbito por Causa Mal Definida</title>
+<title>IOCMD - Ficha de Investigacao de Obito com Causa Mal Definida</title>
 <style>
-@page { margin: 15mm 15mm 20mm; size: A4 portrait; }
-body { font-family: Helvetica, Arial, sans-serif; font-size: 9pt; color: #222; line-height: 1.4; margin: 0; padding: 0; }
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{margin:0;padding:0}
+@page{size:210mm 297mm portrait;margin:7mm 8mm 10mm 8mm}
+body{font-family:"DejaVu Sans",Arial,Helvetica,sans-serif;font-size:8pt;line-height:1.2;color:#000;background:#fff}
+.page-break{page-break-before:always}
+.av{page-break-inside:avoid}
 
-.header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 8px; margin-bottom: 12px; border-bottom: 2px solid #1a5276; }
-.header-left, .header-right { display: flex; align-items: center; gap: 10px; }
-.header-logo { max-height: 55px; max-width: 150px; }
-.header-text { font-size: 8pt; color: #222; line-height: 1.25; }
-.header-text strong { font-size: 9pt; color: #1a5276; }
+/* CABECALHO */
+.cab{width:100%;border-collapse:collapse;margin-bottom:3pt}
+.cab td{padding:1pt 2pt;vertical-align:top}
+.cab .c-esq{width:35%}
+.cab .c-centro{width:45%;text-align:center}
+.cab .c-dir{width:20%}
+.cab .logo-img{height:50px;width:auto;display:block}
+.cab .logo-img-c{height:40px;width:auto;display:inline-block;margin-bottom:1pt}
+.cab .ms-t{font-size:6.5pt;line-height:1.2}
+.cab .ms-t b{font-size:7.5pt;display:block;margin-bottom:1pt}
+.cab .ms-t span{display:block}
+.cab .mun-t{font-size:6.5pt;line-height:1.2}
+.cab .mun-t b{font-size:7.5pt;display:block;margin-bottom:1pt}
+.cab .mun-t span{display:block}
+.cab .i1-box{border:1.5pt solid #000;padding:2pt 3pt;text-align:center;width:100%}
+.cab .i1-box .i1-lbl{font-size:6.5pt;font-weight:bold}
+.cab .i1-box .i1-line{border-bottom:0.5pt solid #000;height:10pt;margin:1pt 0}
+.cab .i1-box .i1-sig{font-size:18pt;font-weight:bold;letter-spacing:2pt}
+.cab .tit-row td{border:none;text-align:center;padding:2pt 0 0 0}
+.cab .tit-doc{font-size:9pt;font-weight:bold;line-height:1.3;border-top:1pt solid #000;border-bottom:1pt solid #000;padding:2pt 0}
 
-.section { margin-bottom: 10px; page-break-inside: avoid; }
-.section-title { background: #1a5276; color: #fff; padding: 3px 8px; font-size: 10pt; font-weight: 600; margin-bottom: 6px; border-radius: 2px; }
+/* TABELAS FORMULARIO */
+.ft{width:100%;border-collapse:collapse;margin-bottom:3pt}
+.ft td{border:0.5pt solid #000;padding:1.5pt 3pt;vertical-align:middle;font-size:8pt}
+.st td{background:#e0e0e0!important;font-weight:bold;font-size:8pt;padding:2pt 3pt}
+.lbl{font-size:7pt;font-weight:bold;white-space:nowrap;width:28%;padding-right:3pt}
+.lbl2{font-size:7pt;font-weight:bold;width:35%;padding-right:3pt}
+.val{font-size:8pt}
+.sub td{background:#f0f0f0!important;font-weight:bold;font-size:7.5pt;padding:1.5pt 3pt;border-bottom:0.5pt solid #000}
 
-.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2px 12px; }
-.row-full { grid-column: 1 / -1; }
-.row { display: flex; align-items: baseline; border-bottom: 1px solid #ccc; padding: 2px 4px; }
-.row .label { color: #555; font-weight: 600; min-width: 180px; flex-shrink: 0; font-size: 8pt; }
-.row .value { flex: 1; color: #000; padding-left: 4px; word-break: break-word; white-space: pre-wrap; }
-.row-multi .value { white-space: pre-wrap; word-break: break-word; }
+/* CHECKBOX */
+.ckt{border-collapse:collapse;display:inline-table}
+.ckt td{border:none!important;padding:0 6pt 0 0;font-size:7pt;vertical-align:middle}
+.cb{display:inline-block;width:8pt;height:8pt;border:0.7pt solid #000;text-align:center;line-height:8pt;font-size:6pt;font-weight:bold;vertical-align:middle;margin-right:1pt}
 
-.sub-title { font-size: 8pt; font-weight: 600; color: #1a5276; padding: 3px 4px; border-bottom: 1px solid #1a5276; margin: 6px 0 3px; }
+/* CAIXA DE TEXTO */
+.txbox{border:0.5pt solid #000;padding:2pt;font-size:7.5pt;line-height:1.25;word-break:break-word;white-space:pre-wrap}
+.txrow{min-height:28pt}
+.txrow-lg{min-height:40pt}
+.txrow-xl{min-height:55pt}
 
-.row-check-group { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 6px 15px; border-bottom: 1px solid #ccc; padding: 3px 4px; }
-.check-item { display: flex; align-items: center; gap: 3px; font-size: 8pt; color: #444; }
+/* RODAPE DO BLOCO */
+.blk-foot td{border-top:1.5pt solid #000!important;font-size:6.5pt;font-style:italic;color:#333;padding:2pt 3pt;text-align:left}
 
-.causas-table { width: 100%; border-collapse: collapse; font-size: 8pt; margin-top: 4px; table-layout: fixed; }
-.causas-table thead th { background: #e8edf2; padding: 3px 4px; text-align: left; font-weight: 600; font-size: 8pt; border: 1px solid #ccc; }
-.causas-table tbody tr { height: auto; }
-.causas-table tbody td { padding: 4px; border: 1px solid #ddd; vertical-align: top; word-break: break-word; line-height: 1.35; }
-.causas-table .parte-label { font-weight: 600; color: #1a5276; background: #f0f4f8; padding: 4px !important; }
+/* TABELA CID */
+.cid-tbl{width:100%;border-collapse:collapse;margin-top:1pt}
+.cid-tbl th{background:#e0e0e0;border:0.5pt solid #000;padding:2pt 3pt;font-size:7pt;font-weight:bold;text-align:left;vertical-align:middle}
+.cid-tbl td{border:0.5pt solid #000;padding:1.5pt 3pt;font-size:7.5pt;vertical-align:middle}
+.cid-tbl .cid-lbl{font-weight:bold;font-size:7pt;width:22%;white-space:nowrap}
+.cid-tbl .cid-code{width:14%;text-align:center}
+.cid-tbl .cid-desc{width:64%}
 
-.footer { text-align: center; font-size: 7pt; color: #999; margin-top: 15px; border-top: 1px solid #ddd; padding-top: 6px; }
+/* ASSINATURA */
+.sig-tbl{width:100%;border-collapse:collapse;margin-top:3pt}
+.sig-tbl td{border:none;padding:2pt 3pt;font-size:7.5pt;vertical-align:bottom}
+.sig-line{border-bottom:0.5pt solid #000;height:18pt;margin:0 4pt}
+.sig-sub{font-size:6.5pt;text-align:center;color:#333}
 
-@media print { .no-print { display: none; } }
+/* RODAPE */
+.rod td{text-align:center;font-size:6.5pt;color:#333;border-top:0.8pt solid #000;padding-top:3pt}
+
+/* NO-PRINT */
+.no-print{display:block;text-align:center;margin-bottom:4pt;padding:3pt}
+@media print{.no-print{display:none!important}body{-webkit-print-color-adjust:exact}}
 </style>
 </head>
 <body>
 
-<div class="no-print" style="text-align:center;margin-bottom:10px;">
-<button onclick="window.print()" style="padding:6px 20px;font-size:14px;cursor:pointer;background:#1a5276;color:#fff;border:none;border-radius:4px;margin-right:5px;">Imprimir</button>
-<button onclick="window.close()" style="padding:6px 20px;font-size:14px;cursor:pointer;background:#6c757d;color:#fff;border:none;border-radius:4px;">Fechar</button>
+<div class="no-print">
+    <button onclick="window.print()" style="padding:5px 14px;font-size:10px;background:#1a5276;color:#fff;border:none;border-radius:3px;margin-right:3px;cursor:pointer;">Imprimir / PDF</button>
+    <button onclick="window.close()" style="padding:5px 14px;font-size:10px;background:#6c757d;color:#fff;border:none;border-radius:3px;cursor:pointer;">Fechar</button>
 </div>
 
-<div class="header">
-<div class="header-left">
-<img src="{{ url_for('static', filename='logo-ms.png') }}" alt="MS" class="header-logo" onerror="this.style.display='none'">
-<div class="header-text">
-<strong>MINISTÉRIO DA SAÚDE</strong><br>
-Secretaria de Vigilância em Saúde<br>
-Departamento de Análise de Situação de Saúde
-</div>
-</div>
-<div class="header-right">
-<div class="header-text" style="text-align:right;">
-<strong>FUNDO MUNICIPAL DE SAÚDE DE GOIANIRA</strong><br>
-Secretaria Municipal de Saúde<br>
-Sistema de Informações de Óbito
-</div>
-<img src="{{ url_for('static', filename='logo.png') }}" alt="Goianira" class="header-logo" onerror="this.style.display='none'">
-</div>
-</div>
-
-<div class="section">
-<div class="section-title">IDENTIFICAÇÃO DO CASO</div>
-<div class="form-grid">
-<div class="row"><span class="label">Município:</span><span class="value">Goianira</span></div>
-<div class="row"><span class="label">UF:</span><span class="value">GO</span></div>
-<div class="row row-full"><span class="label">Nº do Caso:</span><span class="value">{{ inv.id }}</span></div>
-<div class="row"><span class="label">Responsável:</span><span class="value">{{ inv.responsavel or '' }}</span></div>
-<div class="row"><span class="label">Status:</span><span class="value">{{ inv.status_display() }}</span></div>
-</div>
-</div>
-
-<div class="section">
-<div class="section-title">1. INFORMAÇÕES DA DECLARAÇÃO DE ÓBITO</div>
-<div class="form-grid">
-<div class="row"><span class="label">2. Nº da DO:</span><span class="value">{{ c.get('N\u00ba da DO', inv.obito.numero_dob or '') }}</span></div>
-<div class="row"><span class="label">3. Nome do falecido:</span><span class="value">{{ inv.obito.nome or '' }}</span></div>
-<div class="row"><span class="label">4. Nome da mãe:</span><span class="value">{{ inv.obito.nome_mae or '' }}</span></div>
-<div class="row"><span class="label">5. Data de nascimento:</span><span class="value">{{ inv.obito.data_nascimento.strftime('%d/%m/%Y') if inv.obito.data_nascimento else '' }}</span></div>
-<div class="row"><span class="label">6. Data do óbito:</span><span class="value">{{ inv.obito.data_obito.strftime('%d/%m/%Y') if inv.obito.data_obito else '' }}</span></div>
-<div class="row row-full"><span class="label">8. Causa básica original:</span><span class="value">{{ c.get('Causa basica original', inv.obito.causa_morte or '') }} ({{ inv.obito.causa_morte_cid or '' }})</span></div>
-</div>
-</div>
-
-<div class="section">
-<div class="section-title">2. INVESTIGAÇÃO NA UNIDADE BÁSICA DE SAÚDE / PSF</div>
-<div class="form-grid">
-<div class="row row-full"><span class="label">7. Nome da Unidade Básica/USF:</span><span class="value">{{ c.get('Nome da Unidade Basica/USF', '') }}</span></div>
-<div class="row"><span class="label">8. Nº prontuário UBS:</span><span class="value">{{ c.get('N\u00ba prontuario UBS', '') }}</span></div>
-<div class="row"><span class="label">9. Tempo de moradia no domicílio:</span><span class="value">{{ c.get('Tempo de moradia no domicilio', '') }}</span></div>
-<div class="row"><span class="label">10. Cadastrado na USF:</span><span class="value">{{ c.get('Cadastrado na USF', '') }}</span></div>
-<div class="row row-full"><span class="label">11. Patologias/motivos de atendimento:</span><span class="value" style="white-space:pre-wrap;">{{ c.get('Patologias/motivos de atendimento', '') }}</span></div>
-<div class="row"><span class="label">12. Data da última consulta:</span><span class="value">{{ c.get('Data da ultima consulta', '') }}</span></div>
-<div class="row row-full"><span class="label">13. Motivo da última consulta:</span><span class="value">{{ c.get('Motivo da ultima consulta', '') }}</span></div>
-</div>
-</div>
-
-<div class="section">
-<div class="section-title">3. INVESTIGAÇÃO NO ESTABELECIMENTO DE SAÚDE / INTERNAÇÃO</div>
-<div class="form-grid">
-<div class="row row-full"><span class="label">14. Nome do estabelecimento de saúde:</span><span class="value">{{ c.get('Nome do estabelecimento de saude', '') }}</span></div>
-<div class="row"><span class="label">15. Nº prontuário hospitalar:</span><span class="value">{{ c.get('N\u00ba prontuario hospitalar', '') }}</span></div>
-<div class="row"><span class="label">16. Data da internação:</span><span class="value">{{ c.get('Data da internacao', '') }}</span></div>
-<div class="row"><span class="label">17. Data da alta:</span><span class="value">{{ c.get('Data da alta', '') }}</span></div>
-<div class="row"><span class="label">18. Estado na hospitalização:</span><span class="value">{{ c.get('Estado do paciente na hospitalizacao', '') }}</span></div>
-<div class="row"><span class="label">19. Motivo da alta:</span><span class="value">{{ c.get('Motivo da alta', '') }}</span></div>
-<div class="row"><span class="label">20. Atendimento pré-hospitalar:</span><span class="value">{{ c.get('Atendimento pre-hospitalar', '') }}</span></div>
-<div class="row row-full"><span class="label">21. Hipótese diagnóstica da alta:</span><span class="value" style="white-space:pre-wrap;">{{ c.get('Hipotese diagnostica da alta', '') }}</span></div>
-<div class="row row-full"><span class="label">22. Resultados de exames relevantes:</span><span class="value" style="white-space:pre-wrap;">{{ c.get('Resultados de exames relevantes', '') }}</span></div>
-<div class="row row-full"><span class="label">23. Procedimentos realizados:</span><span class="value" style="white-space:pre-wrap;">{{ c.get('Procedimentos realizados', '') }}</span></div>
-<div class="row row-full"><span class="label">24. Causa do óbito no prontuário:</span><span class="value" style="white-space:pre-wrap;">{{ c.get('Causa do obito no prontuario', '') }}</span></div>
-</div>
-</div>
-
-<div class="section">
-<div class="section-title">4. INVESTIGAÇÃO EM OUTROS LOCAIS</div>
-<div class="form-grid">
-<div class="row row-full"><span class="label">SINAN:</span><span class="value">{{ c.get('Investigacao SINAN', '') }}</span></div>
-<div class="row row-full"><span class="label">IML (Instituto Médico Legal):</span><span class="value">{{ c.get('Investigacao IML', '') }}</span></div>
-<div class="row row-full"><span class="label">SVO (Serviço de Verificação de Óbito):</span><span class="value">{{ c.get('Investigacao SVO', '') }}</span></div>
-<div class="row row-full"><span class="label">FUNASA:</span><span class="value">{{ c.get('Investigacao FUNASA', '') }}</span></div>
-<div class="row row-full"><span class="label">Jornal/Internet:</span><span class="value">{{ c.get('Investigacao jornal/internet', '') }}</span></div>
-</div>
-</div>
-
-<div class="section">
-<div class="section-title">5. INVESTIGAÇÃO DOMICILIAR / AUTÓPSIA VERBAL</div>
-<div class="form-grid">
-<div class="row row-full"><span class="label">26. Formulário utilizado:</span><span class="value">{{ c.get('Formulario utilizado (autopsia verbal)', '') }}</span></div>
-</div>
-</div>
-
-<div class="section">
-<div class="section-title">6. CONCLUSÃO DA INVESTIGAÇÃO</div>
-
-<div class="sub-title">Causas da Morte após Investigação</div>
-<table class="causas-table">
-<thead>
-<tr><th style="width:5%;">Letra</th><th colspan="2" style="width:70%;">Causa da Morte (diagnóstico)</th><th style="width:25%;text-align:right;">CID-10</th></tr>
-</thead>
-<tbody>
-<tr><td class="parte-label" colspan="4">Parte I — Atestado Médico</td></tr>
+<!-- ============================================================ -->
+<!-- CABECALHO PADRAO -->
+<!-- ============================================================ -->
+<table class="cab">
 <tr>
-  <td style="text-align:center;vertical-align:top;font-weight:600;">a)</td>
-  <td style="width:25%;vertical-align:top;color:#666;font-size:7.5pt;">Devido ou como consequência de:</td>
-  <td style="vertical-align:top;word-break:break-word;">{{ c.get('Causa direta - diagnostico', '') }}</td>
-  <td style="text-align:right;vertical-align:top;font-weight:600;white-space:nowrap;">{{ c.get('Causa direta - CID', '') }}</td>
+    <td class="c-esq">
+        {% if logo_ms %}<img src="{{ logo_ms }}" alt="MS" class="logo-img">{% endif %}
+        <div class="ms-t">
+            <b>MINISTERIO DA SAUDE</b>
+            <span>Secretaria de Vigilancia em Saude</span>
+            <span>Departamento de Analise de Situacao de Saude</span>
+        </div>
+    </td>
+    <td class="c-centro">
+        {% if logo_pref %}<img src="{{ logo_pref }}" alt="Goianira" class="logo-img-c">{% endif %}
+        <div class="mun-t">
+            <b>FUNDO MUNICIPAL DE SAUDE DE GOIANIRA</b>
+            <span>Secretaria Municipal de Saude</span>
+            <span>Sistema de Informacoes de Obito</span>
+        </div>
+    </td>
+    <td class="c-dir">
+        <div class="i1-box">
+            <div class="i1-lbl">No. do Caso</div>
+            <div class="i1-line"></div>
+            <div class="i1-sig">IOCMD</div>
+        </div>
+    </td>
 </tr>
-<tr>
-  <td style="text-align:center;vertical-align:top;font-weight:600;">b)</td>
-  <td style="width:25%;vertical-align:top;color:#666;font-size:7.5pt;">Devido ou como consequência de:</td>
-  <td style="vertical-align:top;word-break:break-word;">{{ c.get('Antecedente (linha b) - diagnostico', '') }}</td>
-  <td style="text-align:right;vertical-align:top;font-weight:600;white-space:nowrap;">{{ c.get('Antecedente (linha b) - CID', '') }}</td>
+<tr class="tit-row">
+    <td colspan="3">
+        <div class="tit-doc">Ficha de Investigacao de Obito com Causa Mal Definida</div>
+    </td>
 </tr>
-<tr>
-  <td style="text-align:center;vertical-align:top;font-weight:600;">c)</td>
-  <td style="width:25%;vertical-align:top;color:#666;font-size:7.5pt;">Devido ou como consequência de:</td>
-  <td style="vertical-align:top;word-break:break-word;">{{ c.get('Antecedente (linha c) - diagnostico', '') }}</td>
-  <td style="text-align:right;vertical-align:top;font-weight:600;white-space:nowrap;">{{ c.get('Antecedente (linha c) - CID', '') }}</td>
-</tr>
-<tr>
-  <td style="text-align:center;vertical-align:top;font-weight:600;">d)</td>
-  <td style="width:25%;vertical-align:top;color:#666;font-size:7.5pt;">Causa básica:</td>
-  <td style="vertical-align:top;word-break:break-word;">{{ c.get('Causa basica - diagnostico', '') }}</td>
-  <td style="text-align:right;vertical-align:top;font-weight:600;white-space:nowrap;">{{ c.get('Causa basica - CID', '') }}</td>
-</tr>
-<tr><td class="parte-label" colspan="4">Parte II — Outras Condições Significativas</td></tr>
-<tr>
-  <td colspan="2" style="color:#666;font-size:7.5pt;">Outras condições que contribuíram para a morte, mas não estão relacionadas à causa básica:</td>
-  <td style="vertical-align:top;word-break:break-word;">{{ c.get('Outras condicoes significativas', '') }}</td>
-  <td style="text-align:right;vertical-align:top;"></td>
-</tr>
-</tbody>
 </table>
 
-<div class="form-grid" style="margin-top:8px;">
-<div class="row row-full"><span class="label">Data da conclusão:</span><span class="value">{{ c.get('Data da conclusao', '') }}</span></div>
-<div class="row row-full"><span class="label">Responsável pela investigação:</span><span class="value">{{ c.get('Responsavel pela investigacao', inv.responsavel or '') }}</span></div>
-<div class="row row-full"><span class="label">Coordenador Vigilância SIM:</span><span class="value">{{ c.get('Coordenador Vigilancia SIM', '') }}</span></div>
-</div>
-</div>
 
-<div class="footer">
-<p>Ficha gerada em {{ now.strftime('%d/%m/%Y às %H:%M') if now else '' }} — Sistema de Informações de Óbito — Prefeitura de Goianira</p>
-</div>
+<!-- ============================================================ -->
+<!-- PAGINA 1 -->
+<!-- ============================================================ -->
+
+<!-- BLOCO A - DECLARACAO DE OBITO -->
+<table class="ft av">
+<tr class="st"><td colspan="4">A - INFORMACOES DA DECLARACAO DE OBITO</td></tr>
+<tr>
+    <td class="lbl">1. Municipio:</td>
+    <td class="val" style="width:22%;">{{ inv.obito.municipio or '' }}</td>
+    <td class="lbl" style="width:15%;">2. No. da DO:</td>
+    <td class="val" style="width:30%;">{{ c.get('No. da DO', inv.obito.numero_dob or '') }}</td>
+</tr>
+<tr>
+    <td class="lbl">3. Nome do falecido:</td>
+    <td class="val" colspan="3">{{ inv.obito.nome or '' }}</td>
+</tr>
+<tr>
+    <td class="lbl">4. Nome da mae:</td>
+    <td class="val" colspan="3">{{ inv.obito.nome_mae or '' }}</td>
+</tr>
+<tr>
+    <td class="lbl">5. Data de nascimento:</td>
+    <td class="val">{{ inv.obito.data_nascimento.strftime('%d/%m/%Y') if inv.obito.data_nascimento else '' }}</td>
+    <td class="lbl">6. Data do obito:</td>
+    <td class="val">{{ inv.obito.data_obito.strftime('%d/%m/%Y') if inv.obito.data_obito else '' }}</td>
+</tr>
+<tr class="blk-foot"><td colspan="4">Anexar copia da Declaracao de Obito (DO) preenchida e assinada pelo medico responsavel.</td></tr>
+</table>
+
+<!-- BLOCO B - UBS / PSF -->
+<table class="ft av">
+<tr class="st"><td colspan="4">B - INVESTIGACAO NA UNIDADE BASICA DE SAUDE (PSF)</td></tr>
+<tr>
+    <td class="lbl">7. Nome da UBS:</td>
+    <td class="val" colspan="3">{{ c.get('Nome da Unidade Basica/USF', '') }}</td>
+</tr>
+<tr>
+    <td class="lbl">8. No. prontuario UBS:</td>
+    <td class="val">{{ c.get('No. prontuario UBS', '') }}</td>
+    <td class="lbl">9. Tempo de domicilio:</td>
+    <td class="val">{{ c.get('Tempo de moradia no domicilio', '') }}</td>
+</tr>
+<tr>
+    <td class="lbl">10. Cadastrado na USF?:</td>
+    <td class="val" colspan="3">
+        <table class="ckt"><tr>
+            <td><span class="cb">{{ 'X' if c.get('Cadastrado na USF: Sim') else '' }}</span> Sim</td>
+            <td><span class="cb">{{ 'X' if c.get('Cadastrado na USF: Nao') else '' }}</span> Nao</td>
+        </tr></table>
+    </td>
+</tr>
+<tr>
+    <td class="lbl" style="vertical-align:top;">11. Patologias / motivos de atendimento:</td>
+    <td class="val" colspan="3"><div class="txbox txrow-lg">{{ c.get('Patologias/motivos de atendimento', '') }}</div></td>
+</tr>
+<tr>
+    <td class="lbl">12. Data da ultima consulta:</td>
+    <td class="val">{{ c.get('Data da ultima consulta', '') }}</td>
+    <td class="lbl">13. Motivo da ultima consulta:</td>
+    <td class="val">{{ c.get('Motivo da ultima consulta', '') }}</td>
+</tr>
+</table>
+
+<!-- BLOCO C - ESTABELECIMENTO DE SAUDE (INTERCACAO) -->
+<table class="ft av">
+<tr class="st"><td colspan="4">C - INVESTIGACAO NO ESTAB. DE SAUDE DA INTERMACAO</td></tr>
+<tr>
+    <td class="lbl">14. Estabelecimento de saude:</td>
+    <td class="val" colspan="3">{{ c.get('Nome do estabelecimento de saude', '') }}</td>
+</tr>
+<tr>
+    <td class="lbl">15. No. prontuario hospitalar:</td>
+    <td class="val">{{ c.get('No. prontuario hospitalar', '') }}</td>
+    <td class="lbl">16. Data da internacao:</td>
+    <td class="val">{{ c.get('Data da internacao', '') }}</td>
+</tr>
+<tr>
+    <td class="lbl">17. Data da alta:</td>
+    <td class="val" colspan="3">{{ c.get('Data da alta', '') }}</td>
+</tr>
+<tr>
+    <td class="lbl">18. Estado a hospitalizacao:</td>
+    <td class="val" colspan="3">
+        <table class="ckt"><tr>
+            <td><span class="cb">{{ 'X' if c.get('Estado do paciente: Consciente') else '' }}</span> Consciente</td>
+            <td><span class="cb">{{ 'X' if c.get('Estado do paciente: Inconsciente') else '' }}</span> Inconsciente</td>
+            <td><span class="cb">{{ 'X' if c.get('Estado do paciente: Agonizante') else '' }}</span> Agonizante</td>
+            <td><span class="cb">{{ 'X' if c.get('Estado do paciente: Sem vida') else '' }}</span> Sem vida</td>
+        </tr></table>
+    </td>
+</tr>
+<tr>
+    <td class="lbl">19. Motivo da alta:</td>
+    <td class="val" colspan="3">
+        <table class="ckt"><tr>
+            <td><span class="cb">{{ 'X' if c.get('Motivo da alta: Cura') else '' }}</span> Cura</td>
+            <td><span class="cb">{{ 'X' if c.get('Motivo da alta: Transferencia') else '' }}</span> Transferencia</td>
+            <td><span class="cb">{{ 'X' if c.get('Motivo da alta: Saida solicitacao') else '' }}</span> Saida a solicitacao</td>
+            <td><span class="cb">{{ 'X' if c.get('Motivo da alta: Evasao') else '' }}</span> Evasao</td>
+            <td><span class="cb">{{ 'X' if c.get('Motivo da alta: Obito') else '' }}</span> Obito</td>
+        </tr></table>
+    </td>
+</tr>
+<tr>
+    <td class="lbl" style="vertical-align:top;">20. Atendimento pre-hospitalar:</td>
+    <td class="val" colspan="3"><div class="txbox txrow">{{ c.get('Atendimento pre-hospitalar', '') }}</div></td>
+</tr>
+<tr>
+    <td class="lbl" style="vertical-align:top;">21. Hipotese diagnostica da alta:</td>
+    <td class="val" colspan="3"><div class="txbox txrow">{{ c.get('Hipotese diagnostica da alta', '') }}</div></td>
+</tr>
+<tr>
+    <td class="lbl" style="vertical-align:top;">22. Resultados de exames relevantes:</td>
+    <td class="val" colspan="3"><div class="txbox txrow">{{ c.get('Resultados de exames relevantes', '') }}</div></td>
+</tr>
+<tr>
+    <td class="lbl" style="vertical-align:top;">23. Procedimentos realizados:</td>
+    <td class="val" colspan="3"><div class="txbox txrow">{{ c.get('Procedimentos realizados', '') }}</div></td>
+</tr>
+<tr>
+    <td class="lbl" style="vertical-align:top;">24. Causa do obito no prontuario:</td>
+    <td class="val" colspan="3"><div class="txbox txrow">{{ c.get('Causa do obito no prontuario', '') }}</div></td>
+</tr>
+</table>
+
+
+<!-- ============================================================ -->
+<!-- PAGINA 2 -->
+<!-- ============================================================ -->
+<div class="page-break"></div>
+
+<!-- CABECALHO PAG 2 -->
+<table class="cab">
+<tr>
+    <td class="c-esq"><div class="ms-t"><b>MINISTERIO DA SAUDE</b><span>Continuacao - Pagina 2</span></div></td>
+    <td class="c-centro"><div class="tit-doc" style="font-size:8pt;">IOCMD - Continuacao</div></td>
+    <td class="c-dir"><div class="i1-box"><div class="i1-lbl">No. do Caso</div><div class="i1-line"></div><div class="i1-sig">IOCMD</div></div></td>
+</tr>
+</table>
+
+<!-- BLOCO D - INVESTIGACAO EM OUTROS LOCAIS -->
+<table class="ft av">
+<tr class="st"><td colspan="4">D - INVESTIGACAO DA CAUSA DA MORTE EM OUTROS LOCAIS (Campo 25)</td></tr>
+
+<!-- SINAN -->
+<tr>
+    <td class="lbl" style="vertical-align:top;">SINAN:</td>
+    <td class="val" colspan="3">
+        <table class="ckt"><tr>
+            <td><span class="cb">{{ 'X' if c.get('Investigacao SINAN: Investigado') else '' }}</span> Investigado</td>
+            <td><span class="cb">{{ 'X' if c.get('Investigacao SINAN: Nao disponivel') else '' }}</span> Nao disponivel</td>
+            <td><span class="cb">{{ 'X' if c.get('Investigacao SINAN: Nao realizado') else '' }}</span> Nao realizado</td>
+        </tr></table>
+        <div style="margin-top:2pt;"><span style="font-size:6.5pt;font-weight:bold;">Qual patologia?</span> <span style="font-size:7.5pt;">{{ c.get('Investigacao SINAN - patologia', '') }}</span></div>
+    </td>
+</tr>
+
+<!-- IML -->
+<tr>
+    <td class="lbl" style="vertical-align:top;">IML:</td>
+    <td class="val" colspan="3">
+        <table class="ckt"><tr>
+            <td><span class="cb">{{ 'X' if c.get('Investigacao IML: Investigado') else '' }}</span> Investigado</td>
+            <td><span class="cb">{{ 'X' if c.get('Investigacao IML: Nao disponivel') else '' }}</span> Nao disponivel</td>
+            <td><span class="cb">{{ 'X' if c.get('Investigacao IML: Nao realizado') else '' }}</span> Nao realizado</td>
+        </tr></table>
+        <div style="margin-top:2pt;"><span style="font-size:6.5pt;font-weight:bold;">Laudo:</span> <span style="font-size:7.5pt;">{{ c.get('Investigacao IML - laudo', '') }}</span></div>
+    </td>
+</tr>
+
+<!-- SVO -->
+<tr>
+    <td class="lbl" style="vertical-align:top;">SVO:</td>
+    <td class="val" colspan="3">
+        <table class="ckt"><tr>
+            <td><span class="cb">{{ 'X' if c.get('Investigacao SVO: Investigado') else '' }}</span> Investigado</td>
+            <td><span class="cb">{{ 'X' if c.get('Investigacao SVO: Nao disponivel') else '' }}</span> Nao disponivel</td>
+            <td><span class="cb">{{ 'X' if c.get('Investigacao SVO: Nao realizado') else '' }}</span> Nao realizado</td>
+        </tr></table>
+        <div style="margin-top:2pt;"><span style="font-size:6.5pt;font-weight:bold;">Laudo:</span> <span style="font-size:7.5pt;">{{ c.get('Investigacao SVO - laudo', '') }}</span></div>
+    </td>
+</tr>
+
+<!-- FUNASA -->
+<tr>
+    <td class="lbl" style="vertical-align:top;">FUNASA:</td>
+    <td class="val" colspan="3">
+        <table class="ckt"><tr>
+            <td><span class="cb">{{ 'X' if c.get('Investigacao FUNASA: Investigado') else '' }}</span> Investigado</td>
+            <td><span class="cb">{{ 'X' if c.get('Investigacao FUNASA: Nao disponivel') else '' }}</span> Nao disponivel</td>
+            <td><span class="cb">{{ 'X' if c.get('Investigacao FUNASA: Nao realizado') else '' }}</span> Nao realizado</td>
+        </tr></table>
+        <div style="margin-top:2pt;"><span style="font-size:6.5pt;font-weight:bold;">Descricao:</span> <span style="font-size:7.5pt;">{{ c.get('Investigacao FUNASA - descricao', '') }}</span></div>
+    </td>
+</tr>
+
+<!-- JORNAL / INTERNET -->
+<tr>
+    <td class="lbl" style="vertical-align:top;">Jornal / Internet:</td>
+    <td class="val" colspan="3">
+        <table class="ckt"><tr>
+            <td><span class="cb">{{ 'X' if c.get('Investigacao jornal/internet: Consultado') else '' }}</span> Consultado</td>
+            <td><span class="cb">{{ 'X' if c.get('Investigacao jornal/internet: Nao disponivel') else '' }}</span> Nao disponivel</td>
+        </tr></table>
+        <div style="margin-top:2pt;"><span style="font-size:6.5pt;font-weight:bold;">Descricao sumaria:</span> <span style="font-size:7.5pt;">{{ c.get('Investigacao jornal/internet - descricao', '') }}</span></div>
+    </td>
+</tr>
+</table>
+
+<!-- BLOCO E - AUTOPSIA VERBAL -->
+<table class="ft av">
+<tr class="st"><td colspan="4">E - INVESTIGACAO DOMICILIAR - AUTOPSIA VERBAL (Campo 26)</td></tr>
+<tr>
+    <td class="lbl">Formulario utilizado:</td>
+    <td class="val" colspan="3">
+        <table class="ckt"><tr>
+            <td><span class="cb">{{ 'X' if c.get('Formulario utilizado: Form 1') else '' }}</span> Form 1</td>
+            <td><span class="cb">{{ 'X' if c.get('Formulario utilizado: Form 2') else '' }}</span> Form 2</td>
+            <td><span class="cb">{{ 'X' if c.get('Formulario utilizado: Form 3') else '' }}</span> Form 3</td>
+            <td><span class="cb">{{ 'X' if c.get('Formulario utilizado: Form 3.1-MIF') else '' }}</span> Form 3.1-MIF</td>
+            <td><span class="cb">{{ 'X' if c.get('Formulario utilizado: Nao realizada') else '' }}</span> Nao realizada</td>
+        </tr></table>
+    </td>
+</tr>
+<tr>
+    <td class="lbl" style="vertical-align:top;">Formulario utilizado (detalhe):</td>
+    <td class="val" colspan="3"><div class="txbox txrow">{{ c.get('Formulario utilizado (detalhe)', '') }}</div></td>
+</tr>
+</table>
+
+<!-- BLOCO F - CONCLUSAO / CID-10 -->
+<table class="ft av">
+<tr class="st"><td colspan="4">F - CONCLUSAO DA INVESTIGACAO</td></tr>
+<tr>
+    <td class="lbl" style="vertical-align:top;">Causa basica original (DO):</td>
+    <td class="val" colspan="3"><div class="txbox">{{ c.get('Causa basica original', '') }}</div></td>
+</tr>
+</table>
+
+<!-- TABELA CID-10 -->
+<table class="cid-tbl av">
+<tr>
+    <th colspan="4" style="text-align:left;padding-left:4pt;">Classificacao CID-10 - Causa da Morte (Apos Investigacao)</th>
+</tr>
+<tr>
+    <th class="cid-lbl" style="width:16%;">Parte</th>
+    <th class="cid-lbl" style="width:8%;">Linha</th>
+    <th class="cid-desc" style="width:52%;">Diagnostico</th>
+    <th class="cid-code" style="width:24%;">CID-10</th>
+</tr>
+
+<tr>
+    <td class="cid-lbl" rowspan="4" style="vertical-align:top;">Parte I<br><span style="font-size:6pt;font-weight:normal;">"Devido ou como<br>consequencia de"</span></td>
+    <td style="text-align:center;font-weight:bold;">(a)</td>
+    <td><div class="txbox" style="min-height:16pt;">{{ c.get('Causa direta - diagnostico', '') }}</div></td>
+    <td class="cid-code" style="font-weight:bold;font-size:9pt;">{{ c.get('Causa direta - CID', '') }}</td>
+</tr>
+<tr>
+    <td style="text-align:center;font-weight:bold;">(b)</td>
+    <td><div class="txbox" style="min-height:16pt;">{{ c.get('Antecedente (linha b) - diagnostico', '') }}</div></td>
+    <td class="cid-code" style="font-weight:bold;font-size:9pt;">{{ c.get('Antecedente (linha b) - CID', '') }}</td>
+</tr>
+<tr>
+    <td style="text-align:center;font-weight:bold;">(c)</td>
+    <td><div class="txbox" style="min-height:16pt;">{{ c.get('Antecedente (linha c) - diagnostico', '') }}</div></td>
+    <td class="cid-code" style="font-weight:bold;font-size:9pt;">{{ c.get('Antecedente (linha c) - CID', '') }}</td>
+</tr>
+<tr>
+    <td style="text-align:center;font-weight:bold;">(d)</td>
+    <td><div class="txbox" style="min-height:16pt;">{{ c.get('Causa basica - diagnostico', '') }}</div></td>
+    <td class="cid-code" style="font-weight:bold;font-size:9pt;">{{ c.get('Causa basica - CID', '') }}</td>
+</tr>
+
+<tr>
+    <td class="cid-lbl" style="vertical-align:top;">Parte II</td>
+    <td style="text-align:center;">-</td>
+    <td><div class="txbox" style="min-height:16pt;">{{ c.get('Outras condicoes significativas', '') }}</div></td>
+    <td class="cid-code">{{ c.get('Parte II - CID', '') }}</td>
+</tr>
+</table>
+
+<!-- OUTRAS CONDICOES -->
+<table class="ft av">
+<tr>
+    <td class="lbl" style="vertical-align:top;">Outras condicoes significativas:</td>
+    <td class="val" colspan="3"><div class="txbox txrow">{{ c.get('Outras condicoes significativas', '') }}</div></td>
+</tr>
+</table>
+
+<!-- ASSINATURAS -->
+<table class="sig-tbl av" style="margin-top:8pt;">
+<tr>
+    <td style="width:50%;padding-right:15pt;">
+        <div class="sig-line"></div>
+        <div class="sig-sub">Responsavel pela Investigacao</div>
+        <div style="margin-top:3pt;font-size:7pt;">Nome: {{ c.get('Responsavel pela investigacao', '') }}</div>
+        <div style="margin-top:2pt;font-size:6.5pt;">Data: {{ c.get('Data da conclusao', '') }}</div>
+    </td>
+    <td style="width:50%;padding-left:15pt;">
+        <div class="sig-line"></div>
+        <div class="sig-sub">Coordenador da Vigilancia em Saude (SIM)</div>
+        <div style="margin-top:3pt;font-size:7pt;">Nome: {{ c.get('Coordenador Vigilancia SIM', '') }}</div>
+        <div style="margin-top:2pt;font-size:6.5pt;">Data: {{ c.get('Data da conclusao', '') }}</div>
+    </td>
+</tr>
+</table>
+
+<!-- RODAPE -->
+<table class="ft" style="margin-top:6pt;">
+<tr class="rod"><td>Ficha gerada em {{ now.strftime('%d/%m/%Y as %H:%M') if now else '' }} &mdash; Sistema de Informacoes de Obito &mdash; Prefeitura de Goianira</td></tr>
+</table>
 
 </body>
 </html>
