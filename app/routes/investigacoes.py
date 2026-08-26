@@ -116,6 +116,10 @@ def imprimir(id):
     
     campos_dict = InvestigacaoService.obter_para_impressao(inv)
     
+    from app.utils.pdf import _logo_data_uri
+    logo_ms = _logo_data_uri('logo-ms.png')
+    logo_pref = _logo_data_uri('logo.png')
+
     template_map = {
         'MIF': 'investigacoes/imprimir_mif.html',
         'MATERNO': 'investigacoes/imprimir_materno.html',
@@ -124,7 +128,8 @@ def imprimir(id):
         'INFANTIL': 'investigacoes/imprimir_infantil.html',
     }
     tmpl = template_map.get(inv.tipo, 'investigacoes/imprimir.html')
-    return render_template(tmpl, inv=inv, c=campos_dict, now=datetime.now())
+    return render_template(tmpl, inv=inv, c=campos_dict, now=datetime.now(),
+                           logo_ms=logo_ms, logo_pref=logo_pref)
 
 @bp.route('/<int:id>/pdf')
 @login_required
