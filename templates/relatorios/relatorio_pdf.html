@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Relatorio - Sistema de Obito</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+@page{size:210mm 297mm portrait;margin:10mm 12mm 12mm 12mm}
+body{font-family:"DejaVu Sans",Arial,Helvetica,sans-serif;font-size:9pt;line-height:1.3;color:#000;background:#fff}
+
+/* CABECALHO */
+.cab{width:100%;border-collapse:collapse;margin-bottom:6pt}
+.cab td{padding:2pt 3pt;vertical-align:top}
+.cab .c-esq{width:35%}
+.cab .c-centro{width:45%;text-align:center}
+.cab .c-dir{width:20%}
+.cab .logo-img{height:45px;width:auto;display:block}
+.cab .logo-img-c{height:35px;width:auto;display:inline-block;margin-bottom:1pt}
+.cab .ms-t{font-size:6.5pt;line-height:1.2}
+.cab .ms-t b{font-size:7.5pt;display:block;margin-bottom:1pt}
+.cab .ms-t span{display:block}
+.cab .mun-t{font-size:6.5pt;line-height:1.2}
+.cab .mun-t b{font-size:7.5pt;display:block;margin-bottom:1pt}
+.cab .mun-t span{display:block}
+.cab .i1-box{border:1.5pt solid #000;padding:2pt 3pt;text-align:center;width:100%}
+.cab .i1-box .i1-lbl{font-size:6.5pt;font-weight:bold}
+.cab .i1-box .i1-line{border-bottom:0.5pt solid #000;height:10pt;margin:1pt 0}
+.cab .tit-row td{border:none;text-align:center;padding:2pt 0 0 0}
+.cab .tit-doc{font-size:10pt;font-weight:bold;line-height:1.3;border-top:1pt solid #000;border-bottom:1pt solid #000;padding:3pt 0}
+
+/* TABELAS */
+.ft{width:100%;border-collapse:collapse;margin-bottom:5pt}
+.ft td{border:0.5pt solid #000;padding:2pt 4pt;vertical-align:middle;font-size:8.5pt}
+.st td{background:#e0e0e0!important;font-weight:bold;font-size:8.5pt;padding:3pt 4pt}
+.lbl{font-size:8pt;font-weight:bold;width:40%;padding-right:3pt}
+.val{font-size:8.5pt}
+
+/* TABELA DE DADOS */
+.dtbl{width:100%;border-collapse:collapse;font-size:8pt}
+.dtbl th{background:#e8e8e8;border:0.5pt solid #000;padding:3pt 4pt;font-size:7.5pt;font-weight:bold;text-align:left;vertical-align:middle}
+.dtbl td{border:0.5pt solid #000;padding:3pt 4pt;vertical-align:middle;font-size:8pt}
+.dtbl .num{text-align:right;font-weight:bold}
+
+/* RODAPE */
+.rod td{text-align:center;font-size:7pt;color:#666;border-top:0.8pt solid #000;padding-top:3pt}
+</style>
+</head>
+<body>
+
+<!-- CABECALHO -->
+<table class="cab">
+<tr>
+    <td class="c-esq">
+        {% if logo_ms %}<img src="{{ logo_ms }}" alt="MS" class="logo-img">{% endif %}
+        <div class="ms-t">
+            <b>MINISTERIO DA SAUDE</b>
+            <span>Secretaria de Vigilancia em Saude</span>
+        </div>
+    </td>
+    <td class="c-centro">
+        {% if logo_pref %}<img src="{{ logo_pref }}" alt="Goianira" class="logo-img-c">{% endif %}
+        <div class="mun-t">
+            <b>FUNDO MUNICIPAL DE SAUDE DE GOIANIRA</b>
+            <span>Secretaria Municipal de Saude</span>
+        </div>
+    </td>
+    <td class="c-dir">
+        <div class="i1-box">
+            <div class="i1-lbl">Relatorio</div>
+            <div class="i1-line"></div>
+            <div style="font-size:11pt;font-weight:bold;">{{ tipo|upper }}</div>
+        </div>
+    </td>
+</tr>
+<tr class="tit-row">
+    <td colspan="3">
+        <div class="tit-doc">
+            {% if tipo == 'geral' %}Relatorio Geral de Obitos
+            {% elif tipo == 'investigacoes' %}Relatorio de Investigações
+            {% elif tipo == 'causas' %}Relatorio de Causas de Obito (CID-10)
+            {% endif %}
+        </div>
+    </td>
+</tr>
+</table>
+
+<!-- INFO -->
+<table class="ft">
+<tr>
+    <td class="lbl">Periodo:</td>
+    <td class="val">{{ data_inicio }} a {{ data_fim }}</td>
+    <td class="lbl" style="width:20%;">Gerado por:</td>
+    <td class="val" style="width:25%;">{{ usuario }}</td>
+</tr>
+<tr>
+    <td class="lbl">Data de geracao:</td>
+    <td class="val" colspan="3">{{ now.strftime('%d/%m/%Y as %H:%M') }}</td>
+</tr>
+</table>
+
+<!-- CONTEUDO -->
+{% if tipo == 'geral' %}
+
+<table class="ft">
+<tr class="st"><td colspan="4">RESUMO GERAL</td></tr>
+<tr>
+    <td class="lbl">Total de obitos no periodo:</td>
+    <td class="val" style="font-size:14pt;font-weight:bold;color:var(--primary);">{{ dados.total }}</td>
+    <td class="lbl">&nbsp;</td>
+    <td class="val">&nbsp;</td>
+</tr>
+</table>
+
+<table class="dtbl">
+<tr><th colspan="2">Obitos por Sexo</th></tr>
+<tr><th style="width:60%;">Categoria</th><th style="width:40%;text-align:right;">Quantidade</th></tr>
+{% for item in dados.por_sexo %}
+<tr><td>{{ item.label }}</td><td class="num">{{ item.value }}</td></tr>
+{% endfor %}
+</table>
+
+<table class="dtbl" style="margin-top:5pt;">
+<tr><th colspan="2">Obitos por Local</th></tr>
+<tr><th style="width:60%;">Categoria</th><th style="width:40%;text-align:right;">Quantidade</th></tr>
+{% for item in dados.por_local %}
+<tr><td>{{ item.label }}</td><td class="num">{{ item.value }}</td></tr>
+{% endfor %}
+</table>
+
+
+{% elif tipo == 'investigacoes' %}
+
+<table class="ft">
+<tr class="st"><td colspan="4">RESUMO DE INVESTIGACOES</td></tr>
+<tr>
+    <td class="lbl">Total de investigacoes:</td>
+    <td class="val" style="font-size:14pt;font-weight:bold;color:var(--primary);">{{ dados.total }}</td>
+    <td class="lbl">&nbsp;</td>
+    <td class="val">&nbsp;</td>
+</tr>
+</table>
+
+<table class="dtbl">
+<tr><th colspan="2">Investigacoes por Tipo</th></tr>
+<tr><th style="width:60%;">Tipo</th><th style="width:40%;text-align:right;">Quantidade</th></tr>
+{% for item in dados.por_tipo %}
+<tr><td>{{ item.label }}</td><td class="num">{{ item.value }}</td></tr>
+{% endfor %}
+</table>
+
+<table class="dtbl" style="margin-top:5pt;">
+<tr><th colspan="2">Investigacoes por Status</th></tr>
+<tr><th style="width:60%;">Status</th><th style="width:40%;text-align:right;">Quantidade</th></tr>
+{% for item in dados.por_status %}
+<tr><td>{{ item.label }}</td><td class="num">{{ item.value }}</td></tr>
+{% endfor %}
+</table>
+
+
+{% elif tipo == 'causas' %}
+
+<table class="dtbl">
+<tr><th colspan="2">Principais Causas de Obito (CID-10)</th></tr>
+<tr><th style="width:60%;">CID-10</th><th style="width:40%;text-align:right;">Quantidade</th></tr>
+{% for item in dados.causas %}
+<tr><td>{{ item.label }}</td><td class="num">{{ item.value }}</td></tr>
+{% endfor %}
+</table>
+
+{% endif %}
+
+<!-- RODAPE -->
+<table class="ft" style="margin-top:10pt;">
+<tr class="rod"><td>Documento gerado automaticamente pelo Sistema de Informacoes de Obito &mdash; Prefeitura de Goianira</td></tr>
+</table>
+
+</body>
+</html>

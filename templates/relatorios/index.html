@@ -27,15 +27,22 @@
     <div class="col-md-8">
         <div class="card">
             <div class="card-body">
-                <div class="d-flex gap-2">
+                <div class="d-flex gap-2 flex-wrap">
                     <button class="btn btn-outline-primary btn-sm active" onclick="carregarDados('geral')" id="btn-geral">
-                        <i class="bi bi-table"></i> Visão Geral
+                        <i class="bi bi-table"></i> Visao Geral
                     </button>
                     <button class="btn btn-outline-primary btn-sm" onclick="carregarDados('investigacoes')" id="btn-investigacoes">
-                        <i class="bi bi-search"></i> Investigações
+                        <i class="bi bi-search"></i> Investigacoes
                     </button>
                     <button class="btn btn-outline-primary btn-sm" onclick="carregarDados('causas')" id="btn-causas">
                         <i class="bi bi-heart-pulse"></i> Causas
+                    </button>
+                    <span class="vr"></span>
+                    <button class="btn btn-outline-success btn-sm" onclick="exportar('csv')" id="btn-csv">
+                        <i class="bi bi-filetype-csv"></i> CSV
+                    </button>
+                    <button class="btn btn-outline-danger btn-sm" onclick="exportar('pdf')" id="btn-pdf">
+                        <i class="bi bi-file-earmark-pdf"></i> PDF
                     </button>
                 </div>
             </div>
@@ -65,8 +72,17 @@
 
 <script>
 let graficoAtual = null;
+let tipoAtual = 'geral';
+
+function exportar(formato) {
+    const data_inicio = document.getElementById('data_inicio').value;
+    const data_fim = document.getElementById('data_fim').value;
+    const url = `/relatorios/exportar/${formato}?tipo=${tipoAtual}&data_inicio=${data_inicio}&data_fim=${data_fim}`;
+    window.location.href = url;
+}
 
 function carregarDados(tipo) {
+    tipoAtual = tipo;
     document.querySelectorAll('[id^="btn-"]').forEach(b => b.classList.remove('active'));
     document.getElementById('btn-' + tipo).classList.add('active');
 
