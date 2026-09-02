@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash, jsonify
 from flask_login import login_required, current_user
 from app.extensions import db
+from app.forms import ObitoForm
 from app.services.obito_service import ObitoService
 from app.services.investigacao_service import InvestigacaoService
 from app.utils.audit import audit_log
@@ -52,8 +53,8 @@ def novo():
         if erros:
             for erro in erros:
                 flash(erro, 'danger')
-            return render_template('obitos/form.html', 
-                                   form=Form(request.form), 
+            return render_template('obitos/form.html',
+                                   form=ObitoForm(request.form),
                                    titulo='Novo Óbito')
         
         if inv:
@@ -64,7 +65,6 @@ def novo():
         return redirect(url_for('obitos.detalhe', id=obito.id))
     
     # GET - renderiza formulário
-    from app.forms import ObitoForm
     form = ObitoForm()
     return render_template('obitos/form.html', form=form, titulo='Novo Óbito')
 
