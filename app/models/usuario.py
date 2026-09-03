@@ -24,3 +24,6 @@ class Usuario(UserMixin, db.Model):
 
     def __repr__(self):
         return f'<Usuario {self.usuario}>'
+
+    def is_admin(self):
+        return self.cargo in ('Admin', 'Supervisor')

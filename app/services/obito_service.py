@@ -47,16 +47,16 @@ class ObitoService:
             data_nascimento=data_nascimento,
             data_obito=data_obito,
             sexo=dados.get('sexo'),
-            nome_mae=dados.get('nome_mae', '').strip() or None,
-            nome_pai=dados.get('nome_pai', '').strip() or None,
-            numero_dob=dados.get('numero_dob', '').strip(),
-            causa_morte=dados.get('causa_morte', '').strip() or None,
+            nome_mae=(dados.get('nome_mae') or '').strip() or None,
+            nome_pai=(dados.get('nome_pai') or '').strip() or None,
+            numero_dob=(dados.get('numero_dob') or '').strip(),
+            causa_morte=(dados.get('causa_morte') or '').strip() or None,
             causa_morte_cid=cid or None,
             causas_morte_cids=dados.get('causas_morte_cids', []),
             local_obito=dados.get('local_obito'),
-            municipio_ocorrencia=dados.get('municipio_ocorrencia', '').strip() or None,
-            endereco=dados.get('endereco', '').strip() or None,
-            observacoes=dados.get('observacoes', '').strip() or None,
+            municipio_ocorrencia=(dados.get('municipio_ocorrencia') or '').strip() or None,
+            endereco=(dados.get('endereco') or '').strip() or None,
+            observacoes=(dados.get('observacoes') or '').strip() or None,
             estabelecimento_id=dados.get('estabelecimento_id'),
             usuario_id=usuario.id,
         )
@@ -110,16 +110,16 @@ class ObitoService:
         obito.data_nascimento = data_nascimento
         obito.data_obito = data_obito
         obito.sexo = dados.get('sexo')
-        obito.nome_mae = dados.get('nome_mae', '').strip() or None
-        obito.nome_pai = dados.get('nome_pai', '').strip() or None
+        obito.nome_mae = (dados.get('nome_mae') or '').strip() or None
+        obito.nome_pai = (dados.get('nome_pai') or '').strip() or None
         obito.numero_dob = numero_dob
-        obito.causa_morte = dados.get('causa_morte', '').strip() or None
+        obito.causa_morte = (dados.get('causa_morte') or '').strip() or None
         obito.causa_morte_cid = cid or None
         obito.causas_morte_cids = dados.get('causas_morte_cids', [])
         obito.local_obito = dados.get('local_obito')
-        obito.municipio_ocorrencia = dados.get('municipio_ocorrencia', '').strip() or None
-        obito.endereco = dados.get('endereco', '').strip() or None
-        obito.observacoes = dados.get('observacoes', '').strip() or None
+        obito.municipio_ocorrencia = (dados.get('municipio_ocorrencia') or '').strip() or None
+        obito.endereco = (dados.get('endereco') or '').strip() or None
+        obito.observacoes = (dados.get('observacoes') or '').strip() or None
         obito.estabelecimento_id = dados.get('estabelecimento_id')
         obito.atualizado_em = datetime.utcnow()
         
