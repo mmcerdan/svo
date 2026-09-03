@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, redirect, url_for, flash, jsonify, session, abort
+from flask import Blueprint, render_template, request, redirect, url_for, flash, jsonify
 from flask_login import login_required, current_user
 from app.extensions import db
 from app.forms import ObitoForm
@@ -7,15 +7,8 @@ from app.services.investigacao_service import InvestigacaoService
 from app.utils.audit import audit_log
 from app.utils.campos import get_campos_padrao_investigacao, agrupar_campos_list
 from datetime import datetime, date
-import hashlib
 
 bp = Blueprint('obitos', __name__, url_prefix='/obitos')
-
-def _validar_csrf():
-    token = request.form.get('csrf_token', '')
-    expected = hashlib.sha256(session.get('csrf_token', '').encode()).hexdigest()
-    if not token or token != expected:
-        abort(403)
 
 @bp.route('/')
 @login_required
@@ -29,26 +22,27 @@ def lista():
 @login_required
 def novo():
     from app.models import Usuario
-    if request.method == 'POST':
-        _validar_csrf()
+    form = ObitoForm(request.form if request.method == 'POST' else None)
+    
+    if request.method == 'POST' and form.validate():
         # Prepara dados do óbito
         dados_obito = {
-            'nome': request.form.get('nome', '').strip(),
-            'data_nascimento': request.form.get('data_nascimento') or None,
-            'data_obito': request.form.get('data_obito'),
-            'sexo': request.form.get('sexo') or None,
-            'nome_mae': request.form.get('nome_mae', '').strip() or None,
-            'nome_pai': request.form.get('nome_pai', '').strip() or None,
-            'numero_dob': request.form.get('numero_dob', '').strip(),
-            'causa_morte': request.form.get('causa_morte', '').strip() or None,
-            'causa_morte_cid': request.form.get('causa_morte_cid', '').strip().upper() or None,
-            'local_obito': request.form.get('local_obito') or None,
-            'municipio_ocorrencia': request.form.get('municipio_ocorrencia', '').strip() or None,
-            'endereco': request.form.get('endereco', '').strip() or None,
-            'observacoes': request.form.get('observacoes', '').strip() or None,
+            'nome': form.nome.data.strip() if form.nome.data else '',
+            'data_nascimento': form.data_nascimento.data,
+            'data_obito': form.data_obito.data,
+            'sexo': form.sexo.data,
+            'nome_mae': form.nome_mae.data.strip() if form.nome_mae.data else None,
+            'nome_pai': form.nome_pai.data.strip() if form.nome_pai.data else None,
+            'numero_dob': form.numero_dob.data.strip() if form.numero_dob.data else '',
+            'causa_morte': form.causa_morte.data.strip() if form.causa_morte.data else None,
+            'causa_morte_cid': form.causa_morte_cid.data.strip().upper() if form.causa_morte_cid.data else None,
+            'local_obito': form.local_obito.data,
+            'municipio_ocorrencia': form.municipio_ocorrencia.data.strip() if form.municipio_ocorrencia.data else None,
+            'endereco': form.endereco.data.strip() if form.endereco.data else None,
+            'observacoes': form.observacoes.data.strip() if form.observacoes.data else None,
         }
         
-        tipo_investigacao = request.form.get('criar_investigacao') or None
+        tipo_investigacao = form.criar_investigacao.data or None
         dados_campos = request.form.to_dict() if tipo_investigacao else None
         
         # Cria óbito + investigação em transação única
@@ -59,9 +53,7 @@ def novo():
         if erros:
             for erro in erros:
                 flash(erro, 'danger')
-            return render_template('obitos/form.html',
-                                   form=ObitoForm(request.form),
-                                   titulo='Novo Óbito')
+            return render_template('obitos/form.html', form=form, titulo='Novo Óbito')
         
         if inv:
             flash('Óbito cadastrado com investigação!', 'success')
@@ -70,8 +62,11 @@ def novo():
         flash('Óbito cadastrado com sucesso!', 'success')
         return redirect(url_for('obitos.detalhe', id=obito.id))
     
-    # GET - renderiza formulário
-    form = ObitoForm()
+    if request.method == 'POST' and not form.validate():
+        for field, errors in form.errors.items():
+            for error in errors:
+                flash(f'{getattr(form, field).label.text}: {error}', 'danger')
+    
     return render_template('obitos/form.html', form=form, titulo='Novo Óbito')
 
 @bp.route('/<int:id>')
@@ -91,36 +86,40 @@ def editar(id):
         flash('Óbito não encontrado.', 'danger')
         return redirect(url_for('obitos.lista'))
     
-    if request.method == 'POST':
-        _validar_csrf()
+    form = ObitoForm(request.form if request.method == 'POST' else None, obj=obito)
+    
+    if request.method == 'POST' and form.validate():
         dados = {
-            'nome': request.form.get('nome', '').strip(),
-            'data_nascimento': request.form.get('data_nascimento') or None,
-            'data_obito': request.form.get('data_obito'),
-            'sexo': request.form.get('sexo') or None,
-            'nome_mae': request.form.get('nome_mae', '').strip() or None,
-            'nome_pai': request.form.get('nome_pai', '').strip() or None,
-            'numero_dob': request.form.get('numero_dob', '').strip(),
-            'causa_morte': request.form.get('causa_morte', '').strip() or None,
-            'causa_morte_cid': request.form.get('causa_morte_cid', '').strip().upper() or None,
-            'local_obito': request.form.get('local_obito') or None,
-            'municipio_ocorrencia': request.form.get('municipio_ocorrencia', '').strip() or None,
-            'endereco': request.form.get('endereco', '').strip() or None,
-            'observacoes': request.form.get('observacoes', '').strip() or None,
+            'nome': form.nome.data.strip() if form.nome.data else '',
+            'data_nascimento': form.data_nascimento.data,
+            'data_obito': form.data_obito.data,
+            'sexo': form.sexo.data,
+            'nome_mae': form.nome_mae.data.strip() if form.nome_mae.data else None,
+            'nome_pai': form.nome_pai.data.strip() if form.nome_pai.data else None,
+            'numero_dob': form.numero_dob.data.strip() if form.numero_dob.data else '',
+            'causa_morte': form.causa_morte.data.strip() if form.causa_morte.data else None,
+            'causa_morte_cid': form.causa_morte_cid.data.strip().upper() if form.causa_morte_cid.data else None,
+            'local_obito': form.local_obito.data,
+            'municipio_ocorrencia': form.municipio_ocorrencia.data.strip() if form.municipio_ocorrencia.data else None,
+            'endereco': form.endereco.data.strip() if form.endereco.data else None,
+            'observacoes': form.observacoes.data.strip() if form.observacoes.data else None,
         }
         
         erros = ObitoService.atualizar(obito, current_user, dados)
         if erros:
             for erro in erros:
                 flash(erro, 'danger')
-            return render_template('obitos/form.html', form=ObitoForm(request.form, obj=obito), 
-                                   titulo='Editar Óbito', obito=obito)
+            return render_template('obitos/form.html', form=form, titulo='Editar Óbito', obito=obito)
         
         db.session.commit()
         flash('Óbito atualizado com sucesso!', 'success')
         return redirect(url_for('obitos.detalhe', id=obito.id))
     
-    form = ObitoForm(obj=obito)
+    if request.method == 'POST' and not form.validate():
+        for field, errors in form.errors.items():
+            for error in errors:
+                flash(f'{getattr(form, field).label.text}: {error}', 'danger')
+    
     return render_template('obitos/form.html', form=form, titulo='Editar Óbito', obito=obito)
 
 @bp.route('/<int:id>/excluir', methods=['POST'])
