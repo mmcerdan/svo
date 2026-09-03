@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, redirect, url_for, flash, jsonify, send_from_directory, current_app
+from flask import Blueprint, render_template, request, redirect, url_for, flash, jsonify, send_from_directory, current_app, session, abort
 from flask_login import login_required, current_user
 from app.extensions import db
 from app.models import Investigacao, InvestigacaoCampo, Anexo, Obito
@@ -11,9 +11,16 @@ from app.utils.campos import agrupar_campos as agrupar_campos_util
 from datetime import datetime, date
 import uuid
 import os
+import hashlib
 from werkzeug.utils import secure_filename
 
 bp = Blueprint('investigacoes', __name__, url_prefix='/investigacoes')
+
+def _validar_csrf():
+    token = request.form.get('csrf_token', '')
+    expected = hashlib.sha256(session.get('csrf_token', '').encode()).hexdigest()
+    if not token or token != expected:
+        abort(403)
 
 @bp.route('/')
 @login_required
@@ -35,6 +42,7 @@ def lista():
 def nova(obito_id):
     from app.models import Obito
     from app.forms import InvestigacaoForm
+    from app.models import TIPOS_INVESTIGACAO
     
     obito = db.session.get(Obito, obito_id)
     if not obito:
@@ -42,18 +50,26 @@ def nova(obito_id):
         return redirect(url_for('obitos.lista'))
     
     if request.method == 'POST':
-        form_data = request.form
+        form = InvestigacaoForm(request.form)
+        if not form.validate():
+            flash('Erro de validação. Verifique os campos.', 'danger')
+            return render_template('investigacoes/form.html', form=form, obito=obito, titulo='Nova Investigação')
+        
+        tipo = form.tipo.data
+        tipos_validos = [k for k, v in TIPOS_INVESTIGACAO]
+        if tipo not in tipos_validos:
+            flash('Tipo de investigação inválido.', 'danger')
+            return render_template('investigacoes/form.html', form=form, obito=obito, titulo='Nova Investigação')
+        
         inv = Investigacao(
             obito_id=obito.id,
-            tipo=form_data.get('tipo'),
-            status=form_data.get('status') or 'AGUARDANDO',
-            responsavel=form_data.get('responsavel') or None,
-            data_abertura=datetime.strptime(form_data['data_abertura'], '%Y-%m-%d').date() 
-                          if form_data.get('data_abertura') else date.today(),
-            data_conclusao=datetime.strptime(form_data['data_conclusao'], '%Y-%m-%d').date() 
-                          if form_data.get('data_conclusao') else None,
-            conclusao=form_data.get('conclusao', '').strip() or None,
-            observacoes=form_data.get('observacoes', '').strip() or None,
+            tipo=tipo,
+            status=form.status.data or 'AGUARDANDO',
+            responsavel=form.responsavel.data or None,
+            data_abertura=form.data_abertura.data or date.today(),
+            data_conclusao=form.data_conclusao.data or None,
+            conclusao=form.conclusao.data.strip() if form.conclusao.data else None,
+            observacoes=form.observacoes.data.strip() if form.observacoes.data else None,
             usuario_id=current_user.id,
         )
         db.session.add(inv)
@@ -164,13 +180,24 @@ def editar(id):
         return redirect(url_for('investigacoes.lista'))
     
     if request.method == 'POST':
-        erros = InvestigacaoService.atualizar_status(inv, current_user, request.form)
-        if erros:
-            for erro in erros:
-                flash(erro, 'danger')
+        form = InvestigacaoForm(request.form)
+        if not form.validate():
+            flash('Erro de validação. Verifique os campos.', 'danger')
         else:
-            flash('Investigação atualizada!', 'success')
-            return redirect(url_for('investigacoes.detalhe', id=inv.id))
+            erros = InvestigacaoService.atualizar_status(inv, current_user, {
+                'status': form.status.data,
+                'responsavel': form.responsavel.data,
+                'data_abertura': form.data_abertura.data.strftime('%Y-%m-%d') if form.data_abertura.data else None,
+                'data_conclusao': form.data_conclusao.data.strftime('%Y-%m-%d') if form.data_conclusao.data else None,
+                'conclusao': form.conclusao.data,
+                'observacoes': form.observacoes.data,
+            })
+            if erros:
+                for erro in erros:
+                    flash(erro, 'danger')
+            else:
+                flash('Investigação atualizada!', 'success')
+                return redirect(url_for('investigacoes.detalhe', id=inv.id))
     
     form = InvestigacaoForm(obj=inv)
     return render_template('investigacoes/form.html', form=form, obito=inv.obito,

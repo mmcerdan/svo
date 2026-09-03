@@ -8,6 +8,8 @@ from datetime import datetime
 
 bp = Blueprint('admin', __name__, url_prefix='/admin')
 
+CARGOS_VALIDOS = ['Admin', 'Supervisor', 'Investigador', 'Investigadora', 'Enfermeira', 'Usuário']
+
 @bp.route('/usuarios')
 @login_required
 @admin_required
@@ -34,6 +36,8 @@ def novo_usuario():
             erros.append('Senha é obrigatória.')
         elif len(senha) < 8:
             erros.append('Senha deve ter no mínimo 8 caracteres.')
+        if cargo not in CARGOS_VALIDOS:
+            erros.append(f'Cargo inválido. Opções: {", ".join(CARGOS_VALIDOS)}')
         
         if Usuario.query.filter_by(usuario=usuario).first():
             erros.append('Nome de usuário já existe.')
@@ -73,6 +77,9 @@ def editar_usuario(id):
         if not nome:
             flash('Nome é obrigatório.', 'danger')
             return render_template('admin_usuario_form.html', usuario=u)
+        if cargo not in CARGOS_VALIDOS:
+            flash(f'Cargo inválido. Opções: {", ".join(CARGOS_VALIDOS)}', 'danger')
+            return render_template('admin_usuario_form.html', usuario=u)
         
         antes = {'nome': u.nome, 'cargo': u.cargo}
         
@@ -100,6 +107,10 @@ def editar_usuario(id):
 def ativar_usuario(id):
     u = db.session.get(Usuario, id)
     if u:
+        if u.id == current_user.id:
+            flash('Você não pode desativar seu próprio usuário.', 'danger')
+            return redirect(url_for('admin.lista_usuarios'))
+        
         antes = {'ativo': u.ativo}
         u.ativo = not u.ativo
         db.session.commit()

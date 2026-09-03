@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, redirect, url_for, flash, jsonify
+from flask import Blueprint, render_template, request, redirect, url_for, flash, jsonify, session, abort
 from flask_login import login_required, current_user
 from app.extensions import db
 from app.forms import ObitoForm
@@ -7,8 +7,15 @@ from app.services.investigacao_service import InvestigacaoService
 from app.utils.audit import audit_log
 from app.utils.campos import get_campos_padrao_investigacao, agrupar_campos_list
 from datetime import datetime, date
+import hashlib
 
 bp = Blueprint('obitos', __name__, url_prefix='/obitos')
+
+def _validar_csrf():
+    token = request.form.get('csrf_token', '')
+    expected = hashlib.sha256(session.get('csrf_token', '').encode()).hexdigest()
+    if not token or token != expected:
+        abort(403)
 
 @bp.route('/')
 @login_required
@@ -22,9 +29,8 @@ def lista():
 @login_required
 def novo():
     from app.models import Usuario
-    from wtforms import Form
-    
     if request.method == 'POST':
+        _validar_csrf()
         # Prepara dados do óbito
         dados_obito = {
             'nome': request.form.get('nome', '').strip(),
@@ -80,13 +86,13 @@ def detalhe(id):
 @bp.route('/<int:id>/editar', methods=['GET', 'POST'])
 @login_required
 def editar(id):
-    from app.forms import ObitoForm
     obito = ObitoService.buscar_por_id(id)
     if not obito:
         flash('Óbito não encontrado.', 'danger')
         return redirect(url_for('obitos.lista'))
     
     if request.method == 'POST':
+        _validar_csrf()
         dados = {
             'nome': request.form.get('nome', '').strip(),
             'data_nascimento': request.form.get('data_nascimento') or None,
