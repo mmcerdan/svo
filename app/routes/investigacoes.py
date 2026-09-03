@@ -206,6 +206,7 @@ def editar(id):
 @bp.route('/<int:id>/finalizar', methods=['POST'])
 @login_required
 def finalizar(id):
+    _validar_csrf()
     inv = db.session.get(Investigacao, id)
     if not inv:
         flash('Investigação não encontrada.', 'danger')
@@ -225,6 +226,7 @@ def finalizar(id):
 @bp.route('/<int:id>/salvar-campos', methods=['POST'])
 @login_required
 def salvar_campos(id):
+    _validar_csrf()
     inv = db.session.get(Investigacao, id)
     if not inv:
         return jsonify({'erro': 'Investigação não encontrada'}), 404
@@ -245,6 +247,7 @@ def salvar_campos(id):
 @bp.route('/<int:id>/anexar', methods=['POST'])
 @login_required
 def anexar_arquivo(id):
+    _validar_csrf()
     inv = db.session.get(Investigacao, id)
     if not inv:
         flash('Investigação não encontrada.', 'danger')
@@ -293,6 +296,7 @@ def download_anexo(nome_arquivo):
 @bp.route('/anexos/<int:id>/excluir', methods=['POST'])
 @login_required
 def excluir_anexo(id):
+    _validar_csrf()
     anexo = db.session.get(Anexo, id)
     if not anexo:
         flash('Anexo não encontrado.', 'danger')
@@ -316,6 +320,7 @@ def excluir_anexo(id):
 @bp.route('/<int:id>/salvar-campos-ajax', methods=['POST'])
 @login_required
 def salvar_campos_ajax(id):
+    _validar_csrf()
     inv = db.session.get(Investigacao, id)
     if not inv:
         return jsonify({'erro': 'Investigação não encontrada'}), 404
