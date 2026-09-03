@@ -52,10 +52,12 @@ class ObitoService:
             numero_dob=dados.get('numero_dob', '').strip(),
             causa_morte=dados.get('causa_morte', '').strip() or None,
             causa_morte_cid=cid or None,
+            causas_morte_cids=dados.get('causas_morte_cids', []),
             local_obito=dados.get('local_obito'),
             municipio_ocorrencia=dados.get('municipio_ocorrencia', '').strip() or None,
             endereco=dados.get('endereco', '').strip() or None,
             observacoes=dados.get('observacoes', '').strip() or None,
+            estabelecimento_id=dados.get('estabelecimento_id'),
             usuario_id=usuario.id,
         )
         
@@ -113,10 +115,12 @@ class ObitoService:
         obito.numero_dob = numero_dob
         obito.causa_morte = dados.get('causa_morte', '').strip() or None
         obito.causa_morte_cid = cid or None
+        obito.causas_morte_cids = dados.get('causas_morte_cids', [])
         obito.local_obito = dados.get('local_obito')
         obito.municipio_ocorrencia = dados.get('municipio_ocorrencia', '').strip() or None
         obito.endereco = dados.get('endereco', '').strip() or None
         obito.observacoes = dados.get('observacoes', '').strip() or None
+        obito.estabelecimento_id = dados.get('estabelecimento_id')
         obito.atualizado_em = datetime.utcnow()
         
         # Auditoria

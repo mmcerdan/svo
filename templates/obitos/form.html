@@ -41,8 +41,13 @@
                     {{ form.numero_dob(class="form-control") }}
                 </div>
                 <div class="col-md-4">
-                    <label class="form-label">{{ form.causa_morte_cid.label }}</label>
-                    {{ form.causa_morte_cid(class="form-control") }}
+                    <label class="form-label">{{ form.estabelecimento_id.label }}</label>
+                    {{ form.estabelecimento_id(class="form-select", id="estabelecimento-select") }}
+                    <div class="form-text">
+                        <a href="#" id="btn-novo-estabelecimento" class="text-decoration-none">
+                            <i class="bi bi-plus-circle"></i> Novo estabelecimento
+                        </a>
+                    </div>
                 </div>
                 <div class="col-md-4">
                     <label class="form-label">{{ form.local_obito.label }}</label>
@@ -52,6 +57,31 @@
                     <label class="form-label">{{ form.causa_morte.label }}</label>
                     {{ form.causa_morte(class="form-control", rows=3) }}
                 </div>
+                
+                {# === MÚLTIPLOS CIDs === #}
+                <div class="col-12">
+                    <label class="form-label">{{ form.causa_morte_cid.label }}</label>
+                    <div class="input-group">
+                        {{ form.causa_morte_cid(class="form-control", placeholder="CID Principal (ex: P968)") }}
+                        <span class="input-group-text" title="Buscar CID"><i class="bi bi-search"></i></span>
+                    </div>
+                </div>
+                <div class="col-12 mt-2">
+                    <label class="form-label small">CIDs Adicionais</label>
+                    <div id="cids-adicionais-container">
+                        {% for cid_form in form.causas_morte_cids %}
+                            <div class="cid-row input-group input-group-sm mb-2">
+                                {{ cid_form.codigo(class="form-control", placeholder="CID (ex: P369)", oninput="buscarCID(this)") }}
+                                {{ cid_form.descricao(class="form-control", placeholder="Descrição (opcional)", readonly="readonly") }}
+                                <button type="button" class="btn btn-outline-danger btn-remover-cid" onclick="removerCID(this)" title="Remover"><i class="bi bi-x"></i></button>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <button type="button" class="btn btn-sm btn-outline-secondary" onclick="adicionarCID()">
+                        <i class="bi bi-plus"></i> Adicionar CID
+                    </button>
+                </div>
+
                 <div class="col-md-8">
                     <label class="form-label">{{ form.municipio_ocorrencia.label }}</label>
                     {{ form.municipio_ocorrencia(class="form-control") }}
@@ -89,6 +119,69 @@
                 <a href="{{ url_for('obitos.lista') }}" class="btn btn-outline-secondary">Cancelar</a>
             </div>
         </form>
+    </div>
+</div>
+
+{# Modal Novo Estabelecimento #}
+<div class="modal fade" id="modalNovoEstabelecimento" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="form-estabelecimento">
+                <div class="modal-header">
+                    <h5 class="modal-title">Novo Estabelecimento</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">CNES</label>
+                        <input type="text" name="cnes" class="form-control" maxlength="7" placeholder="Ex: 1234567">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Nome *</label>
+                        <input type="text" name="nome" class="form-control" required maxlength="200">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Endereço</label>
+                        <input type="text" name="endereco" class="form-control" maxlength="300">
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label class="form-label">Município</label>
+                            <input type="text" name="municipio" class="form-control" maxlength="100">
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label">UF</label>
+                            <input type="text" name="uf" class="form-control" maxlength="2" placeholder="GO">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Tipo</label>
+                            <select name="tipo" class="form-select">
+                                <option value="">Selecione...</option>
+                                <option value="HOSPITAL">Hospital</option>
+                                <option value="UBS">UBS</option>
+                                <option value="UPA">UPA</option>
+                                <option value="LABORATORIO">Laboratório</option>
+                                <option value="OUTROS">Outros</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label class="form-label">Telefone</label>
+                            <input type="text" name="telefone" class="form-control" maxlength="20">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Email</label>
+                            <input type="email" name="email" class="form-control" maxlength="100">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Salvar</button>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 
@@ -200,7 +293,7 @@ function carregarCamposInvestigacao() {
 
 function esc(s) {
     if (!s) return '';
-    return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    return s.replace(/&/g,'&').replace(/</g,'<').replace(/>/g,'>').replace(/"/g,'"');
 }
 
 function extrairOpcao(nome) {
@@ -212,6 +305,74 @@ function extrairOpcao(nome) {
     return nome;
 }
 
+{# === NOVAS FUNÇÕES: CID E ESTABELECIMENTO === #}
+let cidSearchTimeout = null;
+const cidCache = {};
+
+function buscarCID(input) {
+    const codigo = input.value.trim().toUpperCase();
+    const row = input.closest('.cid-row');
+    const descInput = row.querySelector('input[name$="descricao"]');
+    
+    if (!codigo || codigo.length < 2) {
+        if (descInput) descInput.value = '';
+        return;
+    }
+    
+    if (cidCache[codigo]) {
+        if (descInput) descInput.value = cidCache[codigo];
+        return;
+    }
+    
+    clearTimeout(cidSearchTimeout);
+    cidSearchTimeout = setTimeout(() => {
+        fetch(`/obitos/api/cid/buscar?q=${encodeURIComponent(codigo)}`)
+            .then(r => r.json())
+            .then(data => {
+                if (data.cids && data.cids.length > 0) {
+                    const cid = data.cids[0];
+                    if (descInput) descInput.value = cid.descricao;
+                    cidCache[codigo] = cid.descricao;
+                }
+            });
+    }, 300);
+}
+
+function adicionarCID() {
+    const container = document.getElementById('cids-adicionais-container');
+    const idx = container.querySelectorAll('.cid-row').length;
+    const row = document.createElement('div');
+    row.className = 'cid-row input-group input-group-sm mb-2';
+    row.innerHTML = `
+        <input type="text" name="causas_morte_cids-${idx}-codigo" class="form-control" placeholder="CID (ex: P369)" oninput="buscarCID(this)">
+        <input type="text" name="causas_morte_cids-${idx}-descricao" class="form-control" placeholder="Descrição (opcional)" readonly>
+        <button type="button" class="btn btn-outline-danger btn-remover-cid" onclick="removerCID(this)" title="Remover"><i class="bi bi-x"></i></button>
+    `;
+    container.appendChild(row);
+}
+
+function removerCID(btn) {
+    btn.closest('.cid-row').remove();
+}
+
+function popularEstabelecimento(select, data) {
+    select.innerHTML = '<option value="0">Selecione...</option>';
+    data.estabelecimentos.forEach(e => {
+        const opt = document.createElement('option');
+        opt.value = e.id;
+        opt.textContent = e.nome + (e.municipio ? ` (${e.municipio})` : '');
+        select.appendChild(opt);
+    });
+}
+
+function carregarEstabelecimentos(query = '') {
+    fetch(`/obitos/api/estabelecimentos?q=${encodeURIComponent(query)}`)
+        .then(r => r.json())
+        .then(data => {
+            popularEstabelecimento(document.getElementById('estabelecimento-select'), data);
+        });
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     const camposAuto = Object.values(OBITO_CAMPO_MAP);
     camposAuto.forEach(function(campoId) {
@@ -220,6 +381,53 @@ document.addEventListener('DOMContentLoaded', function() {
             el.addEventListener('input', autoPreencherInvestigacao);
             el.addEventListener('change', autoPreencherInvestigacao);
         }
+    });
+    
+    // Carregar estabelecimentos
+    carregarEstabelecimentos();
+    
+    // Buscar estabelecimento por CNES/nome
+    const estabSelect = document.getElementById('estabelecimento-select');
+    if (estabSelect) {
+        estabSelect.addEventListener('focus', () => carregarEstabelecimentos());
+        estabSelect.addEventListener('click', () => carregarEstabelecimentos());
+    }
+    
+    // Modal novo estabelecimento
+    const modalEl = document.getElementById('modalNovoEstabelecimento');
+    const modal = new bootstrap.Modal(modalEl);
+    document.getElementById('btn-novo-estabelecimento')?.addEventListener('click', function(e) {
+        e.preventDefault();
+        document.getElementById('form-estabelecimento').reset();
+        modal.show();
+    });
+    
+    document.getElementById('form-estabelecimento')?.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const formData = new FormData(this);
+        const data = Object.fromEntries(formData);
+        
+        fetch('/obitos/api/estabelecimentos', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': document.querySelector('input[name="csrf_token"]').value
+            },
+            body: JSON.stringify(data)
+        })
+        .then(r => r.json())
+        .then(res => {
+            if (res.id) {
+                modal.hide();
+                carregarEstabelecimentos();
+                // Selecionar o novo
+                setTimeout(() => {
+                    estabSelect.value = res.id;
+                }, 100);
+            } else {
+                alert(res.erro || 'Erro ao criar estabelecimento');
+            }
+        });
     });
 });
 </script>

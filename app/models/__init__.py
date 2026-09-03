@@ -5,6 +5,8 @@ from app.models.investigacao import (
     TIPOS_INVESTIGACAO, STATUS_INVESTIGACAO
 )
 from app.models.audit import AuditLog
+from app.models.estabelecimento import Estabelecimento
+from app.models.cid import CID
 
 __all__ = [
     'Usuario',
@@ -15,4 +17,6 @@ __all__ = [
     'AuditLog',
     'TIPOS_INVESTIGACAO',
     'STATUS_INVESTIGACAO',
+    'Estabelecimento',
+    'CID',
 ]

@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, TextAreaField, DateField, SelectField, PasswordField
+from wtforms import StringField, TextAreaField, DateField, SelectField, PasswordField, FieldList, FormField, HiddenField
 from wtforms.validators import DataRequired, Optional, Length
 
 LOCAIS_OBITO = [
@@ -24,6 +24,10 @@ STATUS_INVESTIGACAO = [
     ('ARQUIVADA', 'Arquivada'),
 ]
 
+class CIDForm(FlaskForm):
+    codigo = StringField('CID', validators=[Optional(), Length(max=10)])
+    descricao = StringField('Descrição', validators=[Optional(), Length(max=300)])
+
 class LoginForm(FlaskForm):
     usuario = StringField('Usuário', validators=[DataRequired(), Length(max=50)])
     senha = PasswordField('Senha', validators=[DataRequired()])
@@ -38,12 +42,15 @@ class ObitoForm(FlaskForm):
     nome_pai = StringField('Nome do Pai', validators=[Optional(), Length(max=200)])
     numero_dob = StringField('Nº Declaração de Óbito', validators=[Optional(), Length(max=50)])
     causa_morte = TextAreaField('Causa da Morte', validators=[Optional()])
-    causa_morte_cid = StringField('CID da Causa da Morte', validators=[Optional(), Length(max=10)])
+    causa_morte_cid = StringField('CID Principal da Causa da Morte', validators=[Optional(), Length(max=10)])
+    causas_morte_cids = FieldList(FormField(CIDForm), min_entries=1)  # Múltiplos CIDs
     local_obito = SelectField('Local do Óbito', choices=[('', 'Selecione...')] + LOCAIS_OBITO,
                               validators=[Optional()])
     municipio_ocorrencia = StringField('Município da Ocorrência', validators=[Optional(), Length(max=100)])
     endereco = TextAreaField('Endereço', validators=[Optional()])
     observacoes = TextAreaField('Observações', validators=[Optional()])
+    estabelecimento_id = SelectField('Estabelecimento', coerce=int, validators=[Optional()],
+                                      choices=[(0, 'Selecione...')])
     criar_investigacao = SelectField('Criar Investigação', choices=[
         ('', 'Apenas cadastrar óbito'),
         ('MIF', 'MIF - Mulher em Idade Fértil'),
