@@ -1,5 +1,5 @@
 from app.extensions import db
-from app.models import Obito, Investigacao
+from app.models import Obito, Investigacao, CID
 from datetime import datetime, date
 from typing import Optional, List, Dict, Any
 from sqlalchemy import func
@@ -69,19 +69,23 @@ class RelatorioService:
         }
 
     @staticmethod
-    def dados_causas(data_inicio: Optional[date] = None, data_fim: Optional[date] = None, limite: int = 15) -> Dict[str, Any]:
-        query = Obito.query.filter(Obito.causa_morte_cid.isnot(None))
+    def dados_causas(data_inicio=None, data_fim=None, limite=15):
+        query = db.session.query(
+            Obito.causa_morte_cid,
+            CID.descricao,
+            func.count(Obito.id).label('qtd')
+        ).outerjoin(CID, Obito.causa_morte_cid == CID.codigo).filter(
+            Obito.causa_morte_cid.isnot(None)
+        )
         if data_inicio:
             query = query.filter(Obito.data_obito >= data_inicio)
         if data_fim:
             query = query.filter(Obito.data_obito <= data_fim)
         
-        causas = query.with_entities(
-            Obito.causa_morte_cid, func.count(Obito.id)
-        ).group_by(Obito.causa_morte_cid).order_by(
+        causas = query.group_by(Obito.causa_morte_cid, CID.descricao).order_by(
             func.count(Obito.id).desc()
         ).limit(limite).all()
         
         return {
-            'causas': [{'label': c or 'Sem CID', 'value': v} for c, v in causas],
+            'causas': [{'label': c or 'Sem CID', 'descricao': d or '', 'value': v} for c, d, v in causas],
         }

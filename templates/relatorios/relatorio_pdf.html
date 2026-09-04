@@ -160,10 +160,10 @@ body{font-family:"DejaVu Sans",Arial,Helvetica,sans-serif;font-size:9pt;line-hei
 {% elif tipo == 'causas' %}
 
 <table class="dtbl">
-<tr><th colspan="2">Principais Causas de Obito (CID-10)</th></tr>
-<tr><th style="width:60%;">CID-10</th><th style="width:40%;text-align:right;">Quantidade</th></tr>
+<tr><th colspan="3">Principais Causas de Obito (CID-10)</th></tr>
+<tr><th style="width:20%;">CID-10</th><th style="width:50%;">Descricao</th><th style="width:30%;text-align:right;">Quantidade</th></tr>
 {% for item in dados.causas %}
-<tr><td>{{ item.label }}</td><td class="num">{{ item.value }}</td></tr>
+<tr><td>{{ item.label }}</td><td>{{ item.descricao }}</td><td class="num">{{ item.value }}</td></tr>
 {% endfor %}
 </table>
 

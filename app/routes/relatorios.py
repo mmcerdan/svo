@@ -89,9 +89,9 @@ def exportar_csv():
     elif tipo == 'causas':
         writer.writerow(['Causas de Obito (CID-10)'])
         writer.writerow([])
-        writer.writerow(['CID-10', 'Quantidade'])
+        writer.writerow(['CID-10', 'Descricao', 'Quantidade'])
         for item in dados['causas']:
-            writer.writerow([item['label'], item['value']])
+            writer.writerow([item['label'], item.get('descricao', ''), item['value']])
     
     filename = f'relatorio_{tipo}_{datetime.now().strftime("%Y%m%d_%H%M")}.csv'
     

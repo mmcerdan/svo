@@ -127,7 +127,7 @@ function carregarDados(tipo) {
                 lbl.textContent = 'Principais Causas (CID)';
                 let html = '<h6>Principais CID</h6><table class="table table-sm">';
                 dados.causas.forEach(item => {
-                    html += `<tr><td>${item.label}</td><td class="text-end"><strong>${item.value}</strong></td></tr>`;
+                    html += `<tr><td><strong>${item.label}</strong><br><small class="text-muted">${item.descricao || ''}</small></td><td class="text-end"><strong>${item.value}</strong></td></tr>`;
                 });
                 html += '</table>';
                 resumo.innerHTML = html;
