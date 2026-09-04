@@ -17,9 +17,11 @@ from werkzeug.utils import secure_filename
 bp = Blueprint('investigacoes', __name__, url_prefix='/investigacoes')
 
 def _validar_csrf():
+    from flask_wtf.csrf import validate_csrf
     token = request.form.get('csrf_token', '')
-    expected = hashlib.sha256(session.get('csrf_token', '').encode()).hexdigest()
-    if not token or token != expected:
+    try:
+        validate_csrf(token)
+    except Exception:
         abort(403)
 
 @bp.route('/')
