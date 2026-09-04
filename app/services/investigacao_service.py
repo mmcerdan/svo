@@ -49,7 +49,8 @@ class InvestigacaoService:
         """Cria nova investigação com campos padrão."""
         erros = []
         
-        if tipo not in dict(Investigacao.__dict__.get('TIPOS_INVESTIGACAO', [])):
+        from app.models.investigacao import TIPOS_INVESTIGACAO
+        if tipo not in dict(TIPOS_INVESTIGACAO):
             return None, ['Tipo de investigação inválido.']
         
         inv = Investigacao(
