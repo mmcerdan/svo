@@ -62,9 +62,10 @@
                 <div class="col-12">
                     <label class="form-label">{{ form.causa_morte_cid.label }}</label>
                     <div class="input-group">
-                        {{ form.causa_morte_cid(class="form-control", placeholder="CID Principal (ex: P968)") }}
+                        {{ form.causa_morte_cid(class="form-control", placeholder="CID Principal (ex: P968)", id="causa_morte_cid_busca", oninput="buscarCIDPrincipal(this)", autocomplete="off") }}
                         <span class="input-group-text" title="Buscar CID"><i class="bi bi-search"></i></span>
                     </div>
+                    <div id="cid-principal-resultado" class="list-group mt-1" style="display:none;"></div>
                 </div>
                 <div class="col-12 mt-2">
                     <label class="form-label small">CIDs Adicionais</label>
@@ -337,6 +338,47 @@ function buscarCID(input) {
             });
     }, 300);
 }
+
+let cidPrincipalTimeout = null;
+function buscarCIDPrincipal(input) {
+    const q = input.value.trim().toUpperCase();
+    const resultado = document.getElementById('cid-principal-resultado');
+    if (!q || q.length < 2) {
+        resultado.style.display = 'none';
+        return;
+    }
+    clearTimeout(cidPrincipalTimeout);
+    cidPrincipalTimeout = setTimeout(() => {
+        fetch(`/obitos/api/cid/buscar?q=${encodeURIComponent(q)}`)
+            .then(r => r.json())
+            .then(data => {
+                if (data.cids && data.cids.length > 0) {
+                    let html = '';
+                    data.cids.forEach(c => {
+                        html += '<button type="button" class="list-group-item list-group-item-action py-2" onclick="selecionarCIDPrincipal(\'' + esc(c.codigo) + '\', \'' + esc(c.descricao.replace(/'/g, "\\'")) + '\')">';
+                        html += '<strong>' + esc(c.codigo) + '</strong> <small class="text-muted">' + esc(c.descricao.substring(0, 80)) + '</small>';
+                        html += '</button>';
+                    });
+                    resultado.innerHTML = html;
+                    resultado.style.display = 'block';
+                } else {
+                    resultado.innerHTML = '<div class="list-group-item text-muted py-2 small">Nenhum CID encontrado</div>';
+                    resultado.style.display = 'block';
+                }
+            });
+    }, 300);
+}
+
+function selecionarCIDPrincipal(codigo, descricao) {
+    document.getElementById('causa_morte_cid_busca').value = codigo;
+    document.getElementById('cid-principal-resultado').style.display = 'none';
+}
+
+document.addEventListener('click', function(e) {
+    if (!e.target.closest('#cid-principal-resultado') && !e.target.closest('#causa_morte_cid_busca')) {
+        document.getElementById('cid-principal-resultado').style.display = 'none';
+    }
+});
 
 function adicionarCID() {
     const container = document.getElementById('cids-adicionais-container');
