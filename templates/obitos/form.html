@@ -267,16 +267,68 @@ function carregarCamposInvestigacao() {
                         const opcao = extrairOpcao(campo.nome);
                         const name = 'inv_' + campo.nome;
                         const isAuto = OBITO_CAMPO_MAP.hasOwnProperty(campo.nome);
-                        html += '<div class="checkbox-wrapper">';
-                        html += '<input type="checkbox" name="' + esc(name) + '" value="X" id="' + esc(name) + '">';
-                        html += '<label for="' + esc(name) + '">' + esc(opcao) + (isAuto ? ' <span class="badge bg-success" style="font-size:10px">auto</span>' : '') + '</label>';
-                        html += '</div>';
+                        // Verificar padrões de campo especiais
+                        const isWigglesworth = campo.nome.startsWith('Wigglesworth');
+                        const isListaBrasileira = campo.nome.startsWith('Lista Brasileira');
+                        const isInvestigacao = campo.nome.startsWith('Investigacao');
+                        const isRecomendacao = campo.nome.startsWith('Recomendacao');
+                        const isExame = campo.nome.startsWith('Exame ');
+                        const isQuadroPN = campo.nome.startsWith('Quadro PN -');
+                        const isAtendimento = campo.nome.startsWith('Atendimento -');
+                        
+                        if (isWigglesworth || isListaBrasileira || isInvestigacao || isRecomendacao) {
+                            // Checkboxes para Wigglesworth, Lista Brasileira, Investigação, Recomendação
+                            html += '<div class="checkbox-wrapper">';
+                            html += '<input type="checkbox" name="' + esc(name) + '" value="X" id="' + esc(name) + '">';
+                            html += '<label for="' + esc(name) + '">' + esc(opcao) + (isAuto ? ' <span class="badge bg-success" style="font-size:10px">auto</span>' : '') + '</label>';
+                            html += '</div>';
+                        } else if (isExame) {
+                            // Exames de laboratório com T1/T2/T3 e resultado
+                            const trimestre = opcao.match(/(\d+)/i)?.[1] || '?';
+                            const key = campo.nome.replace('Exame ', '').trim();
+                            html += '<div class="checkbox-wrapper" style="margin-bottom: 4px;">';
+                            html += '<input type="checkbox" name="' + esc(name + ' - ' + trimestre) + '" value="X" id="' + esc(name + ' - ' + trimestre) + '">';
+                            html += '<label for="' + esc(name + ' - ' + trimestre) + '">' + esc(key + ' - T' + trimestre) + '</label>';
+                            html += '</div>';
+                        } else if (quadroPN) {
+                            // Quadro de Assistência Pré-Natal - 5 linhas
+                            const linhaMatch = campo.nome.match(/Quadro PN - (\d+)/);
+                            if (linhaMatch) {
+                                const linha = linhaMatch[1];
+                                html += '<div style="margin-bottom: 8px; border-bottom: 1px solid #eee; padding-bottom: 4px;">';
+                                html += '<strong>Linha ' + linha + ':</strong> ';
+                                html += '<input type="checkbox" name="' + esc(name + ' - data") + '" value="" id="' + esc(name + ' - data") + '" style="margin-right: 4px;">';
+                                html += '<input type="text" name="' + esc(name + ' - ig") + '" class="form-control form-control-sm" style="width: 30px; margin-right: 4px;" placeholder="IG">';
+                                html += '<input type="text" name="' + esc(name + ' - peso") + '" class="form-control form-control-sm" style="width: 40px;" placeholder="Peso">';
+                                html += '<input type="text" name="' + esc(name + ' - pa") + '" class="form-control form-control-sm" style="width: 30px;" placeholder="PA">';
+                                html += '</div>';
+                            }
+                        } else if (isAtendimento) {
+                            // Atendimentos realizados - 6 linhas
+                            const linhaMatch = campo.nome.match(/Atendimento - (\d+)/);
+                            if (linhaMatch) {
+                                const linha = linhaMatch[1];
+                                html += '<div style="margin-bottom: 8px; border-bottom: 1px solid #eee; padding-bottom: 4px;">';
+                                html += '<strong>Linha ' + linha + ':</strong> ';
+                                html += '<input type="text" name="' + esc(name + ' - data") + '" class="form-control form-control-sm" placeholder="Data">';
+                                html += '<input type="text" name="' + esc(name + ' - tipo") + '" class="form-control form-control-sm" placeholder="Tipo">';
+                                html += '<input type="text" name="' + esc(name + ' - local") + '" class="form-control form-control-sm" placeholder="Local">';
+                                html += '</div>';
+                            }
+                        } else {
+                            // Checkboxes padrao (campo original)
+                            html += '<div class="checkbox-wrapper">';
+                            html += '<input type="checkbox" name="' + esc(name) + '" value="X" id="' + esc(name) + '">';
+                            html += '<label for="' + esc(name) + '">' + esc(opcao) + (isAuto ? ' <span class="badge bg-success" style="font-size:10px">auto</span>' : '') + '</label>';
+                            html += '</div>';
+                        }
                     });
                     html += '</div></div>';
                 } else {
                     const campo = item.campo;
                     const name = 'inv_' + campo.nome;
                     const isAuto = OBITO_CAMPO_MAP.hasOwnProperty(campo.nome);
+                    // Campos textarea padrao
                     html += '<div class="campo-inv-item">';
                     html += '<label for="' + esc(name) + '">' + esc(campo.nome) + (isAuto ? ' <span class="badge bg-success" style="font-size:10px">auto-preenchido</span>' : '') + '</label>';
                     html += '<textarea name="' + esc(name) + '" id="' + esc(name) + '" class="form-control" rows="2"></textarea>';
