@@ -62,19 +62,19 @@ CAMPOS_PADRAO = {
         'O que aconteceu (investigador)', 'Data de encerramento',
         'Resp. investigação geral - nome', 'Resp. investigação geral - carimbo',
         'Maternidade referencia', 'Faltas no pre-natal', 'Prevencao cancer',
-        'Exame 24.1 T1', 'Exame 24.1 T2', 'Exame 24.1 T3', 'Exame 24.1 resultado',
-        'Exame 24.2 T1', 'Exame 24.2 T2', 'Exame 24.2 T3', 'Exame 24.2 resultado',
-        'Exame 24.3 T1', 'Exame 24.3 T2', 'Exame 24.3 T3', 'Exame 24.3 resultado',
-        'Exame 24.4 T1', 'Exame 24.4 T2', 'Exame 24.4 T3', 'Exame 24.4 resultado',
-        'Exame 24.5 T1', 'Exame 24.5 T2', 'Exame 24.5 T3', 'Exame 24.5 resultado',
-        'Exame 24.6 T1', 'Exame 24.6 T2', 'Exame 24.6 T3', 'Exame 24.6 resultado',
-        'Exame 24.7 T1', 'Exame 24.7 T2', 'Exame 24.7 T3', 'Exame 24.7 resultado',
-        'Exame 24.8 T1', 'Exame 24.8 T2', 'Exame 24.8 T3', 'Exame 24.8 resultado',
-        'Exame 24.9 T1', 'Exame 24.9 T2', 'Exame 24.9 T3', 'Exame 24.9 resultado',
-        'Exame 24.10 T1', 'Exame 24.10 T2', 'Exame 24.10 T3', 'Exame 24.10 resultado',
-        'Exame 24.11 T1', 'Exame 24.11 T2', 'Exame 24.11 T3', 'Exame 24.11 resultado',
-        'Exame 24.12 T1', 'Exame 24.12 T2', 'Exame 24.12 T3', 'Exame 24.12 resultado',
-        'Exame 24.13 T1', 'Exame 24.13 T2', 'Exame 24.13 T3', 'Exame 24.13 resultado',
+        'Exame 24.1 T1', 'Exame 24.1 T1 resultado', 'Exame 24.1 T2', 'Exame 24.1 T2 resultado', 'Exame 24.1 T3', 'Exame 24.1 T3 resultado', 'Exame 24.1 SR',
+        'Exame 24.2 T1', 'Exame 24.2 T1 resultado', 'Exame 24.2 T2', 'Exame 24.2 T2 resultado', 'Exame 24.2 T3', 'Exame 24.2 T3 resultado', 'Exame 24.2 SR',
+        'Exame 24.3 T1', 'Exame 24.3 T1 resultado', 'Exame 24.3 T2', 'Exame 24.3 T2 resultado', 'Exame 24.3 T3', 'Exame 24.3 T3 resultado', 'Exame 24.3 SR',
+        'Exame 24.4 T1', 'Exame 24.4 T1 resultado', 'Exame 24.4 T2', 'Exame 24.4 T2 resultado', 'Exame 24.4 T3', 'Exame 24.4 T3 resultado', 'Exame 24.4 SR',
+        'Exame 24.5 T1', 'Exame 24.5 T1 resultado', 'Exame 24.5 T2', 'Exame 24.5 T2 resultado', 'Exame 24.5 T3', 'Exame 24.5 T3 resultado', 'Exame 24.5 SR',
+        'Exame 24.6 T1', 'Exame 24.6 T1 resultado', 'Exame 24.6 T2', 'Exame 24.6 T2 resultado', 'Exame 24.6 T3', 'Exame 24.6 T3 resultado', 'Exame 24.6 SR',
+        'Exame 24.7 T1', 'Exame 24.7 T1 resultado', 'Exame 24.7 T2', 'Exame 24.7 T2 resultado', 'Exame 24.7 T3', 'Exame 24.7 T3 resultado', 'Exame 24.7 SR',
+        'Exame 24.8 T1', 'Exame 24.8 T1 resultado', 'Exame 24.8 T2', 'Exame 24.8 T2 resultado', 'Exame 24.8 T3', 'Exame 24.8 T3 resultado', 'Exame 24.8 SR',
+        'Exame 24.9 T1', 'Exame 24.9 T1 resultado', 'Exame 24.9 T2', 'Exame 24.9 T2 resultado', 'Exame 24.9 T3', 'Exame 24.9 T3 resultado', 'Exame 24.9 SR',
+        'Exame 24.10 T1', 'Exame 24.10 T1 resultado', 'Exame 24.10 T2', 'Exame 24.10 T2 resultado', 'Exame 24.10 T3', 'Exame 24.10 T3 resultado', 'Exame 24.10 SR',
+        'Exame 24.11 T1', 'Exame 24.11 T1 resultado', 'Exame 24.11 T2', 'Exame 24.11 T2 resultado', 'Exame 24.11 T3', 'Exame 24.11 T3 resultado', 'Exame 24.11 SR',
+        'Exame 24.12 T1', 'Exame 24.12 T1 resultado', 'Exame 24.12 T2', 'Exame 24.12 T2 resultado', 'Exame 24.12 T3', 'Exame 24.12 T3 resultado', 'Exame 24.12 SR',
+        'Exame 24.13 T1', 'Exame 24.13 T1 resultado', 'Exame 24.13 T2', 'Exame 24.13 T2 resultado', 'Exame 24.13 T3', 'Exame 24.13 T3 resultado', 'Exame 24.13 SR',
         'Quadro PN - data_1', 'Quadro PN - ig_1', 'Quadro PN - peso_1', 'Quadro PN - pa_1', 'Quadro PN - au_1', 'Quadro PN - bcf_1', 'Quadro PN - mf_1', 'Quadro PN - edema_1', 'Quadro PN - queixas_1', 'Quadro PN - prof_1',
         'Quadro PN - data_2', 'Quadro PN - ig_2', 'Quadro PN - peso_2', 'Quadro PN - pa_2', 'Quadro PN - au_2', 'Quadro PN - bcf_2', 'Quadro PN - mf_2', 'Quadro PN - edema_2', 'Quadro PN - queixas_2', 'Quadro PN - prof_2',
         'Quadro PN - data_3', 'Quadro PN - ig_3', 'Quadro PN - peso_3', 'Quadro PN - pa_3', 'Quadro PN - au_3', 'Quadro PN - bcf_3', 'Quadro PN - mf_3', 'Quadro PN - edema_3', 'Quadro PN - queixas_3', 'Quadro PN - prof_3',
@@ -180,12 +180,15 @@ CAMPOS_PADRAO = {
         'Nº da DO', 'Nome do falecido', 'Nome da mãe',
         'Data de nascimento', 'Data do óbito', 'Causa básica original',
         'Nome da Unidade Básica/USF', 'Nº prontuário UBS',
-        'Tempo de moradia no domicílio', 'Cadastrado na USF',
+        'Tempo de moradia no domicílio', 'Cadastrado na USF: Sim', 'Cadastrado na USF: Nao',
         'Patologias/motivos de atendimento',
         'Data da última consulta', 'Motivo da última consulta',
         'Nome do estabelecimento de saúde', 'Nº prontuário hospitalar',
         'Data da internação', 'Data da alta',
-        'Estado do paciente na hospitalização', 'Motivo da alta',
+        'Estado do paciente: Consciente', 'Estado do paciente: Inconsciente',
+        'Estado do paciente: Agonizante', 'Estado do paciente: Sem vida',
+        'Motivo da alta: Cura', 'Motivo da alta: Transferencia',
+        'Motivo da alta: Saida solicitacao', 'Motivo da alta: Evasao', 'Motivo da alta: Obito',
         'Atendimento pré-hospitalar', 'Hipótese diagnóstica da alta',
         'Resultados de exames relevantes', 'Procedimentos realizados',
         'Causa do óbito no prontuário',
@@ -193,13 +196,13 @@ CAMPOS_PADRAO = {
         'Investigação IML: Investigado', 'Investigação IML: Nao disponivel', 'Investigação IML: Nao realizado', 'Investigação IML - laudo',
         'Investigação SVO: Investigado', 'Investigação SVO: Nao disponivel', 'Investigação SVO: Nao realizado', 'Investigação SVO - laudo',
         'Investigação FUNASA: Investigado', 'Investigação FUNASA: Nao disponivel', 'Investigação FUNASA: Nao realizado', 'Investigação FUNASA - descricao',
-        'Investigação journal/internet: Consultado', 'Investigação journal/internet: Nao disponivel',
+        'Investigacao jornal/internet: Consultado', 'Investigacao jornal/internet: Nao disponivel', 'Investigacao jornal/internet - descricao',
         'Formulario utilizado: Form 1', 'Formulario utilizado: Form 2', 'Formulario utilizado: Form 3', 'Formulario utilizado: Form 3.1-MIF', 'Formulario utilizado: Nao realizada', 'Formulario utilizado (detalhe)',
         'Causa direta - diagnostico', 'Causa direta - CID',
         'Antecedente (linha b) - diagnostico', 'Antecedente (linha b) - CID',
         'Antecedente (linha c) - diagnostico', 'Antecedente (linha c) - CID',
         'Causa basica - diagnostico', 'Causa basica - CID',
-        'Outras condicoes significativas',
+        'Outras condicoes significativas', 'Parte II - CID',
         'Data da conclusao', 'Responsavel pela investigacao',
         'Coordenador Vigilancia SIM',
     ],
@@ -209,11 +212,11 @@ CAMPOS_PADRAO = {
         'Sexo', 'Sexo: Masculino', 'Sexo: Feminino', 'Sexo: Ignorado',
         'Peso ao nascer (gramas)', 'Idade ao óbito',
         'Idade óbito - meses', 'Idade óbito - dias', 'Idade óbito - horas',
-        'Idade óbito ignorado',
+        'Idade óbito - minutos', 'Idade óbito ignorado',
         'Nº do Cartão SUS', 'Equipe/PACS/PSF', 'Centro de Saude/UBS',
         'Distrito Sanitário', 'Nome do servico de pre-natal', 'Código CNES',
         'Tipo de servico',
-        'Tipo servico: CS SUS', 'Tipo servico: Convencao', 'Tipo servico: Particular',
+        'Tipo servico: CS SUS', 'Tipo servico: Convenio', 'Tipo servico: Particular',
         'Não fez pré-natal',
         'IG na 1a consulta (semanas)', 'IG na 1a consulta (meses)',
         'IG 1ª consulta sem registro',
@@ -335,6 +338,13 @@ _CHECKBOX_PATTERNS = [
     r'^Investigacao\s',    # SINAN, IML, SVO, FUNASA, journal/internet
     r'^Lista Brasileira:', # Lista Brasileira de Causas de Obito
     r'^Recomendacao\s',    # Recomendacoes e medidas
+    r'^Organizacao\s',     # campo 26.10
+    r'^Problema\s',        # campo 26
+    r'^Wigglesworth:',     # classificação de evitabilidade
+    r'^SEADE:',
+    r'^Exame\s+\S+\s+T[123]$',      # Exame 24.1 T1 (tri checkbox)
+    r'^Exame\s+\S+\s+SR$',          # Exame 24.1 SR (sem resposta)
+    r'^Exame\s+\S+\s+-\s*[123]tri$', # Exames INFANTIL (hb_ht - 1tri)
 ]
 
 _CHECKBOX_RE = re.compile('|'.join(_CHECKBOX_PATTERNS))
@@ -378,6 +388,16 @@ def get_grupo_campo(nome_campo: str) -> str | None:
     m = _GRUPO_RE_2.match(nome_campo)
     if m:
         return m.group(1).strip()
+    # Exames: agrupar T1/T2/T3/SR/resultado do mesmo exame sob "Exame <cod>"
+    m = re.match(r'^(Exame\s+\S+)', nome_campo)
+    if m:
+        return m.group(1).strip()
+    # Problema/Organização: agrupar sob o nome do bloco
+    n2 = nome_campo.lower().replace('ç', 'c').replace('ã', 'a')
+    if n2.startswith('problema'):
+        return 'Problema'
+    if n2.startswith('organizac'):
+        return 'Organização'
     partes = nome_campo.split(': ', 1)
     if len(partes) == 2:
         return partes[0]

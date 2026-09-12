@@ -6,6 +6,44 @@ from app.utils.audit import audit_log, serialize_model
 from flask import request, current_app
 from datetime import date, datetime
 from typing import Optional, List, Tuple, Dict, Any
+import unicodedata
+import re
+
+
+def _normalizar_nome(nome: str) -> str:
+    """Remove acentos e variações de grafia (Nº/No., ?/-, etc) para comparar nomes de campo."""
+    if not nome:
+        return ''
+    s = unicodedata.normalize('NFD', nome)
+    s = ''.join(ch for ch in s if unicodedata.category(ch) != 'Mn')
+    s = s.replace('Nº', 'No.').replace('N°', 'No.')
+    s = s.replace('º', 'o').replace('ª', 'a')
+    s = s.lower()
+    for ch in '.?;:/\\':
+        s = s.replace(ch, '')
+    s = re.sub(r'\s+', ' ', s).strip()
+    return s
+
+
+class _CamposDict(dict):
+    """Dict com get() insensível a acentos/grafia para compatibilidade com templates de impressão."""
+
+    def __init__(self, dados):
+        super().__init__(dados)
+        self._normalizado = {}
+        for k, v in dados.items():
+            nk = _normalizar_nome(k)
+            if nk not in self._normalizado:
+                self._normalizado[nk] = k
+
+    def get(self, key, default=''):
+        if key in self:
+            return dict.get(self, key, default)
+        nk = _normalizar_nome(key)
+        if nk in self._normalizado:
+            return dict.get(self, self._normalizado[nk], default)
+        return default
+
 
 class InvestigacaoService:
     # Mapeamento: nome_campo_na_investigacao -> campo_no_obito
@@ -351,4 +389,4 @@ class InvestigacaoService:
                 if campo_novo2 and campo_novo2 not in campos_dict:
                     campos_dict[campo_novo2] = ''
         
-        return campos_dict
+        return _CamposDict(campos_dict)

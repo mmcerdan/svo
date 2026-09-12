@@ -24,17 +24,15 @@ class ObitoService:
         data_obito = dados.get('data_obito')
         data_nascimento = dados.get('data_nascimento')
         if isinstance(data_obito, str):
-            from datetime import datetime
             data_obito = datetime.strptime(data_obito, '%Y-%m-%d').date()
         if isinstance(data_nascimento, str) and data_nascimento:
-            from datetime import datetime
             data_nascimento = datetime.strptime(data_nascimento, '%Y-%m-%d').date()
         
         ok, msg = validar_data_obito(data_obito, data_nascimento)
         if not ok:
             erros.append(msg)
         
-        cid = dados.get('causa_morte_cid', '').strip().upper()
+        cid = (dados.get('causa_morte_cid') or '').strip().upper()
         if cid and not validar_cid10(cid):
             erros.append('CID-10 inválido. Formato esperado: A00.0 ou A00')
         
@@ -70,64 +68,62 @@ class ObitoService:
         
         return obito, []
 
-    @staticmethod
-    def atualizar(obito: Obito, usuario: Usuario, dados: dict) -> List[str]:
-        """Atualiza óbito existente."""
-        erros = []
-        
-        # Validações similares à criação
-        numero_dob = dados.get('numero_dob', '').strip()
-        if numero_dob and numero_dob != obito.numero_dob:
-            ok, msg = validar_numero_dob(numero_dob, obito.id)
-            if not ok:
-                erros.append(msg)
-        
-        data_obito = dados.get('data_obito')
-        data_nascimento = dados.get('data_nascimento')
-        if isinstance(data_obito, str):
-            from datetime import datetime
-            data_obito = datetime.strptime(data_obito, '%Y-%m-%d').date()
-        if isinstance(data_nascimento, str) and data_nascimento:
-            from datetime import datetime
-            data_nascimento = datetime.strptime(data_nascimento, '%Y-%m-%d').date()
-        
-        ok, msg = validar_data_obito(data_obito, data_nascimento)
+@staticmethod
+def atualizar(obito: Obito, usuario: Usuario, dados: dict) -> List[str]:
+    """Atualiza óbito existente."""
+    erros = []
+    
+    # Validações similares à criação
+    numero_dob = dados.get('numero_dob', '').strip()
+    if numero_dob and numero_dob != obito.numero_dob:
+        ok, msg = validar_numero_dob(numero_dob, obito.id)
         if not ok:
             erros.append(msg)
-        
-        cid = dados.get('causa_morte_cid', '').strip().upper()
-        if cid and not validar_cid10(cid):
-            erros.append('CID-10 inválido.')
-        
-        if erros:
-            return erros
-        
-        # Captura estado anterior para auditoria
-        antes = serialize_model(obito)
-        
-        # Atualiza campos
-        obito.nome = dados['nome'].strip()
-        obito.data_nascimento = data_nascimento
-        obito.data_obito = data_obito
-        obito.sexo = dados.get('sexo')
-        obito.nome_mae = (dados.get('nome_mae') or '').strip() or None
-        obito.nome_pai = (dados.get('nome_pai') or '').strip() or None
-        obito.numero_dob = numero_dob
-        obito.causa_morte = (dados.get('causa_morte') or '').strip() or None
-        obito.causa_morte_cid = cid or None
-        obito.causas_morte_cids = dados.get('causas_morte_cids', [])
-        obito.local_obito = dados.get('local_obito')
-        obito.municipio_ocorrencia = (dados.get('municipio_ocorrencia') or '').strip() or None
-        obito.endereco = (dados.get('endereco') or '').strip() or None
-        obito.observacoes = (dados.get('observacoes') or '').strip() or None
-        obito.estabelecimento_id = dados.get('estabelecimento_id')
-        obito.atualizado_em = datetime.utcnow()
-        
-        # Auditoria
-        depois = serialize_model(obito)
-        audit_log(usuario, 'UPDATE', 'Obito', obito.id, antes, depois)
-        
-        return []
+    
+    data_obito = dados.get('data_obito')
+    data_nascimento = dados.get('data_nascimento')
+    if isinstance(data_obito, str):
+        data_obito = datetime.strptime(data_obito, '%Y-%m-%d').date()
+    if isinstance(data_nascimento, str) and data_nascimento:
+        data_nascimento = datetime.strptime(data_nascimento, '%Y-%m-%d').date()
+    
+    ok, msg = validar_data_obito(data_obito, data_nascimento)
+    if not ok:
+        erros.append(msg)
+    
+    cid = (dados.get('causa_morte_cid') or '').strip().upper()
+    if cid and not validar_cid10(cid):
+        erros.append('CID-10 inválido.')
+    
+    if erros:
+        return erros
+    
+    # Captura estado anterior para auditoria
+    antes = serialize_model(obito)
+    
+    # Atualiza campos
+    obito.nome = dados['nome'].strip()
+    obito.data_nascimento = data_nascimento
+    obito.data_obito = data_obito
+    obito.sexo = dados.get('sexo')
+    obito.nome_mae = (dados.get('nome_mae') or '').strip() or None
+    obito.nome_pai = (dados.get('nome_pai') or '').strip() or None
+    obito.numero_dob = numero_dob
+    obito.causa_morte = (dados.get('causa_morte') or '').strip() or None
+    obito.causa_morte_cid = cid or None
+    obito.causas_morte_cids = dados.get('causas_morte_cids', [])
+    obito.local_obito = dados.get('local_obito')
+    obito.municipio_ocorrencia = (dados.get('municipio_ocorrencia') or '').strip() or None
+    obito.endereco = (dados.get('endereco') or '').strip() or None
+    obito.observacoes = (dados.get('observacoes') or '').strip() or None
+    obito.estabelecimento_id = dados.get('estabelecimento_id')
+    obito.atualizado_em = datetime.utcnow()
+    
+    # Auditoria
+    depois = serialize_model(obito)
+    audit_log(usuario, 'UPDATE', 'Obito', obito.id, antes, depois)
+    
+    return []
 
     @staticmethod
     def excluir(obito: Obito, usuario: Usuario) -> bool:
