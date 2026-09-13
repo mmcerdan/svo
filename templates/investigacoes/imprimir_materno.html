@@ -359,26 +359,24 @@ body{font-family:"DejaVu Sans",Arial,Helvetica,sans-serif;font-size:8pt;line-hei
 
 <!-- CAMPO 20 - QUADRO DA ASSISTENCIA PRE-NATAL -->
 <table class="ft av">
-<tr class="st"><td colspan="4">20. QUADRO DA ASSISTENCIA PRE-NATAL</td></tr>
-</table>
-<table class="dtbl av">
+<tr class="st"><td colspan="10">20. QUADRO DA ASSISTENCIA PRE-NATAL</td></tr>
 <tr>
-    <th style="width:9%;">Data</th>
-    <th style="width:9%;">IG</th>
-    <th style="width:8%;">Peso</th>
-    <th style="width:10%;">PA</th>
-    <th style="width:9%;">BCF</th>
-    <th style="width:10%;">Utero fita</th>
-    <th style="width:9%;">Edema</th>
-    <th style="width:22%;">Conduta</th>
-    <th style="width:14%;">Profissional</th>
+    <th style="width:8%;background:#eee;border:0.5pt solid #000;font-size:6.5pt;padding:1pt;">Data</th>
+    <th style="width:8%;background:#eee;border:0.5pt solid #000;font-size:6.5pt;padding:1pt;">IG(sem)</th>
+    <th style="width:7%;background:#eee;border:0.5pt solid #000;font-size:6.5pt;padding:1pt;">Peso</th>
+    <th style="width:7%;background:#eee;border:0.5pt solid #000;font-size:6.5pt;padding:1pt;">PA</th>
+    <th style="width:7%;background:#eee;border:0.5pt solid #000;font-size:6.5pt;padding:1pt;">AU(cm)</th>
+    <th style="width:7%;background:#eee;border:0.5pt solid #000;font-size:6.5pt;padding:1pt;">BCF</th>
+    <th style="width:6%;background:#eee;border:0.5pt solid #000;font-size:6.5pt;padding:1pt;">MF</th>
+    <th style="width:7%;background:#eee;border:0.5pt solid #000;font-size:6.5pt;padding:1pt;">Edema</th>
+    <th style="width:25%;background:#eee;border:0.5pt solid #000;font-size:6.5pt;padding:1pt;">Queixas/Conduta</th>
+    <th style="width:18%;background:#eee;border:0.5pt solid #000;font-size:6.5pt;padding:1pt;">Profissional</th>
 </tr>
-<tr class="empty-row"><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr class="empty-row"><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr class="empty-row"><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr class="empty-row"><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr class="empty-row"><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr class="empty-row"><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>{{ c.get('Quadro PN - data_1', '') }}</td><td>{{ c.get('Quadro PN - ig_1', '') }}</td><td>{{ c.get('Quadro PN - peso_1', '') }}</td><td>{{ c.get('Quadro PN - pa_1', '') }}</td><td>{{ c.get('Quadro PN - au_1', '') }}</td><td>{{ c.get('Quadro PN - bcf_1', '') }}</td><td>{{ c.get('Quadro PN - mf_1', '') }}</td><td>{{ c.get('Quadro PN - edema_1', '') }}</td><td>{{ c.get('Quadro PN - queixas_1', '') }}</td><td>{{ c.get('Quadro PN - prof_1', '') }}</td></tr>
+<tr><td>{{ c.get('Quadro PN - data_2', '') }}</td><td>{{ c.get('Quadro PN - ig_2', '') }}</td><td>{{ c.get('Quadro PN - peso_2', '') }}</td><td>{{ c.get('Quadro PN - pa_2', '') }}</td><td>{{ c.get('Quadro PN - au_2', '') }}</td><td>{{ c.get('Quadro PN - bcf_2', '') }}</td><td>{{ c.get('Quadro PN - mf_2', '') }}</td><td>{{ c.get('Quadro PN - edema_2', '') }}</td><td>{{ c.get('Quadro PN - queixas_2', '') }}</td><td>{{ c.get('Quadro PN - prof_2', '') }}</td></tr>
+<tr><td>{{ c.get('Quadro PN - data_3', '') }}</td><td>{{ c.get('Quadro PN - ig_3', '') }}</td><td>{{ c.get('Quadro PN - peso_3', '') }}</td><td>{{ c.get('Quadro PN - pa_3', '') }}</td><td>{{ c.get('Quadro PN - au_3', '') }}</td><td>{{ c.get('Quadro PN - bcf_3', '') }}</td><td>{{ c.get('Quadro PN - mf_3', '') }}</td><td>{{ c.get('Quadro PN - edema_3', '') }}</td><td>{{ c.get('Quadro PN - queixas_3', '') }}</td><td>{{ c.get('Quadro PN - prof_3', '') }}</td></tr>
+<tr><td>{{ c.get('Quadro PN - data_4', '') }}</td><td>{{ c.get('Quadro PN - ig_4', '') }}</td><td>{{ c.get('Quadro PN - peso_4', '') }}</td><td>{{ c.get('Quadro PN - pa_4', '') }}</td><td>{{ c.get('Quadro PN - au_4', '') }}</td><td>{{ c.get('Quadro PN - bcf_4', '') }}</td><td>{{ c.get('Quadro PN - mf_4', '') }}</td><td>{{ c.get('Quadro PN - edema_4', '') }}</td><td>{{ c.get('Quadro PN - queixas_4', '') }}</td><td>{{ c.get('Quadro PN - prof_4', '') }}</td></tr>
+<tr style="height:25pt;"><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
 </table>
 
 <!-- CAMPOS 20.1 a 23 -->
@@ -507,24 +505,25 @@ body{font-family:"DejaVu Sans",Arial,Helvetica,sans-serif;font-size:8pt;line-hei
 
 <!-- CAMPO 27 - ATENDIMENTOS REALIZADOS -->
 <table class="ft av">
-<tr class="st"><td colspan="4">27. ATENDIMENTOS REALIZADOS</td></tr>
+<tr class="st"><td colspan="8">27. ATENDIMENTOS REALIZADOS</td></tr>
 </table>
 <table class="dtbl av">
 <tr>
     <th style="width:9%;">Data</th>
-    <th style="width:11%;">Local</th>
+    <th style="width:9%;">Tipo</th>
+    <th style="width:13%;">Local</th>
     <th style="width:7%;">Idade</th>
     <th style="width:7%;">Peso</th>
-    <th style="width:18%;">Queixa</th>
-    <th style="width:18%;">Exames</th>
-    <th style="width:18%;">Conduta</th>
-    <th style="width:12%;">Profissional</th>
+    <th style="width:21%;">Queixa/Diagnostico</th>
+    <th style="width:17%;">Exames</th>
+    <th style="width:17%;">Conduta</th>
 </tr>
-<tr class="empty-row-lg"><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr class="empty-row-lg"><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr class="empty-row-lg"><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr class="empty-row-lg"><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr class="empty-row-lg"><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>{{ c.get('Atendimento - data_1', '') }}</td><td>{{ c.get('Atendimento - tipo_1', '') }}</td><td>{{ c.get('Atendimento - local_1', '') }}</td><td>{{ c.get('Atendimento - idade_1', '') }}</td><td>{{ c.get('Atendimento - peso_1', '') }}</td><td>{{ c.get('Atendimento - queixa_1', '') }}</td><td>{{ c.get('Atendimento - exames_1', '') }}</td><td>{{ c.get('Atendimento - conduta_1', '') }}</td></tr>
+<tr><td>{{ c.get('Atendimento - data_2', '') }}</td><td>{{ c.get('Atendimento - tipo_2', '') }}</td><td>{{ c.get('Atendimento - local_2', '') }}</td><td>{{ c.get('Atendimento - idade_2', '') }}</td><td>{{ c.get('Atendimento - peso_2', '') }}</td><td>{{ c.get('Atendimento - queixa_2', '') }}</td><td>{{ c.get('Atendimento - exames_2', '') }}</td><td>{{ c.get('Atendimento - conduta_2', '') }}</td></tr>
+<tr><td>{{ c.get('Atendimento - data_3', '') }}</td><td>{{ c.get('Atendimento - tipo_3', '') }}</td><td>{{ c.get('Atendimento - local_3', '') }}</td><td>{{ c.get('Atendimento - idade_3', '') }}</td><td>{{ c.get('Atendimento - peso_3', '') }}</td><td>{{ c.get('Atendimento - queixa_3', '') }}</td><td>{{ c.get('Atendimento - exames_3', '') }}</td><td>{{ c.get('Atendimento - conduta_3', '') }}</td></tr>
+<tr><td>{{ c.get('Atendimento - data_4', '') }}</td><td>{{ c.get('Atendimento - tipo_4', '') }}</td><td>{{ c.get('Atendimento - local_4', '') }}</td><td>{{ c.get('Atendimento - idade_4', '') }}</td><td>{{ c.get('Atendimento - peso_4', '') }}</td><td>{{ c.get('Atendimento - queixa_4', '') }}</td><td>{{ c.get('Atendimento - exames_4', '') }}</td><td>{{ c.get('Atendimento - conduta_4', '') }}</td></tr>
+<tr><td>{{ c.get('Atendimento - data_5', '') }}</td><td>{{ c.get('Atendimento - tipo_5', '') }}</td><td>{{ c.get('Atendimento - local_5', '') }}</td><td>{{ c.get('Atendimento - idade_5', '') }}</td><td>{{ c.get('Atendimento - peso_5', '') }}</td><td>{{ c.get('Atendimento - queixa_5', '') }}</td><td>{{ c.get('Atendimento - exames_5', '') }}</td><td>{{ c.get('Atendimento - conduta_5', '') }}</td></tr>
+<tr style="height:25pt;"><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
 </table>
 
 <!-- CAMPOS 28 a 33 -->
