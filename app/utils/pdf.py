@@ -1,7 +1,6 @@
 import base64
 import os
 from flask import render_template, current_app
-from weasyprint import HTML
 from datetime import datetime
 from app.models import Investigacao
 from app.services.investigacao_service import InvestigacaoService
@@ -57,6 +56,7 @@ def gerar_pdf_investigacao(investigacao: Investigacao) -> bytes:
         )
 
     base_url = app.root_path + '/..'
+    from weasyprint import HTML
     pdf_bytes = HTML(string=html_string, base_url=base_url).write_pdf()
 
     return pdf_bytes
