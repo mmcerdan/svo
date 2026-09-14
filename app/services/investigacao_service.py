@@ -229,9 +229,11 @@ class InvestigacaoService:
             from datetime import datetime
             investigacao.data_conclusao = datetime.strptime(dados['data_conclusao'], '%Y-%m-%d').date()
         if 'conclusao' in dados:
-            investigacao.conclusao = dados['conclusao'].strip() or None
+            val = dados['conclusao']
+            investigacao.conclusao = val.strip() if val else None
         if 'observacoes' in dados:
-            investigacao.observacoes = dados['observacoes'].strip() or None
+            val = dados['observacoes']
+            investigacao.observacoes = val.strip() if val else None
         
         investigacao.atualizado_em = datetime.utcnow()
         db.session.commit()
