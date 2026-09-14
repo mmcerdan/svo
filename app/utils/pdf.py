@@ -5,6 +5,14 @@ from datetime import datetime
 from app.models import Investigacao
 from app.services.investigacao_service import InvestigacaoService
 
+try:
+    from weasyprint import HTML
+except Exception as e:
+    HTML = None
+    _weasyprint_error = e
+else:
+    _weasyprint_error = None
+
 
 TEMPLATE_MAP = {
     'MIF': 'investigacoes/imprimir_mif.html',
@@ -56,7 +64,8 @@ def gerar_pdf_investigacao(investigacao: Investigacao) -> bytes:
         )
 
     base_url = app.root_path + '/..'
-    from weasyprint import HTML
+    if HTML is None:
+        raise RuntimeError(f'WeasyPrint não disponível: {_weasyprint_error}')
     pdf_bytes = HTML(string=html_string, base_url=base_url).write_pdf()
 
     return pdf_bytes
