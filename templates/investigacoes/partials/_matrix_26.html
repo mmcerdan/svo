@@ -34,16 +34,18 @@
                 {% set field = grupo.campos|selectattr('nome_campo', 'equalto', 'Problema ' + num + ' acesso - ' + n)|first %}
                 <td class="text-center">
                     <input type="checkbox" name="campo_{{ field.id if field else '' }}" value="X"
-                           id="campo_{{ field.id if field else '' }}"
-                           {% if field and field.valor == 'X' %}checked{% endif %}>
+                           id="campo_p{{ num.replace('.', '_') }}_acesso_{{ n }}"
+                           {% if field and field.valor == 'X' %}checked{% endif %}
+                           autocomplete="off">
                 </td>
                 {% endfor %}
                 {% for n in [1,2,3] %}
                 {% set field = grupo.campos|selectattr('nome_campo', 'equalto', 'Problema ' + num + ' assistencia - ' + n)|first %}
                 <td class="text-center">
                     <input type="checkbox" name="campo_{{ field.id if field else '' }}" value="X"
-                           id="campo_{{ field.id if field else '' }}"
-                           {% if field and field.valor == 'X' %}checked{% endif %}>
+                           id="campo_p{{ num.replace('.', '_') }}_assistencia_{{ n }}"
+                           {% if field and field.valor == 'X' %}checked{% endif %}
+                           autocomplete="off">
                 </td>
                 {% endfor %}
             </tr>

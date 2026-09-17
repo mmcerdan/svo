@@ -7,7 +7,8 @@
         <div class="checkbox-wrapper">
             <input type="checkbox" name="campo_{{ campo.id }}" value="X"
                    id="campo_{{ campo.id }}"
-                   {% if campo.valor == 'X' %}checked{% endif %}>
+                   {% if campo.valor == 'X' %}checked{% endif %}
+                   autocomplete="off">
             <label for="campo_{{ campo.id }}" class="checkbox-label">{{ opcao }}</label>
         </div>
         {% endfor %}

@@ -19,14 +19,17 @@
                 {% set field = grupo.campos|selectattr('nome_campo', 'equalto', 'Organizacao ' + letra + ' - ' + n)|first %}
                 <td class="text-center">
                     <input type="checkbox" name="campo_{{ field.id if field else '' }}" value="X"
-                           id="campo_{{ field.id if field else '' }}"
-                           {% if field and field.valor == 'X' %}checked{% endif %}>
+                           id="campo_org_{{ letra }}_{{ n }}"
+                           {% if field and field.valor == 'X' %}checked{% endif %}
+                           autocomplete="off">
                 </td>
                 {% endfor %}
                 {% set obs_field = grupo.campos|selectattr('nome_campo', 'equalto', 'Organizacao ' + letra + ' - obs')|first %}
                 <td>
                     <input type="text" name="campo_{{ obs_field.id if obs_field else '' }}" class="form-control form-control-sm"
-                           value="{{ obs_field.valor if obs_field else '' }}">
+                           id="campo_org_{{ letra }}_obs"
+                           value="{{ obs_field.valor if obs_field else '' }}"
+                           autocomplete="off">
                 </td>
             </tr>
         </tbody>

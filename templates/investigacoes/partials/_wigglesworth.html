@@ -10,9 +10,10 @@
                     <td class="text-center">
                         <div class="form-check form-check-inline">
                             <input type="radio" name="wigglesworth" value="{{ w }}"
-                                   id="campo_{{ field.id if field else '' }}"
-                                   {% if field and field.valor == 'X' %}checked{% endif %}>
-                            <label class="form-check-label" for="campo_{{ field.id if field else '' }}">{{ w }}</label>
+                                   id="campo_wigglesworth_{{ w }}"
+                                   {% if field and field.valor == 'X' %}checked{% endif %}
+                                   autocomplete="off">
+                            <label class="form-check-label" for="campo_wigglesworth_{{ w }}">{{ w }}</label>
                         </div>
                     </td>
                     {% endfor %}

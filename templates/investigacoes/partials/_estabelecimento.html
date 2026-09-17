@@ -5,17 +5,20 @@
         {% for campo in grupo.campos %}
         {% set label = campo.nome_campo.split(' - ')[-1] %}
         <div class="col-md-4">
-            <label class="form-label small mb-1">{{ label }}</label>
+            <label class="form-label small mb-1" for="campo_{{ campo.id }}">{{ label }}</label>
             {% if 'Tipo:' in label %}
             <div class="checkbox-wrapper">
                 <input type="checkbox" name="campo_{{ campo.id }}" value="X"
                        id="campo_{{ campo.id }}"
-                       {% if campo.valor == 'X' %}checked{% endif %}>
+                       {% if campo.valor == 'X' %}checked{% endif %}
+                       autocomplete="off">
                 <label for="campo_{{ campo.id }}" class="checkbox-label">{{ campo.nome_campo.split('Tipo: ')[-1] }}</label>
             </div>
             {% else %}
             <input type="text" name="campo_{{ campo.id }}" class="form-control form-control-sm"
-                   value="{{ campo.valor or '' }}">
+                   id="campo_{{ campo.id }}"
+                   value="{{ campo.valor or '' }}"
+                   autocomplete="off">
             {% endif %}
         </div>
         {% endfor %}

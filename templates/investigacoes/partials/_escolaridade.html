@@ -4,17 +4,20 @@
     <div class="row g-2 align-items-end">
         {% for campo in grupo.campos %}
         <div class="col-auto">
-            <label class="form-label small mb-1">{{ campo.nome_campo.split(' - ')[-1] }}</label>
+            <label class="form-label small mb-1" for="campo_{{ campo.id }}">{{ campo.nome_campo.split(' - ')[-1] }}</label>
             {% if 'ignorado' in campo.nome_campo.lower() %}
             <div class="checkbox-wrapper">
                 <input type="checkbox" name="campo_{{ campo.id }}" value="X"
                        id="campo_{{ campo.id }}"
-                       {% if campo.valor == 'X' %}checked{% endif %}>
+                       {% if campo.valor == 'X' %}checked{% endif %}
+                       autocomplete="off">
                 <label for="campo_{{ campo.id }}" class="checkbox-label">Ignorado</label>
             </div>
             {% else %}
             <input type="text" name="campo_{{ campo.id }}" class="form-control form-control-sm"
-                   value="{{ campo.valor or '' }}" style="width:80px;">
+                   id="campo_{{ campo.id }}"
+                   value="{{ campo.valor or '' }}" style="width:80px;"
+                   autocomplete="off">
             {% endif %}
         </div>
         {% endfor %}

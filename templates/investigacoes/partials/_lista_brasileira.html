@@ -5,18 +5,22 @@
         {% for lb in ['1.1','1.2.1','1.2.2','1.2.3','1.3','1.4','2','3'] %}
         {% set field_sim = grupo.campos|selectattr('nome_campo', 'equalto', 'Lista Brasileira ' + lb + ': Sim')|first %}
         {% set field_nao = grupo.campos|selectattr('nome_campo', 'equalto', 'Lista Brasileira ' + lb + ': Não')|first %}
+        {% set sim_id = 'campo_lb_' + lb.replace('.', '_') + '_sim' %}
+        {% set nao_id = 'campo_lb_' + lb.replace('.', '_') + '_nao' %}
         <div class="col-6 col-md-3">
             <div class="checkbox-wrapper">
                 <input type="checkbox" name="campo_{{ field_sim.id if field_sim else '' }}" value="X"
-                       id="campo_{{ field_sim.id if field_sim else '' }}"
-                       {% if field_sim and field_sim.valor == 'X' %}checked{% endif %}>
-                <label for="campo_{{ field_sim.id if field_sim else '' }}" class="checkbox-label">{{ lb }} Sim</label>
+                       id="{{ sim_id }}"
+                       {% if field_sim and field_sim.valor == 'X' %}checked{% endif %}
+                       autocomplete="off">
+                <label for="{{ sim_id }}" class="checkbox-label">{{ lb }} Sim</label>
             </div>
             <div class="checkbox-wrapper">
                 <input type="checkbox" name="campo_{{ field_nao.id if field_nao else '' }}" value="X"
-                       id="campo_{{ field_nao.id if field_nao else '' }}"
-                       {% if field_nao and field_nao.valor == 'X' %}checked{% endif %}>
-                <label for="campo_{{ field_nao.id if field_nao else '' }}" class="checkbox-label">{{ lb }} Não</label>
+                       id="{{ nao_id }}"
+                       {% if field_nao and field_nao.valor == 'X' %}checked{% endif %}
+                       autocomplete="off">
+                <label for="{{ nao_id }}" class="checkbox-label">{{ lb }} Não</label>
             </div>
         </div>
         {% endfor %}

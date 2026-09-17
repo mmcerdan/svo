@@ -7,9 +7,10 @@
         <div class="col-6 col-md-3 col-lg-2">
             <div class="checkbox-wrapper">
                 <input type="checkbox" name="campo_{{ field.id if field else '' }}" value="X"
-                       id="campo_{{ field.id if field else '' }}"
-                       {% if field and field.valor == 'X' %}checked{% endif %}>
-                <label for="campo_{{ field.id if field else '' }}" class="checkbox-label">{{ s }}</label>
+                       id="campo_seade_{{ s }}"
+                       {% if field and field.valor == 'X' %}checked{% endif %}
+                       autocomplete="off">
+                <label for="campo_seade_{{ s }}" class="checkbox-label">{{ s }}</label>
             </div>
         </div>
         {% endfor %}

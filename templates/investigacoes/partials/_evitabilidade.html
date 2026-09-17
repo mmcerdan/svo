@@ -7,9 +7,10 @@
         <div class="col-4">
             <div class="checkbox-wrapper">
                 <input type="radio" name="evitabilidade" value="{{ opcao }}"
-                       id="campo_{{ field.id if field else '' }}"
-                       {% if field and field.valor == 'X' %}checked{% endif %}>
-                <label for="campo_{{ field.id if field else '' }}" class="checkbox-label">{{ opcao }}</label>
+                       id="campo_evitabilidade_{{ opcao.lower() }}"
+                       {% if field and field.valor == 'X' %}checked{% endif %}
+                       autocomplete="off">
+                <label for="campo_evitabilidade_{{ opcao.lower() }}" class="checkbox-label">{{ opcao }}</label>
             </div>
         </div>
         {% endfor %}
