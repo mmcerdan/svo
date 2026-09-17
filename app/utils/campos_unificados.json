@@ -1,0 +1,314 @@
+{
+  "version": "2.0",
+  "description": "Estrutura unificada de campos para todos os tipos de investigação - Fonte única da verdade",
+  "last_updated": "2026-09-14",
+  "types": {
+    "INFANTIL_FETAL": {
+      "display_name": "Infantil/Fetal - Síntese, Conclusões e Recomendações (IF5)",
+      "pages": [
+        {
+          "page": 1,
+          "title": "IDENTIFICAÇÃO (Campos 1-15)",
+          "sections": [
+            {
+              "id": "identificacao_crianca",
+              "title": "1-7. Identificação da Criança",
+              "fields": [
+                {"name": "Nome da criança", "type": "text", "pdf_key": "Nome da crianca", "auto_fill": "nome"},
+                {"name": "Nome da mãe", "type": "text", "pdf_key": "Nome da mae", "auto_fill": "nome_mae"},
+                {"name": "Nº do caso", "type": "text", "pdf_key": "Nº do caso"},
+                {"name": "Data de nascimento", "type": "date", "pdf_key": "Data de nascimento", "auto_fill": "data_nascimento", "format": "DD/MM/AAAA"},
+                {"name": "Nº da DN", "type": "text", "pdf_key": "Nº da DN"},
+                {"name": "Nº da DO", "type": "text", "pdf_key": "Nº da DO", "auto_fill": "numero_dob"},
+                {"name": "Data do óbito", "type": "date", "pdf_key": "Data do óbito", "auto_fill": "data_obito", "format": "DD/MM/AAAA"}
+              ]
+            },
+            {
+              "id": "tipo_obito_fetal",
+              "title": "8. Tipo óbito fetal",
+              "fields": [
+                {"name": "Tipo óbito fetal: Anteparto", "type": "checkbox", "group": "Tipo óbito fetal"},
+                {"name": "Tipo óbito fetal: Intraparto", "type": "checkbox", "group": "Tipo óbito fetal"}
+              ]
+            },
+            {
+              "id": "peso_sexo_idade",
+              "title": "8-11. Peso, Sexo, Idade, IG, Faixa etária",
+              "fields": [
+                {"name": "Peso ao nascer (gramas)", "type": "text", "pdf_key": "Peso ao nascer (gramas)"},
+                {"name": "Sexo: Masculino", "type": "checkbox", "group": "Sexo"},
+                {"name": "Sexo: Feminino", "type": "checkbox", "group": "Sexo"},
+                {"name": "Sexo: Ignorado", "type": "checkbox", "group": "Sexo"},
+                {"name": "Idade ao óbito", "type": "text", "pdf_key": "Idade ao óbito"},
+                {"name": "Idade gestacional (semanas)", "type": "text", "pdf_key": "Idade gestacional (semanas)"},
+                {"name": "Idade gestacional (meses)", "type": "text", "pdf_key": "Idade gestacional (meses)"},
+                {"name": "Faixa etária: Fetal", "type": "checkbox", "group": "Faixa etária"},
+                {"name": "Faixa etária: Neonatal precoce", "type": "checkbox", "group": "Faixa etária"},
+                {"name": "Faixa etária: Neonatal tardio", "type": "checkbox", "group": "Faixa etária"},
+                {"name": "Faixa etária: Pós-neonatal", "type": "checkbox", "group": "Faixa etária"},
+                {"name": "Faixa etária: Ignorado", "type": "checkbox", "group": "Faixa etária"}
+              ]
+            },
+            {
+              "id": "mae_escolaridade",
+              "title": "12-15. Mãe, Escolaridade, Municípios",
+              "fields": [
+                {"name": "Idade da mãe (anos)", "type": "text", "pdf_key": "Idade da mae (anos)"},
+                {"name": "Escolaridade mãe - anos", "type": "text", "pdf_key": "Escolaridade mae - anos", "layout": "inline"},
+                {"name": "Escolaridade mãe - série", "type": "text", "pdf_key": "Escolaridade mae - serie", "layout": "inline"},
+                {"name": "Escolaridade mãe - grau", "type": "text", "pdf_key": "Escolaridade mae - grau", "layout": "inline"},
+                {"name": "Escolaridade mãe - ignorado", "type": "checkbox", "layout": "inline", "label": "Ignorado"},
+                {"name": "Município residência", "type": "text", "pdf_key": "Município residencia"},
+                {"name": "UF residência", "type": "text", "pdf_key": "UF residencia"},
+                {"name": "Município ocorrência", "type": "text", "pdf_key": "Município ocorrencia"},
+                {"name": "UF ocorrência", "type": "text", "pdf_key": "UF ocorrencia"}
+              ]
+            }
+          ]
+        },
+        {
+          "page": 1,
+          "title": "RESUMO E FONTES (Campos 16-17)",
+          "sections": [
+            {
+              "id": "resumo_caso",
+              "title": "Resumo do Caso",
+              "fields": [
+                {"name": "Resumo do caso", "type": "textarea", "pdf_key": "Resumo do caso"}
+              ]
+            },
+            {
+              "id": "fontes_informacao",
+              "title": "16-17. Fontes de Informação e Estabelecimento Pré-natal",
+              "fields": [
+                {"name": "Fonte: Prontuários ambulatoriais", "type": "checkbox", "group": "Fontes"},
+                {"name": "Fonte: Entrevista domiciliar", "type": "checkbox", "group": "Fontes"},
+                {"name": "Fonte: Autópsia verbal", "type": "checkbox", "group": "Fontes"},
+                {"name": "Fonte: Registros urgência/emergência", "type": "checkbox", "group": "Fontes"},
+                {"name": "Fonte: Registros hospitalares", "type": "checkbox", "group": "Fontes"},
+                {"name": "Fonte: SVO", "type": "checkbox", "group": "Fontes"},
+                {"name": "Fonte: IML", "type": "checkbox", "group": "Fontes"},
+                {"name": "Estabelecimento pré-natal - Nome", "type": "text", "pdf_key": "Estabelecimento pre-natal - Nome", "layout": "estabelecimento"},
+                {"name": "Estabelecimento pré-natal - CNES", "type": "text", "pdf_key": "Estabelecimento pre-natal - CNES", "layout": "estabelecimento"},
+                {"name": "Estabelecimento pré-natal - Tipo: Público", "type": "checkbox", "group": "Estabelecimento pré-natal - Tipo", "layout": "estabelecimento"},
+                {"name": "Estabelecimento pré-natal - Tipo: Privado", "type": "checkbox", "group": "Estabelecimento pré-natal - Tipo", "layout": "estabelecimento"},
+                {"name": "Estabelecimento pré-natal - Tipo: Convênio", "type": "checkbox", "group": "Estabelecimento pré-natal - Tipo", "layout": "estabelecimento"},
+                {"name": "Estabelecimento pré-natal - Tipo: Outros", "type": "checkbox", "group": "Estabelecimento pré-natal - Tipo", "layout": "estabelecimento"}
+              ]
+            }
+          ]
+        },
+        {
+          "page": 2,
+          "title": "PARTO, ATENÇÃO BÁSICA, CID (Campos 18-24)",
+          "sections": [
+            {
+              "id": "parto_estabelecimento",
+              "title": "18. Local do Parto e Estabelecimento",
+              "fields": [
+                {"name": "Local do parto: Hospital", "type": "checkbox", "group": "Local do parto"},
+                {"name": "Local do parto: Domicilio", "type": "checkbox", "group": "Local do parto"},
+                {"name": "Local do parto: Outro", "type": "checkbox", "group": "Local do parto"},
+                {"name": "Estabelecimento parto - Nome", "type": "text", "pdf_key": "Estabelecimento parto - Nome", "layout": "estabelecimento"},
+                {"name": "Estabelecimento parto - CNES", "type": "text", "pdf_key": "Estabelecimento parto - CNES", "layout": "estabelecimento"},
+                {"name": "Estabelecimento parto - Tipo: Público", "type": "checkbox", "group": "Estabelecimento parto - Tipo", "layout": "estabelecimento"},
+                {"name": "Estabelecimento parto - Tipo: Privado", "type": "checkbox", "group": "Estabelecimento parto - Tipo", "layout": "estabelecimento"},
+                {"name": "Estabelecimento parto - Tipo: Convênio", "type": "checkbox", "group": "Estabelecimento parto - Tipo", "layout": "estabelecimento"},
+                {"name": "Estabelecimento parto - Tipo: Outros", "type": "checkbox", "group": "Estabelecimento parto - Tipo", "layout": "estabelecimento"},
+                {"name": "Uso de partograma", "type": "text"},
+                {"name": "VDRL", "type": "text"}
+              ]
+            },
+            {
+              "id": "acompanhamento_vacinacao",
+              "title": "19. Acompanhamento Atenção Básica e Vacinação",
+              "fields": [
+                {"name": "Estabelecimento atenção basica - Nome", "type": "text", "pdf_key": "Estabelecimento atencao basica - Nome", "layout": "estabelecimento"},
+                {"name": "Estabelecimento atenção basica - CNES", "type": "text", "pdf_key": "Estabelecimento atencao basica - CNES", "layout": "estabelecimento"},
+                {"name": "Estabelecimento atenção basica - Tipo: Público", "type": "checkbox", "group": "Estabelecimento atencao basica - Tipo", "layout": "estabelecimento"},
+                {"name": "Estabelecimento atenção basica - Tipo: Privado", "type": "checkbox", "group": "Estabelecimento atencao basica - Tipo", "layout": "estabelecimento"},
+                {"name": "Estabelecimento atenção basica - Tipo: Convênio", "type": "checkbox", "group": "Estabelecimento atencao basica - Tipo", "layout": "estabelecimento"},
+                {"name": "Estabelecimento atenção basica - Tipo: Outros", "type": "checkbox", "group": "Estabelecimento atencao basica - Tipo", "layout": "estabelecimento"},
+                {"name": "Acompanhamento atencao basica", "type": "text"},
+                {"name": "Vacinas realizadas", "type": "text"}
+              ]
+            },
+            {
+              "id": "cid_correcao",
+              "title": "20-24. CID e Correções DO/DN",
+              "fields": [
+                {"name": "Causa original prontuario", "type": "textarea"},
+                {"name": "CID Ia - diagnostico", "type": "text"},
+                {"name": "CID Ia - CID", "type": "text"},
+                {"name": "CID Ib - diagnostico", "type": "text"},
+                {"name": "CID Ib - CID", "type": "text"},
+                {"name": "CID Ic - diagnostico", "type": "text"},
+                {"name": "CID Ic - CID", "type": "text"},
+                {"name": "CID Id - diagnostico", "type": "text"},
+                {"name": "CID Id - CID", "type": "text"},
+                {"name": "CID II - diagnostico", "type": "text"},
+                {"name": "CID II - CID", "type": "text"},
+                {"name": "Alteracao DO - causa basica original", "type": "text"},
+                {"name": "Alteracao DO - causa basica nova", "type": "text"},
+                {"name": "Alteracao DO - CID original", "type": "text"},
+                {"name": "Alteracao DO - CID novo", "type": "text"},
+                {"name": "Alteracao DO - data original", "type": "text"},
+                {"name": "Alteracao DO - data nova", "type": "text"},
+                {"name": "Alteracao DO - local original", "type": "text"},
+                {"name": "Alteracao DO - local nova", "type": "text"},
+                {"name": "Alteracao DO - idade original", "type": "text"},
+                {"name": "Alteracao DO - idade nova", "type": "text"},
+                {"name": "Alteracao DO - peso original", "type": "text"},
+                {"name": "Alteracao DO - peso novo", "type": "text"}
+              ]
+            }
+          ]
+        },
+        {
+          "page": 3,
+          "title": "MATRIZ DE PROBLEMAS (Campos 25-26)",
+          "sections": [
+            {
+              "id": "problemas_identificados",
+              "title": "25. Problemas Identificados",
+              "fields": [
+                {"name": "Problemas identificados", "type": "textarea"}
+              ]
+            },
+            {
+              "id": "matriz_26",
+              "title": "26. Análise da Assistência (26.1 a 26.9) - MATRIZ",
+              "layout": "matrix_26",
+              "items": [
+                {"code": "26.1", "label": "Planejamento familiar"},
+                {"code": "26.2", "label": "Pré-natal"},
+                {"code": "26.3", "label": "Assistência ao parto"},
+                {"code": "26.4", "label": "Assistência ao RN sala de parto"},
+                {"code": "26.5", "label": "Alojamento conjunto"},
+                {"code": "26.6", "label": "UTI neonatal"},
+                {"code": "26.7", "label": "Atenção básica/ESF"},
+                {"code": "26.8", "label": "Urgência/emergência"},
+                {"code": "26.9", "label": "Hospital"}
+              ],
+              "columns": {
+                "acesso": ["1", "2", "3"],
+                "assistencia": ["1", "2", "3"]
+              },
+              "legend": "1 = Sim | 2 = Não | 3 = Inconclusivo"
+            },
+            {
+              "id": "matriz_26_10",
+              "title": "26.10. Organização do Sistema (a-i) - MATRIZ",
+              "layout": "matrix_26_10",
+              "items": [
+                {"code": "a", "label": "Cobertura atenção primária"},
+                {"code": "b", "label": "Referência/contrarreferência"},
+                {"code": "c", "label": "Pré-natal alto risco"},
+                {"code": "d", "label": "Leito UTI gestante"},
+                {"code": "e", "label": "Leitos UTI neonatal"},
+                {"code": "f", "label": "Central de regulação"},
+                {"code": "g", "label": "Transporte pré/inter-hospitalar"},
+                {"code": "h", "label": "Bancos de sangue"},
+                {"code": "i", "label": "Outros"}
+              ],
+              "columns": ["1 - Adequado", "2 - Parcial", "3 - Inadequado"],
+              "has_obs": true
+            }
+          ]
+        },
+        {
+          "page": 4,
+          "title": "EVITABILIDADE, CLASSIFICAÇÕES, RECOMENDAÇÕES (Campos 27-29)",
+          "sections": [
+            {
+              "id": "evitabilidade",
+              "title": "27. Óbito Evitável?",
+              "fields": [
+                {"name": "Óbito evitável? (Sim)", "type": "checkbox", "group": "Óbito evitável?"},
+                {"name": "Óbito evitável? (Não)", "type": "checkbox", "group": "Óbito evitável?"},
+                {"name": "Óbito evitável? (Inconclusivo)", "type": "checkbox", "group": "Óbito evitável?"}
+              ]
+            },
+            {
+              "id": "wigglesworth",
+              "title": "28. Classificação Wigglesworth",
+              "fields": [
+                {"name": "Wigglesworth: W1", "type": "radio", "group": "Wigglesworth"},
+                {"name": "Wigglesworth: W2", "type": "radio", "group": "Wigglesworth"},
+                {"name": "Wigglesworth: W3", "type": "radio", "group": "Wigglesworth"},
+                {"name": "Wigglesworth: W4", "type": "radio", "group": "Wigglesworth"},
+                {"name": "Wigglesworth: W5", "type": "radio", "group": "Wigglesworth"},
+                {"name": "Wigglesworth: W6", "type": "radio", "group": "Wigglesworth"},
+                {"name": "Wigglesworth: W6", "type": "radio", "group": "Wigglesworth"},
+                {"name": "Wigglesworth: W7", "type": "radio", "group": "Wigglesworth"},
+                {"name": "Wigglesworth: W8", "type": "radio", "group": "Wigglesworth"},
+                {"name": "Wigglesworth: W9", "type": "radio", "group": "Wigglesworth"}
+              ],
+              "note": "Exatamente 1 deve ser selecionado"
+            },
+            {
+              "id": "seade",
+              "title": "Classificação SEADE",
+              "fields": [
+                {"name": "SEADE: S1", "type": "checkbox", "group": "SEADE"},
+                {"name": "SEADE: S2", "type": "checkbox", "group": "SEADE"},
+                {"name": "SEADE: S3", "type": "checkbox", "group": "SEADE"},
+                {"name": "SEADE: S4", "type": "checkbox", "group": "SEADE"},
+                {"name": "SEADE: S5", "type": "checkbox", "group": "SEADE"},
+                {"name": "SEADE: S6", "type": "checkbox", "group": "SEADE"},
+                {"name": "SEADE: S7", "type": "checkbox", "group": "SEADE"}
+              ],
+              "note": "Pelo menos 1 deve ser selecionado"
+            },
+            {
+              "id": "lista_brasileira",
+              "title": "Lista Brasileira de Causas de Óbito (Oficial)",
+              "fields": [
+                {"name": "Lista Brasileira 1.1: Sim", "type": "checkbox", "group": "Lista Brasileira 1.1"},
+                {"name": "Lista Brasileira 1.1: Não", "type": "checkbox", "group": "Lista Brasileira 1.1"},
+                {"name": "Lista Brasileira 1.2.1: Sim", "type": "checkbox", "group": "Lista Brasileira 1.2.1"},
+                {"name": "Lista Brasileira 1.2.1: Não", "type": "checkbox", "group": "Lista Brasileira 1.2.1"},
+                {"name": "Lista Brasileira 1.2.2: Sim", "type": "checkbox", "group": "Lista Brasileira 1.2.2"},
+                {"name": "Lista Brasileira 1.2.2: Não", "type": "checkbox", "group": "Lista Brasileira 1.2.2"},
+                {"name": "Lista Brasileira 1.2.3: Sim", "type": "checkbox", "group": "Lista Brasileira 1.2.3"},
+                {"name": "Lista Brasileira 1.2.3: Não", "type": "checkbox", "group": "Lista Brasileira 1.2.3"},
+                {"name": "Lista Brasileira 1.3: Sim", "type": "checkbox", "group": "Lista Brasileira 1.3"},
+                {"name": "Lista Brasileira 1.3: Não", "type": "checkbox", "group": "Lista Brasileira 1.3"},
+                {"name": "Lista Brasileira 1.4: Sim", "type": "checkbox", "group": "Lista Brasileira 1.4"},
+                {"name": "Lista Brasileira 1.4: Não", "type": "checkbox", "group": "Lista Brasileira 1.4"},
+                {"name": "Lista Brasileira 2: Sim", "type": "checkbox", "group": "Lista Brasileira 2"},
+                {"name": "Lista Brasileira 2: Não", "type": "checkbox", "group": "Lista Brasileira 2"},
+                {"name": "Lista Brasileira 3: Sim", "type": "checkbox", "group": "Lista Brasileira 3"},
+                {"name": "Lista Brasileira 3: Não", "type": "checkbox", "group": "Lista Brasileira 3"}
+              ],
+              "official_items": ["1.1", "1.2.1", "1.2.2", "1.2.3", "1.3", "1.4", "2", "3"]
+            },
+            {
+              "id": "recomendacoes",
+              "title": "29. Recomendações e Medidas de Prevenção",
+              "fields": [
+                {"name": "Recomendacao 1", "type": "textarea"},
+                {"name": "Recomendacao 2", "type": "textarea"},
+                {"name": "Recomendacao 3", "type": "textarea"},
+                {"name": "Recomendacao 4", "type": "textarea"},
+                {"name": "Recomendacao 5", "type": "textarea"},
+                {"name": "Recomendacao 6", "type": "textarea"},
+                {"name": "Recomendacao 7", "type": "textarea"},
+                {"name": "Recomendacao 8", "type": "textarea"}
+              ]
+            },
+            {
+              "id": "conclusao_assinatura",
+              "title": "30-31. Conclusão e Assinatura",
+              "fields": [
+                {"name": "Data da conclusao", "type": "date"},
+                {"name": "Responsavel preenchimento - nome", "type": "text"},
+                {"name": "Responsavel preenchimento - carimbo/rubrica", "type": "text"}
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

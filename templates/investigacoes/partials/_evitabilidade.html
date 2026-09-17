@@ -1,0 +1,17 @@
+{# Evitabilidade - 3 opções #}
+<div class="campo-grupo evitabilidade">
+    <div class="grupo-titulo">{{ grupo.titulo }}</div>
+    <div class="row g-2">
+        {% for opcao in ['Sim', 'Não', 'Inconclusivo'] %}
+        {% set field = grupo.campos|selectattr('nome_campo', 'equalto', grupo.titulo + ' (' + opcao + ')')|first %}
+        <div class="col-4">
+            <div class="checkbox-wrapper">
+                <input type="radio" name="evitabilidade" value="{{ opcao }}"
+                       id="campo_{{ field.id if field else '' }}"
+                       {% if field and field.valor == 'X' %}checked{% endif %}>
+                <label for="campo_{{ field.id if field else '' }}" class="checkbox-label">{{ opcao }}</label>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>

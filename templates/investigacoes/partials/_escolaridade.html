@@ -1,0 +1,22 @@
+{# Escolaridade da mãe - Linha horizontal #}
+<div class="campo-grupo escolaridade">
+    <div class="grupo-titulo">{{ grupo.titulo }}</div>
+    <div class="row g-2 align-items-end">
+        {% for campo in grupo.campos %}
+        <div class="col-auto">
+            <label class="form-label small mb-1">{{ campo.nome_campo.split(' - ')[-1] }}</label>
+            {% if 'ignorado' in campo.nome_campo.lower() %}
+            <div class="checkbox-wrapper">
+                <input type="checkbox" name="campo_{{ campo.id }}" value="X"
+                       id="campo_{{ campo.id }}"
+                       {% if campo.valor == 'X' %}checked{% endif %}>
+                <label for="campo_{{ campo.id }}" class="checkbox-label">Ignorado</label>
+            </div>
+            {% else %}
+            <input type="text" name="campo_{{ campo.id }}" class="form-control form-control-sm"
+                   value="{{ campo.valor or '' }}" style="width:80px;">
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+</div>

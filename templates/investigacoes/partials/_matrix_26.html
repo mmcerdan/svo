@@ -1,0 +1,54 @@
+{# Matriz 26 - Análise da Assistência (26.1 a 26.9) #}
+<div class="campo-grupo matriz-26">
+    <div class="grupo-titulo">{{ grupo.titulo }}</div>
+    <table class="table table-sm table-bordered matriz-table">
+        <thead class="table-light">
+            <tr>
+                <th style="width:40%">Item</th>
+                <th class="text-center" style="width:6%">Nº</th>
+                <th colspan="3" class="text-center bg-info text-white">Falha no acesso</th>
+                <th colspan="3" class="text-center bg-danger text-white">Falha na assistência</th>
+            </tr>
+            <tr>
+                <th></th><th class="text-center"></th>
+                <th class="text-center">1</th><th class="text-center">2</th><th class="text-center">3</th>
+                <th class="text-center">1</th><th class="text-center">2</th><th class="text-center">3</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for num, label in [
+                ('26.1', 'Planejamento familiar'),
+                ('26.2', 'Pré-natal'),
+                ('26.3', 'Assistência ao parto'),
+                ('26.4', 'Assistência ao RN sala de parto'),
+                ('26.5', 'Alojamento conjunto'),
+                ('26.6', 'UTI neonatal'),
+                ('26.7', 'Atenção básica/ESF'),
+                ('26.8', 'Urgência/emergência'),
+                ('26.9', 'Hospital'),
+            ] %}
+            <tr>
+                <td class="fw-bold">{{ label }}</td>
+                <td class="text-center">{{ num }}</td>
+                {% for n in [1,2,3] %}
+                {% set field = grupo.campos|selectattr('nome_campo', 'equalto', 'Problema ' + num + ' acesso - ' + n)|first %}
+                <td class="text-center">
+                    <input type="checkbox" name="campo_{{ field.id if field else '' }}" value="X"
+                           id="campo_{{ field.id if field else '' }}"
+                           {% if field and field.valor == 'X' %}checked{% endif %}>
+                </td>
+                {% endfor %}
+                {% for n in [1,2,3] %}
+                {% set field = grupo.campos|selectattr('nome_campo', 'equalto', 'Problema ' + num + ' assistencia - ' + n)|first %}
+                <td class="text-center">
+                    <input type="checkbox" name="campo_{{ field.id if field else '' }}" value="X"
+                           id="campo_{{ field.id if field else '' }}"
+                           {% if field and field.valor == 'X' %}checked{% endif %}>
+                </td>
+                {% endfor %}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <div class="text-muted small mt-1">Legenda: 1 = Sim &nbsp; 2 = Não &nbsp; 3 = Inconclusivo</div>
+</div>

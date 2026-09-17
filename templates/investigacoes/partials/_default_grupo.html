@@ -1,0 +1,15 @@
+{# Fallback padrão para outros grupos #}
+<div class="campo-grupo">
+    <div class="grupo-titulo">{{ grupo.titulo }}</div>
+    <div class="grupo-opcoes">
+        {% for campo in grupo.campos %}
+        {% set opcao = campo.nome_campo.split(': ', 1)[-1].split('? (', 1)[-1].rstrip(')') if ': ' in campo.nome_campo or '? (' in campo.nome_campo else campo.nome_campo %}
+        <div class="checkbox-wrapper">
+            <input type="checkbox" name="campo_{{ campo.id }}" value="X"
+                   id="campo_{{ campo.id }}"
+                   {% if campo.valor == 'X' %}checked{% endif %}>
+            <label for="campo_{{ campo.id }}" class="checkbox-label">{{ opcao }}</label>
+        </div>
+        {% endfor %}
+    </div>
+</div>

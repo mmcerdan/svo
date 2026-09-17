@@ -1,0 +1,18 @@
+{# SEADE - Checkboxes (pelo menos 1) #}
+<div class="campo-grupo seade">
+    <div class="grupo-titulo">{{ grupo.titulo }}</div>
+    <div class="row g-2">
+        {% for s in ['S1','S2','S3','S4','S5','S6','S7'] %}
+        {% set field = grupo.campos|selectattr('nome_campo', 'equalto', 'SEADE: ' + s)|first %}
+        <div class="col-6 col-md-3 col-lg-2">
+            <div class="checkbox-wrapper">
+                <input type="checkbox" name="campo_{{ field.id if field else '' }}" value="X"
+                       id="campo_{{ field.id if field else '' }}"
+                       {% if field and field.valor == 'X' %}checked{% endif %}>
+                <label for="campo_{{ field.id if field else '' }}" class="checkbox-label">{{ s }}</label>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    <div class="text-muted small mt-1">Pelo menos 1 deve ser selecionado</div>
+</div>

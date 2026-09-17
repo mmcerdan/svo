@@ -1,0 +1,24 @@
+{# Wigglesworth - Radio buttons (exatamente 1) #}
+<div class="campo-grupo wigglesworth">
+    <div class="grupo-titulo">{{ grupo.titulo }}</div>
+    <div class="table-responsive">
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    {% for w in ['W1','W2','W3','W4','W5','W6','W7','W8','W9'] %}
+                    {% set field = grupo.campos|selectattr('nome_campo', 'equalto', 'Wigglesworth: ' + w)|first %}
+                    <td class="text-center">
+                        <div class="form-check form-check-inline">
+                            <input type="radio" name="wigglesworth" value="{{ w }}"
+                                   id="campo_{{ field.id if field else '' }}"
+                                   {% if field and field.valor == 'X' %}checked{% endif %}>
+                            <label class="form-check-label" for="campo_{{ field.id if field else '' }}">{{ w }}</label>
+                        </div>
+                    </td>
+                    {% endfor %}
+                </tr>
+            </tbody>
+        </table>
+        <div class="text-muted small mt-1">Exatamente 1 deve ser selecionado</div>
+    </div>
+</div>

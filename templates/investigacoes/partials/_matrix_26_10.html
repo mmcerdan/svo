@@ -1,0 +1,34 @@
+{# Matriz 26.10 - Organização do Sistema (a-i) #}
+<div class="campo-grupo matriz-26-10">
+    <div class="grupo-titulo">{{ grupo.titulo }}</div>
+    <table class="table table-sm table-bordered matriz-table">
+        <thead class="table-light">
+            <tr>
+                <th style="width:50%">Item</th>
+                <th class="text-center" style="width:12%">1 - Adequado</th>
+                <th class="text-center" style="width:12%">2 - Parcial</th>
+                <th class="text-center" style="width:12%">3 - Inadequado</th>
+                <th style="width:14%">Observação</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% set letra = grupo.titulo.split(' ')[1] %}
+            <tr>
+                <td>{{ letra }}) {{ grupo.titulo.split(' ', 2)[2] if grupo.titulo.split(' ')|length > 2 else '' }}</td>
+                {% for n in [1,2,3] %}
+                {% set field = grupo.campos|selectattr('nome_campo', 'equalto', 'Organizacao ' + letra + ' - ' + n)|first %}
+                <td class="text-center">
+                    <input type="checkbox" name="campo_{{ field.id if field else '' }}" value="X"
+                           id="campo_{{ field.id if field else '' }}"
+                           {% if field and field.valor == 'X' %}checked{% endif %}>
+                </td>
+                {% endfor %}
+                {% set obs_field = grupo.campos|selectattr('nome_campo', 'equalto', 'Organizacao ' + letra + ' - obs')|first %}
+                <td>
+                    <input type="text" name="campo_{{ obs_field.id if obs_field else '' }}" class="form-control form-control-sm"
+                           value="{{ obs_field.valor if obs_field else '' }}">
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

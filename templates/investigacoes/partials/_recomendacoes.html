@@ -1,0 +1,10 @@
+{# Recomendações - Textareas #}
+<div class="campo-grupo recomendacoes">
+    <div class="grupo-titulo">{{ grupo.titulo }}</div>
+    {% for campo in grupo.campos %}
+    <div class="campo-item mb-2">
+        <label class="form-label small mb-1">{{ campo.nome_campo }}</label>
+        <textarea name="campo_{{ campo.id }}" class="form-control" rows="2">{{ campo.valor or '' }}</textarea>
+    </div>
+    {% endfor %}
+</div>

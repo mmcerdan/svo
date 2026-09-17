@@ -1,0 +1,23 @@
+{# Estabelecimentos de Saúde (3 momentos) #}
+<div class="campo-grupo estabelecimento">
+    <div class="grupo-titulo">{{ grupo.titulo }}</div>
+    <div class="row g-2 align-items-end">
+        {% for campo in grupo.campos %}
+        {% set label = campo.nome_campo.split(' - ')[-1] %}
+        <div class="col-md-4">
+            <label class="form-label small mb-1">{{ label }}</label>
+            {% if 'Tipo:' in label %}
+            <div class="checkbox-wrapper">
+                <input type="checkbox" name="campo_{{ campo.id }}" value="X"
+                       id="campo_{{ campo.id }}"
+                       {% if campo.valor == 'X' %}checked{% endif %}>
+                <label for="campo_{{ campo.id }}" class="checkbox-label">{{ campo.nome_campo.split('Tipo: ')[-1] }}</label>
+            </div>
+            {% else %}
+            <input type="text" name="campo_{{ campo.id }}" class="form-control form-control-sm"
+                   value="{{ campo.valor or '' }}">
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+</div>
