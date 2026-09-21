@@ -4,30 +4,55 @@
     <h2>Relatórios</h2>
 </div>
 
-<div class="row g-3 mb-4">
-    <div class="col-md-4">
+<div class="row g-3 mb-3">
+    <div class="col-12">
         <div class="card">
-            <div class="card-body">
-                <div class="d-flex justify-content-between align-items-center mb-2">
-                    <h6 class="mb-0">Período</h6>
-                </div>
-                <div class="row g-2">
-                    <div class="col-6">
-                        <label class="form-label" style="font-size:12px;">Data Início</label>
+            <div class="card-body py-2">
+                <div class="row g-2 align-items-end">
+                    <div class="col-md-3">
+                        <label class="form-label small mb-1">Buscar por nome</label>
+                        <input type="text" id="nome" class="form-control form-control-sm"
+                               placeholder="Nome do óbito..." autocomplete="off">
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label small mb-1">Data Início</label>
                         <input type="date" id="data_inicio" class="form-control form-control-sm">
                     </div>
-                    <div class="col-6">
-                        <label class="form-label" style="font-size:12px;">Data Fim</label>
+                    <div class="col-md-2">
+                        <label class="form-label small mb-1">Data Fim</label>
                         <input type="date" id="data_fim" class="form-control form-control-sm">
+                    </div>
+                    <div class="col-md-1">
+                        <label class="form-label small mb-1">Idade mín</label>
+                        <input type="number" id="idade_min" class="form-control form-control-sm"
+                               min="0" max="150" placeholder="0">
+                    </div>
+                    <div class="col-md-1">
+                        <label class="form-label small mb-1">Idade máx</label>
+                        <input type="number" id="idade_max" class="form-control form-control-sm"
+                               min="0" max="150" placeholder="150">
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label small mb-1">&nbsp;</label>
+                        <div class="d-flex gap-1 flex-wrap">
+                            <button class="btn btn-sm btn-outline-secondary" onclick="setPeriodo('mes')">Este mês</button>
+                            <button class="btn btn-sm btn-outline-secondary" onclick="setPeriodo('trimestre')">Trimestre</button>
+                            <button class="btn btn-sm btn-outline-secondary" onclick="setPeriodo('semestre')">Semestre</button>
+                            <button class="btn btn-sm btn-outline-secondary" onclick="setPeriodo('ano')">Este ano</button>
+                            <button class="btn btn-sm btn-outline-secondary" onclick="setPeriodo('tudo')">Todos</button>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <div class="col-md-8">
+</div>
+
+<div class="row g-3 mb-3">
+    <div class="col-12">
         <div class="card">
-            <div class="card-body">
-                <div class="d-flex gap-2 flex-wrap">
+            <div class="card-body py-2">
+                <div class="d-flex gap-2 flex-wrap align-items-center">
                     <button class="btn btn-outline-primary btn-sm active" onclick="carregarDados('geral')" id="btn-geral">
                         <i class="bi bi-table"></i> Visao Geral
                     </button>
@@ -44,6 +69,8 @@
                     <button class="btn btn-outline-danger btn-sm" onclick="exportar('pdf')" id="btn-pdf">
                         <i class="bi bi-file-earmark-pdf"></i> PDF
                     </button>
+                    <span class="vr"></span>
+                    <small class="text-muted" id="filtro-status"></small>
                 </div>
             </div>
         </div>
@@ -74,10 +101,78 @@
 let graficoAtual = null;
 let tipoAtual = 'geral';
 
-function exportar(formato) {
+function setPeriodo(periodo) {
+    const hoje = new Date();
+    const yyyy = hoje.getFullYear();
+    const mm = String(hoje.getMonth() + 1).padStart(2, '0');
+    const dd = String(hoje.getDate()).padStart(2, '0');
+    const hojeStr = `${yyyy}-${mm}-${dd}`;
+
+    let inicio = '';
+    switch (periodo) {
+        case 'mes':
+            inicio = `${yyyy}-${mm}-01`;
+            break;
+        case 'trimestre':
+            const mesTri = hoje.getMonth() - 2;
+            const anoTri = mesTri < 0 ? yyyy - 1 : yyyy;
+            const mesReal = mesTri < 0 ? mesTri + 12 : mesTri;
+            inicio = `${anoTri}-${String(mesReal + 1).padStart(2, '0')}-01`;
+            break;
+        case 'semestre':
+            const mesSem = hoje.getMonth() - 5;
+            const anoSem = mesSem < 0 ? yyyy - 1 : yyyy;
+            const mesRealSem = mesSem < 0 ? mesSem + 12 : mesSem;
+            inicio = `${anoSem}-${String(mesRealSem + 1).padStart(2, '0')}-01`;
+            break;
+        case 'ano':
+            inicio = `${yyyy}-01-01`;
+            break;
+        case 'tudo':
+            inicio = '';
+            break;
+    }
+    document.getElementById('data_inicio').value = inicio;
+    document.getElementById('data_fim').value = (periodo === 'tudo') ? '' : hojeStr;
+    document.getElementById('nome').value = '';
+    document.getElementById('idade_min').value = '';
+    document.getElementById('idade_max').value = '';
+    carregarDados(tipoAtual);
+}
+
+function getFiltrosParams() {
     const data_inicio = document.getElementById('data_inicio').value;
     const data_fim = document.getElementById('data_fim').value;
-    const url = `/relatorios/exportar/${formato}?tipo=${tipoAtual}&data_inicio=${data_inicio}&data_fim=${data_fim}`;
+    const nome = document.getElementById('nome').value;
+    const idade_min = document.getElementById('idade_min').value;
+    const idade_max = document.getElementById('idade_max').value;
+
+    let params = `tipo=${tipoAtual}`;
+    if (data_inicio) params += `&data_inicio=${data_inicio}`;
+    if (data_fim) params += `&data_fim=${data_fim}`;
+    if (nome) params += `&nome=${encodeURIComponent(nome)}`;
+    if (idade_min) params += `&idade_min=${idade_min}`;
+    if (idade_max) params += `&idade_max=${idade_max}`;
+    return params;
+}
+
+function atualizarFiltroStatus() {
+    const nome = document.getElementById('nome').value;
+    const di = document.getElementById('data_inicio').value;
+    const df = document.getElementById('data_fim').value;
+    const imin = document.getElementById('idade_min').value;
+    const imax = document.getElementById('idade_max').value;
+
+    const partes = [];
+    if (nome) partes.push(`Nome: "${nome}"`);
+    if (di || df) partes.push(`Período: ${di || '...'} a ${df || '...'}`);
+    if (imin || imax) partes.push(`Idade: ${imin || '0'} a ${imax || '...'}`);
+
+    document.getElementById('filtro-status').textContent = partes.length ? 'Filtros: ' + partes.join(' | ') : '';
+}
+
+function exportar(formato) {
+    const url = `/relatorios/exportar/${formato}?${getFiltrosParams()}`;
     window.location.href = url;
 }
 
@@ -86,10 +181,9 @@ function carregarDados(tipo) {
     document.querySelectorAll('[id^="btn-"]').forEach(b => b.classList.remove('active'));
     document.getElementById('btn-' + tipo).classList.add('active');
 
-    const data_inicio = document.getElementById('data_inicio').value;
-    const data_fim = document.getElementById('data_fim').value;
+    atualizarFiltroStatus();
 
-    fetch(`/relatorios/dados?tipo=${tipo}&data_inicio=${data_inicio}&data_fim=${data_fim}`)
+    fetch(`/relatorios/dados?${getFiltrosParams()}`)
         .then(r => r.json())
         .then(dados => {
             const resumo = document.getElementById('resumo-dados');
@@ -161,6 +255,14 @@ function renderGrafico(dados) {
         }
     });
 }
+
+document.querySelectorAll('#nome, #data_inicio, #data_fim, #idade_min, #idade_max').forEach(el => {
+    let timeout;
+    el.addEventListener('input', () => {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => carregarDados(tipoAtual), 400);
+    });
+});
 
 carregarDados('geral');
 </script>
