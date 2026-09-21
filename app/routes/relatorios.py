@@ -105,6 +105,14 @@ def exportar_csv():
         for item in dados['por_sexo']:
             writer.writerow([item['label'], item['value']])
         writer.writerow([])
+        writer.writerow(['Por Tipo de Ficha', 'Quantidade'])
+        for item in dados['por_tipo_ficha']:
+            writer.writerow([item['label'], item['value']])
+        writer.writerow([])
+        writer.writerow(['Por CID', 'Quantidade'])
+        for item in dados['por_cid']:
+            writer.writerow([item['label'], item['value']])
+        writer.writerow([])
         writer.writerow(['Por Local', 'Quantidade'])
         for item in dados['por_local']:
             writer.writerow([item['label'], item['value']])

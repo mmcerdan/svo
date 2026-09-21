@@ -57,10 +57,30 @@ class RelatorioService:
             Obito.local_obito, func.count(Obito.id)
         ).filter(Obito.local_obito.isnot(None)).group_by(Obito.local_obito).all()
 
+        query_cid = RelatorioService._aplicar_filtros_base(
+            Obito.query, nome=nome, data_inicio=data_inicio, data_fim=data_fim,
+            idade_min=idade_min, idade_max=idade_max
+        )
+        por_cid = query_cid.with_entities(
+            Obito.causa_morte_cid, func.count(Obito.id)
+        ).filter(Obito.causa_morte_cid.isnot(None)).group_by(Obito.causa_morte_cid).order_by(
+            func.count(Obito.id).desc()
+        ).all()
+
+        base = RelatorioService._aplicar_filtros_base(
+            Obito.query, nome=nome, data_inicio=data_inicio, data_fim=data_fim,
+            idade_min=idade_min, idade_max=idade_max
+        ).subquery()
+        por_tipo_ficha = db.session.query(
+            Investigacao.tipo, func.count(Investigacao.id)
+        ).join(base, Investigacao.obito_id == base.c.id).group_by(Investigacao.tipo).all()
+
         return {
             'total': total,
             'por_sexo': [{'label': s or 'Não informado', 'value': c} for s, c in por_sexo],
             'por_local': [{'label': l or 'Não informado', 'value': c} for l, c in por_local],
+            'por_cid': [{'label': c or 'Sem CID', 'value': v} for c, v in por_cid],
+            'por_tipo_ficha': [{'label': t or 'Sem investigação', 'value': v} for t, v in por_tipo_ficha],
         }
 
     @staticmethod

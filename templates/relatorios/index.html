@@ -190,10 +190,18 @@ function carregarDados(tipo) {
             const lbl = document.getElementById('grafico-label');
 
             if (tipo === 'geral') {
-                lbl.textContent = 'Óbitos por Categoria';
+                lbl.textContent = 'Óbitos por CID';
                 let html = `<h3 class="text-center mb-3">Total: ${dados.total}</h3>`;
                 html += '<h6>Por Sexo</h6><table class="table table-sm">';
                 dados.por_sexo.forEach(item => {
+                    html += `<tr><td>${item.label}</td><td class="text-end"><strong>${item.value}</strong></td></tr>`;
+                });
+                html += '</table><h6>Por Tipo de Ficha</h6><table class="table table-sm">';
+                dados.por_tipo_ficha.forEach(item => {
+                    html += `<tr><td>${item.label}</td><td class="text-end"><strong>${item.value}</strong></td></tr>`;
+                });
+                html += '</table><h6>Por CID</h6><table class="table table-sm">';
+                dados.por_cid.forEach(item => {
                     html += `<tr><td>${item.label}</td><td class="text-end"><strong>${item.value}</strong></td></tr>`;
                 });
                 html += '</table><h6>Por Local</h6><table class="table table-sm">';
@@ -202,7 +210,7 @@ function carregarDados(tipo) {
                 });
                 html += '</table>';
                 resumo.innerHTML = html;
-                renderGrafico(dados.por_sexo);
+                renderGrafico(dados.por_cid.slice(0, 10));
             } else if (tipo === 'investigacoes') {
                 lbl.textContent = 'Investigações por Tipo';
                 let html = `<h3 class="text-center mb-3">Total: ${dados.total}</h3>`;
