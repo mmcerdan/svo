@@ -358,8 +358,9 @@ git tag -l
 ## 📞 Suporte
 
 - **Desenvolvedor**: Marcos Cerdan
-- **Email**: mm.cerdan@saude.goianira
+- **Email**: mm.cerdan@gmail.com
 - **Repositório**: https://github.com/mmcerdan/svo
+- **Telefone**: (62)99345-8069
 
 ---
 
