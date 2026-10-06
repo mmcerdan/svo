@@ -60,6 +60,11 @@ class InvestigacaoService:
         'Município ocorrência': 'municipio_ocorrencia',
         'Causa básica original': 'causa_morte',
         'Causa do óbito no prontuário': 'causa_morte',
+        # DENGUE
+        'DI03. Nome do paciente': 'nome',
+        'DI04. Data de nascimento': 'data_nascimento',
+        'DI07. Nome da mãe': 'nome_mae',
+        'DI11. Endereço': 'endereco',
     }
 
     @staticmethod

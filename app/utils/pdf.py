@@ -20,6 +20,7 @@ TEMPLATE_MAP = {
     'INFANTIL_FETAL': 'investigacoes/imprimir_infantil_fetal.html',
     'MAL_DEFINIDA': 'investigacoes/imprimir_mal_definida.html',
     'INFANTIL': 'investigacoes/imprimir_infantil.html',
+    'DENGUE': 'investigacoes/imprimir_dengue.html',
 }
 
 _LOGO_CACHE = {}

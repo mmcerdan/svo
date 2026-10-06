@@ -30,7 +30,7 @@ class TestCamposUtils:
         assert extrair_opcao('Wigglesworth: W7') == 'W7'
     
     def test_campos_padrao_todos_tipos(self):
-        for tipo in ['MIF', 'MATERNO', 'INFANTIL_FETAL', 'MAL_DEFINIDA', 'INFANTIL']:
+        for tipo in ['MIF', 'MATERNO', 'INFANTIL_FETAL', 'MAL_DEFINIDA', 'INFANTIL', 'DENGUE']:
             campos = get_campos_padrao_investigacao(tipo)
             assert len(campos) > 0
             # Verifica se tem checkboxes
@@ -106,6 +106,65 @@ class TestValidadorInvestigacao:
         }
         erros = ValidadorInvestigacao.validar('INFANTIL_FETAL', campos)
         assert any('SEADE' in e for e in erros)
+
+    def test_dengue_sexo_obrigatorio(self):
+        campos = {
+            'DI03. Nome do paciente': 'Paciente Teste',
+            'DI04. Data de nascimento': '1990-01-01',
+        }
+        erros = ValidadorInvestigacao.validar('DENGUE', campos)
+        assert any('Sexo' in e for e in erros)
+
+    def test_dengue_sexo_exato_um(self):
+        # Sexo correto
+        campos_ok = {
+            'DI03. Nome do paciente': 'Paciente Teste',
+            'DI04. Data de nascimento': '1990-01-01',
+            'DI06. Sexo: Masculino': 'X',
+            'DI06. Sexo: Feminino': '',
+        }
+        erros_ok = ValidadorInvestigacao.validar('DENGUE', campos_ok)
+        assert len(erros_ok) == 0
+
+        # Sexo duplo
+        campos_duplo = {
+            'DI03. Nome do paciente': 'Paciente Teste',
+            'DI04. Data de nascimento': '1990-01-01',
+            'DI06. Sexo: Masculino': 'X',
+            'DI06. Sexo: Feminino': 'X',
+        }
+        erros_duplo = ValidadorInvestigacao.validar('DENGUE', campos_duplo)
+        assert any('Sexo' in e for e in erros_duplo)
+
+    def test_dengue_grupo_exclusivo_max_um(self):
+        campos = {
+            'DI03. Nome do paciente': 'Paciente',
+            'DI04. Data de nascimento': '1990-01-01',
+            'DI06. Sexo: Feminino': 'X',
+            'IT05. Estadiamento: A': 'X',
+            'IT05. Estadiamento: B': 'X',
+        }
+        erros = ValidadorInvestigacao.validar('DENGUE', campos)
+        assert any('Estadiamento' in e for e in erros)
+
+    def test_dengue_en_encerramento(self):
+        # EN01 = Sim sem critério/classificação
+        campos = {
+            'DI03. Nome do paciente': 'Paciente',
+            'DI04. Data de nascimento': '1990-01-01',
+            'DI06. Sexo: Masculino': 'X',
+            'EN01. Caso encerrado: Sim': 'X',
+        }
+        erros = ValidadorInvestigacao.validar('DENGUE', campos)
+        assert any('EN02' in e for e in erros)
+        assert any('EN03' in e for e in erros)
+
+        # EN01 = Sim com critério e classificação
+        campos_ok = dict(campos)
+        campos_ok['EN02. Critério: Laboratorial'] = 'X'
+        campos_ok['EN03. Classificação: 12 — Dengue grave'] = 'X'
+        erros_ok = ValidadorInvestigacao.validar('DENGUE', campos_ok)
+        assert len(erros_ok) == 0
 
 class TestInvestigacaoService:
     """Testes do InvestigacaoService."""

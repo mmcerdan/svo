@@ -169,7 +169,7 @@ def excluir(id):
 def api_campos_investigacao(tipo):
     from app.utils.campos import get_campos_padrao_investigacao, get_tipo_campo, get_grupo_campo, agrupar_campos_list
     
-    if tipo not in ['MIF', 'MATERNO', 'INFANTIL_FETAL', 'MAL_DEFINIDA', 'INFANTIL']:
+    if tipo not in ['MIF', 'MATERNO', 'INFANTIL_FETAL', 'MAL_DEFINIDA', 'INFANTIL', 'DENGUE']:
         return jsonify({'erro': 'Tipo inválido'}), 400
     
     campos = get_campos_padrao_investigacao(tipo)

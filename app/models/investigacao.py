@@ -7,6 +7,7 @@ TIPOS_INVESTIGACAO = [
     ('INFANTIL_FETAL', 'Infantil/Fetal'),
     ('MAL_DEFINIDA', 'Causa Mal Definida'),
     ('INFANTIL', 'Infantil'),
+    ('DENGUE', 'Dengue (Arbovírus)'),
 ]
 
 STATUS_INVESTIGACAO = [

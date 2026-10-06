@@ -1,5 +1,6 @@
 import re
 from typing import List, Dict, Any
+from app.utils.campos_dengue import obter_campos_dengue
 
 # ============================================================
 # CAMPOS PADRÃO POR TIPO DE INVESTIGAÇÃO
@@ -313,6 +314,7 @@ CAMPOS_PADRAO = {
         'Exame vdrl - 1tri', 'Exame vdrl - 2tri', 'Exame vdrl - 3tri', 'Exame vdrl - resultado',
         'Exame outros_exames - 1tri', 'Exame outros_exames - 2tri', 'Exame outros_exames - 3tri', 'Exame outros_exames - resultado',
     ],
+    'DENGUE': obter_campos_dengue(),
 }
 
 def get_campos_padrao_investigacao(tipo: str) -> List[str]:

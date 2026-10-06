@@ -178,6 +178,7 @@ footer { margin-top: 40px; padding: 15px 0; border-top: 1px solid #eee; font-siz
 .tipo-INFANTIL_FETAL { background: #d5f5e3; color: #1e8449; }
 .tipo-MAL_DEFINIDA { background: #fdebd0; color: #935116; }
 .tipo-INFANTIL { background: #d6eaf8; color: #1a5276; }
+.tipo-DENGUE { background: #fcf3cf; color: #7d6608; }
 
 .investigacao-campos .campo-item { margin-bottom: 15px; }
 .investigacao-campos .campo-item label { display: block; font-weight: 600; font-size: 13px; color: #555; margin-bottom: 4px; }

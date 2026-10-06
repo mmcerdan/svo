@@ -101,7 +101,7 @@ def nova(obito_id):
 def campos_por_tipo(tipo):
     from app.utils.campos import get_campos_padrao_investigacao, get_tipo_campo, get_grupo_campo, agrupar_campos_list
     
-    if tipo not in ['MIF', 'MATERNO', 'INFANTIL_FETAL', 'MAL_DEFINIDA', 'INFANTIL']:
+    if tipo not in ['MIF', 'MATERNO', 'INFANTIL_FETAL', 'MAL_DEFINIDA', 'INFANTIL', 'DENGUE']:
         return jsonify({'erro': 'Tipo inválido'}), 400
     
     campos = get_campos_padrao_investigacao(tipo)
@@ -144,6 +144,7 @@ def imprimir(id):
         'INFANTIL_FETAL': 'investigacoes/imprimir_infantil_fetal.html',
         'MAL_DEFINIDA': 'investigacoes/imprimir_mal_definida.html',
         'INFANTIL': 'investigacoes/imprimir_infantil.html',
+        'DENGUE': 'investigacoes/imprimir_dengue.html',
     }
     tmpl = template_map.get(inv.tipo, 'investigacoes/imprimir.html')
     return render_template(tmpl, inv=inv, c=campos_dict, now=datetime.now(),

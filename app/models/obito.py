@@ -11,7 +11,7 @@ class Obito(db.Model):
     sexo = db.Column(db.String(1))
     nome_mae = db.Column(db.String(200))
     nome_pai = db.Column(db.String(200))
-    numero_dob = db.Column(db.String(50), unique=True, index=True)
+    numero_dob = db.Column(db.String(50), index=True)  # sem unique: gêmeos compartilham a mesma DO
     causa_morte = db.Column(db.Text)
     causa_morte_cid = db.Column(db.String(10), index=True)
     causas_morte_cids = db.Column(JSONB, default=list)  # Lista de CIDs: [{"cid": "P968", "descricao": "..."}, ...]

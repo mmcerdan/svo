@@ -10,11 +10,12 @@ LOCAIS_OBITO = [
 ]
 
 TIPOS_INVESTIGACAO = [
-    ('MIF', 'MIF - Mulher em Idade Fértil'),
+    ('MIF', 'MIF - Mulher em Idade FǸrtil'),
     ('MATERNO', 'Materno'),
     ('INFANTIL_FETAL', 'Infantil/Fetal'),
     ('MAL_DEFINIDA', 'Causa Mal Definida'),
     ('INFANTIL', 'Infantil'),
+    ('DENGUE', 'Dengue (Arbovírus)'),
 ]
 
 STATUS_INVESTIGACAO = [
@@ -58,6 +59,7 @@ class ObitoForm(FlaskForm):
         ('INFANTIL_FETAL', 'Infantil/Fetal'),
         ('MAL_DEFINIDA', 'Causa Mal Definida'),
         ('INFANTIL', 'Infantil'),
+        ('DENGUE', 'Dengue (Arbovírus)'),
     ], validators=[Optional()])
 
 class InvestigacaoForm(FlaskForm):

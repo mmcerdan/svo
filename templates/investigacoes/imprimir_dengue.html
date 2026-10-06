@@ -1,0 +1,1014 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>DENGUE - Ficha de Investigação de Óbito por Arbovírus</title>
+<style>
+/* ============ RESET ============ */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { margin: 0; padding: 0; }
+
+/* ============ PÁGINA A4 ============ */
+@page {
+    size: 210mm 297mm portrait;
+    margin: 10mm 10mm 12mm 10mm;
+}
+body {
+    font-family: "DejaVu Sans", Arial, Helvetica, sans-serif;
+    font-size: 9pt;
+    line-height: 1.3;
+    color: #000;
+    background: #fff;
+}
+
+/* ============ CABEÇALHO ============ */
+.cabecalho { width: 100%; border-collapse: collapse; margin-bottom: 6pt; }
+.cabecalho td { padding: 2pt 3pt; vertical-align: middle; }
+.cabecalho .c-esq { width: 35%; vertical-align: top; border: none; }
+.cabecalho .c-centro { width: 45%; vertical-align: top; text-align: center; border: none; }
+.cabecalho .c-dir { width: 20%; vertical-align: top; border: none; }
+.cabecalho .logo-img { height: 55px; width: auto; display: block; }
+.cabecalho .logo-img-centro { height: 45px; width: auto; display: inline-block; margin-bottom: 2pt; }
+.cabecalho .ms-texto { font-size: 7pt; line-height: 1.2; color: #000; }
+.cabecalho .ms-texto b { font-size: 8pt; display: block; margin-bottom: 1pt; }
+.cabecalho .ms-texto span { display: block; }
+.cabecalho .mun-texto { font-size: 7pt; line-height: 1.2; color: #000; }
+.cabecalho .mun-texto b { font-size: 8pt; display: block; margin-bottom: 1pt; }
+.cabecalho .mun-texto span { display: block; }
+.cabecalho .dengue-box {
+    border: 1.5pt solid #000;
+    padding: 3pt 4pt;
+    text-align: center;
+    width: 100%;
+}
+.cabecalho .dengue-box .dengue-label {
+    font-size: 7pt;
+    font-weight: bold;
+    color: #000;
+}
+.cabecalho .dengue-box .dengue-linha {
+    border-bottom: 0.5pt solid #000;
+    height: 11pt;
+    margin: 2pt 0;
+}
+.cabecalho .dengue-box .dengue-sigla {
+    font-size: 14pt;
+    font-weight: bold;
+    color: #000;
+    letter-spacing: 1pt;
+}
+.cabecalho .titulo-row td {
+    border: none;
+    text-align: center;
+    padding: 3pt 0 0 0;
+}
+.cabecalho .titulo-doc {
+    font-size: 9.5pt;
+    font-weight: bold;
+    color: #000;
+    line-height: 1.3;
+    border-top: 1pt solid #000;
+    border-bottom: 1pt solid #000;
+    padding: 3pt 0;
+}
+
+/* ============ TABELA MESTRA ============ */
+.form-tbl { width: 100%; border-collapse: collapse; }
+.form-tbl td {
+    border: 0.5pt solid #000;
+    padding: 2pt 4pt;
+    vertical-align: middle;
+    font-size: 9pt;
+    line-height: 1.3;
+}
+
+/* ============ TÍTULOS DE SEÇÃO ============ */
+.sec-title td {
+    background-color: #e8e8e8 !important;
+    font-weight: bold;
+    font-size: 9pt;
+    padding: 3pt 4pt;
+    border-top: 1pt solid #000;
+    border-bottom: 1pt solid #000;
+}
+
+/* ============ CAMPOS ============ */
+.lbl {
+    font-size: 8pt;
+    font-weight: bold;
+    color: #000;
+    white-space: nowrap;
+    width: 28%;
+    padding-right: 4pt;
+}
+.val {
+    font-size: 9.5pt;
+    color: #000;
+}
+
+/* ============ CHECKBOXES ============ */
+.ck-tbl {
+    border-collapse: collapse;
+    display: inline-table;
+}
+.ck-tbl td {
+    border: none !important;
+    padding: 0 8pt 0 0;
+    font-size: 9pt;
+    vertical-align: middle;
+}
+.ck-box {
+    display: inline-block;
+    width: 11pt;
+    height: 11pt;
+    border: 1pt solid #000;
+    text-align: center;
+    line-height: 11pt;
+    font-size: 8pt;
+    font-weight: bold;
+    vertical-align: middle;
+    margin-right: 2pt;
+}
+
+/* ============ CAIXA DE TEXTO ============ */
+.txt-box {
+    border: 0.5pt solid #000;
+    min-height: 40pt;
+    padding: 3pt;
+    font-size: 8.5pt;
+    line-height: 1.3;
+    word-break: break-word;
+    white-space: pre-wrap;
+}
+
+/* ============ INSTRUÇÃO ============ */
+.instrucao {
+    font-size: 7.5pt;
+    line-height: 1.3;
+    color: #000;
+    padding: 4pt;
+    border: 1pt solid #000;
+    background: #f5f5f5;
+}
+
+/* ============ RODAPÉ ============ */
+.rodape td {
+    text-align: center;
+    font-size: 7pt;
+    color: #333;
+    border-top: 1pt solid #000;
+    padding-top: 4pt;
+}
+
+/* ============ NO-PRINT ============ */
+.no-print { display: block; text-align: center; margin-bottom: 6pt; padding: 4pt; }
+@media print { .no-print { display: none !important; } }
+
+/* ============ QUEBRA DE PÁGINA ============ */
+.page-break-before { page-break-before: always; }
+.avoid-break { page-break-inside: avoid; }
+</style>
+</head>
+<body>
+
+<!-- BOTOES NAVEGADOR -->
+<div class="no-print">
+    <button onclick="window.print()" style="padding:6px 16px;font-size:11px;background:#1a5276;color:#fff;border:none;border-radius:3px;margin-right:4px;cursor:pointer;">Imprimir / Salvar PDF</button>
+    <button onclick="window.close()" style="padding:6px 16px;font-size:11px;background:#6c757d;color:#fff;border:none;border-radius:3px;cursor:pointer;">Fechar</button>
+</div>
+
+<!-- ============ CABEÇALHO ============ -->
+<table class="cabecalho">
+<tr>
+    <td class="c-esq">
+        {% if logo_ms %}<img src="{{ logo_ms }}" alt="MS" class="logo-img">{% endif %}
+        <div class="ms-texto">
+            <b>MINISTÉRIO DA SAÚDE</b>
+            <span>Secretaria de Vigilância em Saúde</span>
+            <span>Departamento de Análise de Situação de Saúde</span>
+        </div>
+    </td>
+    <td class="c-centro">
+        {% if logo_pref %}<img src="{{ logo_pref }}" alt="Goianira" class="logo-img-centro">{% endif %}
+        <div class="mun-texto">
+            <b>FUNDO MUNICIPAL DE SAÚDE DE GOIANIRA</b>
+            <span>Secretaria Municipal de Saúde</span>
+            <span>Sistema de Informações de Óbito</span>
+        </div>
+    </td>
+    <td class="c-dir">
+        <div class="dengue-box">
+            <div class="dengue-label">Nº do Caso</div>
+            <div class="dengue-linha"></div>
+            <div class="dengue-sigla">DENGUE</div>
+        </div>
+    </td>
+</tr>
+<tr class="titulo-row">
+    <td colspan="3">
+        <div class="titulo-doc">
+            Ficha de Investigação de Óbito por Arbovírus — Dengue<br>
+            <span style="font-size:8pt;font-weight:normal;">Protocolo de Investigação de Óbitos por Arbovírus Urbanos (MS/SVS, 2016)</span>
+        </div>
+    </td>
+</tr>
+</table>
+
+<!-- ============ IDENTIFICAÇÃO DO CASO ============ -->
+<table class="form-tbl">
+<tr class="sec-title"><td colspan="4">IDENTIFICAÇÃO DO CASO</td></tr>
+<tr>
+    <td class="lbl">Nº do Caso:</td>
+    <td class="val" colspan="3">{{ inv.id }} — {{ c.get('DI03. Nome do paciente', inv.obito.nome or '') }}</td>
+</tr>
+<tr>
+    <td class="lbl">Nº da DO:</td>
+    <td class="val">{{ inv.obito.numero_dob or '' }}</td>
+    <td class="lbl">Data do óbito:</td>
+    <td class="val">{{ inv.obito.data_obito.strftime('%d/%m/%Y') if inv.obito.data_obito else '' }}</td>
+</tr>
+<tr>
+    <td class="lbl">Responsável:</td>
+    <td class="val">{{ inv.responsavel or '' }}</td>
+    <td class="lbl">Status:</td>
+    <td class="val">{{ inv.status_display() }}</td>
+</tr>
+</table>
+
+<!-- ============================================================ -->
+<!-- ANEXO A — PRONTUÁRIO                                         -->
+<!-- ============================================================ -->
+
+<!-- ============ A1. DADOS DE IDENTIFICAÇÃO ============ -->
+<table class="form-tbl avoid-break">
+<tr class="sec-title"><td colspan="4">A1. DADOS DE IDENTIFICAÇÃO (Anexo A — Prontuário)</td></tr>
+<tr>
+    <td class="lbl">DI01. Nº SINAN:</td>
+    <td class="val">{{ c.get('DI01. Nº SINAN', '') }}</td>
+    <td class="lbl">DI02. Nº GAL:</td>
+    <td class="val">{{ c.get('DI02. Nº GAL', '') }}</td>
+</tr>
+<tr>
+    <td class="lbl">DI03. Nome do paciente:</td>
+    <td class="val" colspan="3">{{ c.get('DI03. Nome do paciente', inv.obito.nome or '') }}</td>
+</tr>
+<tr>
+    <td class="lbl">DI04. Data de nascimento:</td>
+    <td class="val">{{ c.get('DI04. Data de nascimento', inv.obito.data_nascimento.strftime('%d/%m/%Y') if inv.obito.data_nascimento else '') }}</td>
+    <td class="lbl">DI05. Idade:</td>
+    <td class="val">{{ c.get('DI05. Idade', '') }}
+        <table class="ck-tbl"><tr>
+            <td><span class="ck-box">{{ 'X' if c.get('DI05. Unidade idade: Dias') else '' }}</span> D</td>
+            <td><span class="ck-box">{{ 'X' if c.get('DI05. Unidade idade: Meses') else '' }}</span> M</td>
+            <td><span class="ck-box">{{ 'X' if c.get('DI05. Unidade idade: Anos') else '' }}</span> A</td>
+        </tr></table>
+    </td>
+</tr>
+<tr>
+    <td class="lbl">DI06. Sexo:</td>
+    <td class="val" colspan="3">
+        <table class="ck-tbl"><tr>
+            <td><span class="ck-box">{{ 'X' if c.get('DI06. Sexo: Masculino') else '' }}</span> Masculino</td>
+            <td><span class="ck-box">{{ 'X' if c.get('DI06. Sexo: Feminino') else '' }}</span> Feminino</td>
+        </tr></table>
+    </td>
+</tr>
+<tr>
+    <td class="lbl">DI07. Nome da mãe:</td>
+    <td class="val">{{ c.get('DI07. Nome da mãe', inv.obito.nome_mae or '') }}</td>
+    <td class="lbl">DI08. Telefone:</td>
+    <td class="val">{{ c.get('DI08. Telefone', '') }}</td>
+</tr>
+<tr>
+    <td class="lbl">DI09. Município de residência:</td>
+    <td class="val">{{ c.get('DI09. Município de residência', '') }}</td>
+    <td class="lbl">DI10. UF:</td>
+    <td class="val">{{ c.get('DI10. UF', '') }}</td>
+</tr>
+<tr>
+    <td class="lbl">DI11. Endereço:</td>
+    <td class="val" colspan="3">{{ c.get('DI11. Endereço', inv.obito.endereco or '') }}</td>
+</tr>
+<tr>
+    <td class="lbl">DI12. Bairro:</td>
+    <td class="val">{{ c.get('DI12. Bairro', '') }}</td>
+    <td class="lbl">DI13. Ponto de referência:</td>
+    <td class="val">{{ c.get('DI13. Ponto de referência', '') }}</td>
+</tr>
+</table>
+
+<!-- ============ A2. DADOS DE INTERNAÇÃO ============ -->
+<table class="form-tbl avoid-break">
+<tr class="sec-title"><td colspan="4">A2. DADOS DE INTERNAÇÃO</td></tr>
+<tr>
+    <td class="lbl">IT01. Serviço de saúde:</td>
+    <td class="val">{{ c.get('IT01. Nome do serviço de saúde', '') }}</td>
+    <td class="lbl">IT02. Município de internação:</td>
+    <td class="val">{{ c.get('IT02. Município de internação', '') }}</td>
+</tr>
+<tr>
+    <td class="lbl">IT03. Data de admissão:</td>
+    <td class="val">{{ c.get('IT03. Data de admissão', '') }}</td>
+    <td class="lbl">IT04. Unidade:</td>
+    <td class="val">
+        <table class="ck-tbl"><tr>
+            <td><span class="ck-box">{{ 'X' if c.get('IT04. Unidade: PS') else '' }}</span> PS</td>
+            <td><span class="ck-box">{{ 'X' if c.get('IT04. Unidade: Clínica') else '' }}</span> Clínica</td>
+            <td><span class="ck-box">{{ 'X' if c.get('IT04. Unidade: UTI') else '' }}</span> UTI</td>
+            <td><span class="ck-box">{{ 'X' if c.get('IT04. Unidade: Outro') else '' }}</span> Outro</td>
+        </tr></table>
+    </td>
+</tr>
+<tr>
+    <td class="lbl">IT04.1. Outro (especificar):</td>
+    <td class="val" colspan="3">{{ c.get('IT04.1. Outro (especificar)', '') }}</td>
+</tr>
+<tr>
+    <td class="lbl">IT05. Estadiamento:</td>
+    <td class="val" colspan="3">
+        <table class="ck-tbl"><tr>
+            <td><span class="ck-box">{{ 'X' if c.get('IT05. Estadiamento: A') else '' }}</span> A</td>
+            <td><span class="ck-box">{{ 'X' if c.get('IT05. Estadiamento: B') else '' }}</span> B</td>
+            <td><span class="ck-box">{{ 'X' if c.get('IT05. Estadiamento: C') else '' }}</span> C</td>
+            <td><span class="ck-box">{{ 'X' if c.get('IT05. Estadiamento: D') else '' }}</span> D</td>
+            <td><span class="ck-box">{{ 'X' if c.get('IT05. Estadiamento: Não realizado') else '' }}</span> Não realizado</td>
+        </tr></table>
+    </td>
+</tr>
+<tr>
+    <td class="lbl">IT06. Hipótese diagnóstica inicial:</td>
+    <td class="val" colspan="3">{{ c.get('IT06. Hipótese diagnóstica inicial', '') }}</td>
+</tr>
+</table>
+
+<!-- ============ A3. DADOS CLÍNICOS ============ -->
+<table class="form-tbl avoid-break">
+<tr class="sec-title"><td colspan="4">A3. DADOS CLÍNICOS</td></tr>
+<tr>
+    <td class="lbl">DC01. Sinais/sintomas antes da internação?</td>
+    <td class="val">
+        <table class="ck-tbl"><tr>
+            <td><span class="ck-box">{{ 'X' if c.get('DC01. Sinais/sintomas antes da internação: Sim') else '' }}</span> Sim</td>
+            <td><span class="ck-box">{{ 'X' if c.get('DC01. Sinais/sintomas antes da internação: Não') else '' }}</span> Não</td>
+        </tr></table>
+    </td>
+    <td class="lbl">DC02. Início dos sintomas:</td>
+    <td class="val">{{ c.get('DC02. Data de início dos sintomas', '') }}</td>
+</tr>
+<tr>
+    <td class="lbl" colspan="4" style="background:#f0f0f0;"><b>DC03. Sinais e sintomas:</b></td>
+</tr>
+<tr>
+    <td class="val" colspan="4">
+        <table class="ck-tbl" style="width:100%;">
+        <tr>
+            <td><span class="ck-box">{{ 'X' if c.get('DC03. Sintomas: Febre') else '' }}</span> Febre</td>
+            <td>Início: {{ c.get('DC03. Febre - data de início', '') }}</td>
+            <td>Duração: {{ c.get('DC03. Febre - duração (dias)', '') }} d</td>
+            <td>Máx: {{ c.get('DC03. Febre - temperatura máxima (°C)', '') }} °C</td>
+        </tr>
+        <tr>
+            <td><span class="ck-box">{{ 'X' if c.get('DC03. Sintomas: Hipotermia') else '' }}</span> Hipotermia</td>
+            <td colspan="3">Mín: {{ c.get('DC03. Hipotermia - temperatura mínima (°C)', '') }} °C</td>
+        </tr>
+        <tr>
+            <td><span class="ck-box">{{ 'X' if c.get('DC03. Sintomas: Dor articular') else '' }}</span> Dor articular</td>
+            <td colspan="3">
+                Extensão:
+                <span class="ck-box">{{ 'X' if c.get('DC03. Dor articular extensão: Oligoarticular') else '' }}</span> Oligo
+                <span class="ck-box">{{ 'X' if c.get('DC03. Dor articular extensão: Poliarticular') else '' }}</span> Poli
+                — Intensidade:
+                <span class="ck-box">{{ 'X' if c.get('DC03. Dor articular intensidade: Leve') else '' }}</span> Leve
+                <span class="ck-box">{{ 'X' if c.get('DC03. Dor articular intensidade: Moderada') else '' }}</span> Moderada
+                <span class="ck-box">{{ 'X' if c.get('DC03. Dor articular intensidade: Intensa') else '' }}</span> Intensa
+            </td>
+        </tr>
+        <tr>
+            <td><span class="ck-box">{{ 'X' if c.get('DC03. Sintomas: Exantema') else '' }}</span> Exantema</td>
+            <td>Início: {{ c.get('DC03. Exantema - data de início', '') }}</td>
+            <td>Duração: {{ c.get('DC03. Exantema - duração (dias)', '') }} d</td>
+            <td>
+                <span class="ck-box">{{ 'X' if c.get('DC03. Exantema: Pruriginoso') else '' }}</span> Pruriginoso
+                <span class="ck-box">{{ 'X' if c.get('DC03. Exantema: Macular') else '' }}</span> Macular
+                <span class="ck-box">{{ 'X' if c.get('DC03. Exantema: Maculo-papular') else '' }}</span> Maculo-papular
+            </td>
+        </tr>
+        <tr>
+            <td><span class="ck-box">{{ 'X' if c.get('DC03. Sintomas: Dor abdominal') else '' }}</span> Dor abdominal</td>
+            <td colspan="3">
+                <span class="ck-box">{{ 'X' if c.get('DC03. Dor abdominal intensidade: Leve') else '' }}</span> Leve
+                <span class="ck-box">{{ 'X' if c.get('DC03. Dor abdominal intensidade: Moderada') else '' }}</span> Moderada
+                <span class="ck-box">{{ 'X' if c.get('DC03. Dor abdominal intensidade: Intensa') else '' }}</span> Intensa
+            </td>
+        </tr>
+        <tr>
+            <td><span class="ck-box">{{ 'X' if c.get('DC03. Sintomas: Edema de membros') else '' }}</span> Edema de membros</td>
+            <td colspan="3">
+                <span class="ck-box">{{ 'X' if c.get('DC03. Edema tipo: Articular') else '' }}</span> Articular
+                <span class="ck-box">{{ 'X' if c.get('DC03. Edema tipo: Periarticular') else '' }}</span> Periarticular
+                <span class="ck-box">{{ 'X' if c.get('DC03. Edema tipo: Disseminado') else '' }}</span> Disseminado
+            </td>
+        </tr>
+        </table>
+    </td>
+</tr>
+<tr>
+    <td class="val" colspan="4">
+        <table class="ck-tbl" style="width:100%;">
+        {% set simples = ['Prurido','Cefaleia','Dor retroorbitária','Mialgia','Conjuntivite seca','Artrite','Tenossinovite','Diarreia','Náuseas','Vômitos','Calafrios','Petéquias','Equimose','Epistaxe','Hematoma','Prostração','Sonolência','Irritabilidade','Hipotensão postural','Lipotimia','Hepatomegalia','Esplenomegalia','Coriza','Tosse','Dispneia','Dor de garganta','Faringite','Linfadenopatia','Paresia','Paralisia'] %}
+        {% for s in simples %}
+        {% if loop.index0 % 5 == 0 %}<tr>{% endif %}
+            <td><span class="ck-box">{{ 'X' if c.get('DC03. Sintomas: ' + s) else '' }}</span> {{ s }}</td>
+        {% if loop.index0 % 5 == 4 or loop.last %}</tr>{% endif %}
+        {% endfor %}
+        <tr>
+            <td><span class="ck-box">{{ 'X' if c.get('DC03. Sintomas: Outros') else '' }}</span> Outros:</td>
+            <td colspan="4">{{ c.get('DC03. Outros (especificar)', '') }}</td>
+        </tr>
+        </table>
+    </td>
+</tr>
+<tr>
+    <td class="lbl">DC04. Comorbidades:</td>
+    <td class="val" colspan="3">
+        <table class="ck-tbl"><tr>
+            <td><span class="ck-box">{{ 'X' if c.get('DC04. Comorbidades: Sim') else '' }}</span> Sim</td>
+            <td><span class="ck-box">{{ 'X' if c.get('DC04. Comorbidades: Não') else '' }}</span> Não</td>
+        </tr></table>
+    </td>
+</tr>
+<tr>
+    <td class="val" colspan="4">
+        <table class="ck-tbl" style="width:100%;">
+        {% set comorb = ['Gestante','Puérpera','Hipertensão arterial sistêmica','Diabetes mellitus','Doença renal crônica','Doença acidopéptica','Obesidade','Cardiopatia crônica','Asma','Epilepsia','Doença hematológica','Tabagismo','Etilismo','Hepatite crônica','Cirrose hepática','Doenças reumatológicas','DPOC'] %}
+        {% for cm in comorb %}
+        {% if loop.index0 % 4 == 0 %}<tr>{% endif %}
+            <td><span class="ck-box">{{ 'X' if c.get('DC04. Comorbidade: ' + cm) else '' }}</span> {{ cm }}</td>
+        {% if loop.index0 % 4 == 3 or loop.last %}</tr>{% endif %}
+        {% endfor %}
+        <tr>
+            <td><span class="ck-box">{{ 'X' if c.get('DC04. Comorbidade: Outras patologias') else '' }}</span> Outras:</td>
+            <td colspan="4">{{ c.get('DC04. Outras patologias (especificar)', '') }}</td>
+        </tr>
+        </table>
+    </td>
+</tr>
+<tr>
+    <td class="lbl">DC05. Doença que afete resposta imunológica:</td>
+    <td class="val" colspan="3">
+        <table class="ck-tbl"><tr>
+            <td><span class="ck-box">{{ 'X' if c.get('DC05. Doença que afete resposta imunológica: Sim') else '' }}</span> Sim</td>
+            <td><span class="ck-box">{{ 'X' if c.get('DC05. Doença que afete resposta imunológica: Não') else '' }}</span> Não</td>
+            <td><span class="ck-box">{{ 'X' if c.get('DC05. Doença que afete resposta imunológica: Não informado') else '' }}</span> Não informado</td>
+        </tr></table>
+        Especificar: {{ c.get('DC05.1. Especificar', '') }}
+    </td>
+</tr>
+<tr>
+    <td class="lbl">DC06. Descompensação de enfermidade crônica:</td>
+    <td class="val" colspan="3">
+        <table class="ck-tbl"><tr>
+            <td><span class="ck-box">{{ 'X' if c.get('DC06. Descompensação de enfermidade crônica: Sim') else '' }}</span> Sim</td>
+            <td><span class="ck-box">{{ 'X' if c.get('DC06. Descompensação de enfermidade crônica: Não') else '' }}</span> Não</td>
+            <td><span class="ck-box">{{ 'X' if c.get('DC06. Descompensação de enfermidade crônica: Não informado') else '' }}</span> Não informado</td>
+        </tr></table>
+        Especificar: {{ c.get('DC06.1. Especificar', '') }}
+    </td>
+</tr>
+<tr>
+    <td class="lbl">DC07. Outras manifestações após quadro agudo:</td>
+    <td class="val" colspan="3">
+        <table class="ck-tbl"><tr>
+            <td><span class="ck-box">{{ 'X' if c.get('DC07. Outras manifestações após quadro agudo: Sim') else '' }}</span> Sim</td>
+            <td><span class="ck-box">{{ 'X' if c.get('DC07. Outras manifestações após quadro agudo: Não') else '' }}</span> Não</td>
+            <td><span class="ck-box">{{ 'X' if c.get('DC07. Outras manifestações após quadro agudo: Não informado') else '' }}</span> Não informado</td>
+        </tr></table>
+        Especificar: {{ c.get('DC07.1. Especificar', '') }}
+    </td>
+</tr>
+
+{# DC08 a DC14 — blocos de manifestações #}
+{% set blocos = [
+    ('DC08', 'Manifestações neurológicas', ['Meningoencefalite','Encefalite','Convulsões','Paresia','Paralisia','Neuropatia','Síndrome de Guillain-Barré','Síndrome cerebelar','Encefalomielite aguda disseminada','Agitação','Alteração/rebaixamento de consciência','Coma','Sinais meníngeos','Outras'], 'Manifestação neurológica'),
+    ('DC09', 'Manifestações oculares', ['Neurite óptica','Iridiociclite','Episclerite','Retinite','Uveíte','Outras'], 'Manifestação ocular'),
+    ('DC10', 'Manifestações dermatológicas', ['Hiperpigmentação fotossensível','Dermatose vesículo-bolhosa','Úlcera aftosa intertriginosa','Isquemia cutânea','Outras'], 'Manifestação dermatológica'),
+    ('DC11', 'Quadro renal', ['Nefrite','Insuficiência renal aguda','Redução do débito urinário','Alteração da cor da urina','Outras'], 'Manifestação renal'),
+    ('DC12', 'Quadro hemorrágico', ['Hematêmese','Melena','Metrorragia volumosa','Sangramento do SNC','Sangramentos cutâneos','Sangramento de mucosa oral','Sangramento digestivo alto','Sangramento digestivo baixo','Sangramento cavitário (abdominal, torácico)','Outros'], 'Manifestação hemorrágica'),
+    ('DC13', 'Evoluiu para choque', ['Taquicardia','Pulso débil ou inidentificável','PA diferencial convergente (≤20 mmHg)','Extremidades frias','Tempo de enchimento capilar ≥3s','Hipotensão arterial (PAS <90 mmHg)','Outros'], 'Sinal de choque'),
+    ('DC14', 'Outras complicações', ['Miocardite','Discrasias hemorrágicas','Pneumonia','Insuficiência respiratória','Taquidispneia','Hepatite aguda','Pancreatite aguda','Hipoadrenalismo','Icterícia','Edema agudo pulmonar','Infecção associada à assistência à saúde','Outras'], 'Complicação'),
+] %}
+{% for cod, titulo, itens, prefixo_sub in blocos %}
+<tr>
+    <td class="lbl">{{ cod }}. {{ titulo }}:</td>
+    <td class="val" colspan="3">
+        <table class="ck-tbl"><tr>
+            <td><span class="ck-box">{{ 'X' if c.get(cod + '. ' + titulo + ': Sim') else '' }}</span> Sim</td>
+            <td><span class="ck-box">{{ 'X' if c.get(cod + '. ' + titulo + ': Não') else '' }}</span> Não</td>
+        </tr></table>
+    </td>
+</tr>
+<tr>
+    <td class="val" colspan="4">
+        <table class="ck-tbl" style="width:100%;">
+        {% for it in itens %}
+        {% if loop.index0 % 4 == 0 %}<tr>{% endif %}
+            <td><span class="ck-box">{{ 'X' if c.get(cod + '. ' + prefixo_sub + ': ' + it) else '' }}</span> {{ it }}
+            {%- if it == 'Outras' or it == 'Outros' %}: {{ c.get(cod + '. Outras (especificar)', c.get(cod + '. Outros (especificar)', '')) }}{% endif %}
+            </td>
+        {% if loop.index0 % 4 == 3 or loop.last %}</tr>{% endif %}
+        {% endfor %}
+        </table>
+    </td>
+</tr>
+{% endfor %}
+</table>
+
+<!-- ============ A4. EVOLUÇÃO CLÍNICA ============ -->
+<table class="form-tbl avoid-break">
+<tr class="sec-title"><td colspan="4">A4. EVOLUÇÃO CLÍNICA</td></tr>
+<tr>
+    <td class="lbl">EC1. Remoção para UTI:</td>
+    <td class="val">
+        <table class="ck-tbl"><tr>
+            <td><span class="ck-box">{{ 'X' if c.get('EC1. Remoção para UTI: Sim') else '' }}</span> Sim</td>
+            <td><span class="ck-box">{{ 'X' if c.get('EC1. Remoção para UTI: Não') else '' }}</span> Não</td>
+        </tr></table>
+    </td>
+    <td class="lbl">EC1.1. Admissão UTI:</td>
+    <td class="val">{{ c.get('EC1.1. Data de admissão na UTI', '') }}</td>
+</tr>
+<tr>
+    <td class="lbl">EC1.2. Alta UTI:</td>
+    <td class="val">{{ c.get('EC1.2. Data de alta da UTI', '') }}</td>
+    <td class="lbl">&nbsp;</td>
+    <td class="val">&nbsp;</td>
+</tr>
+<tr>
+    <td class="lbl">EC2. Evolução:</td>
+    <td class="val" colspan="3">
+        <table class="ck-tbl"><tr>
+            <td><span class="ck-box">{{ 'X' if c.get('EC2. Evolução: Transferência') else '' }}</span> Transferência</td>
+            <td><span class="ck-box">{{ 'X' if c.get('EC2. Evolução: Alta') else '' }}</span> Alta</td>
+            <td><span class="ck-box">{{ 'X' if c.get('EC2. Evolução: Óbito') else '' }}</span> Óbito</td>
+        </tr></table>
+        Data: {{ c.get('EC2. Data', '') }} — Para onde: {{ c.get('EC2. Para onde (transferência)', '') }}
+    </td>
+</tr>
+<tr>
+    <td class="lbl">EC3. Conforme a DO:</td>
+    <td class="val" colspan="3">
+        a) {{ c.get('EC3. DO linha a', '') }} — b) {{ c.get('EC3. DO linha b', '') }}<br>
+        c) {{ c.get('EC3. DO linha c', '') }} — d) {{ c.get('EC3. DO linha d', '') }}<br>
+        I) {{ c.get('EC3. DO linha I', '') }} — II) {{ c.get('EC3. DO linha II', '') }}
+    </td>
+</tr>
+<tr>
+    <td class="lbl">EC4. Corpo encaminhado para necropsia:</td>
+    <td class="val" colspan="3">
+        <table class="ck-tbl"><tr>
+            <td><span class="ck-box">{{ 'X' if c.get('EC4. Corpo encaminhado para necropsia: Sim') else '' }}</span> Sim</td>
+            <td><span class="ck-box">{{ 'X' if c.get('EC4. Corpo encaminhado para necropsia: Não') else '' }}</span> Não</td>
+        </tr></table>
+        <div class="txt-box" style="min-height:30pt;">{{ c.get('EC4. Laudo da necropsia', '') }}</div>
+    </td>
+</tr>
+<tr>
+    <td class="lbl">EC5. Óbito fetal/&lt;1 ano em relação ao parto:</td>
+    <td class="val" colspan="3">
+        <table class="ck-tbl"><tr>
+            <td><span class="ck-box">{{ 'X' if c.get('EC5. Óbito fetal/<1 ano em relação ao parto: Antes') else '' }}</span> Antes</td>
+            <td><span class="ck-box">{{ 'X' if c.get('EC5. Óbito fetal/<1 ano em relação ao parto: Durante') else '' }}</span> Durante</td>
+            <td><span class="ck-box">{{ 'X' if c.get('EC5. Óbito fetal/<1 ano em relação ao parto: Após') else '' }}</span> Após</td>
+            <td><span class="ck-box">{{ 'X' if c.get('EC5. Óbito fetal/<1 ano em relação ao parto: Ignorado') else '' }}</span> Ignorado</td>
+        </tr></table>
+    </td>
+</tr>
+</table>
+
+<!-- ============ A5. MANEJO CLÍNICO ============ -->
+<table class="form-tbl avoid-break">
+<tr class="sec-title"><td colspan="4">A5. MANEJO CLÍNICO</td></tr>
+<tr>
+    <td class="lbl">MC01. Soroterapia intravenosa:</td>
+    <td class="val">
+        <table class="ck-tbl"><tr>
+            <td><span class="ck-box">{{ 'X' if c.get('MC01. Soroterapia intravenosa: Sim') else '' }}</span> Sim</td>
+            <td><span class="ck-box">{{ 'X' if c.get('MC01. Soroterapia intravenosa: Não') else '' }}</span> Não</td>
+        </tr></table>
+    </td>
+    <td class="lbl">MC02. Início:</td>
+    <td class="val">{{ c.get('MC02. Data de início da soroterapia', '') }}</td>
+</tr>
+<tr>
+    <td class="lbl">MC03. Dias de uso:</td>
+    <td class="val">{{ c.get('MC03. Dias de uso', '') }}</td>
+    <td class="lbl">&nbsp;</td>
+    <td class="val">&nbsp;</td>
+</tr>
+<tr>
+    <td class="lbl">MC04. Volume diário infundido:</td>
+    <td class="val" colspan="3"><div class="txt-box">{{ c.get('MC04. Volume diário infundido', '') }}</div></td>
+</tr>
+<tr>
+    <td class="lbl">MC05. Medicamentos:</td>
+    <td class="val" colspan="3"><div class="txt-box">{{ c.get('MC05. Medicamentos durante a internação', '') }}</div></td>
+</tr>
+</table>
+
+<!-- ============ A6. EXAMES LABORATORIAIS INESPECÍFICOS ============ -->
+<table class="form-tbl avoid-break">
+<tr class="sec-title"><td colspan="4">A6. EXAMES LABORATORIAIS INESPECÍFICOS</td></tr>
+<tr>
+    <td class="lbl">LI01. Exame de sangue:</td>
+    <td class="val">
+        <table class="ck-tbl"><tr>
+            <td><span class="ck-box">{{ 'X' if c.get('LI01. Exame de sangue: Sim') else '' }}</span> Sim</td>
+            <td><span class="ck-box">{{ 'X' if c.get('LI01. Exame de sangue: Não') else '' }}</span> Não</td>
+        </tr></table>
+    </td>
+    <td class="lbl">&nbsp;</td>
+    <td class="val">&nbsp;</td>
+</tr>
+<tr>
+    <td class="lbl">Resultados:</td>
+    <td class="val" colspan="3"><div class="txt-box">{{ c.get('LI01. Resultados (hemograma/hematócrito/plaquetas)', '') }}</div></td>
+</tr>
+<tr>
+    <td class="lbl">LI02. Punção liquórica:</td>
+    <td class="val">
+        <table class="ck-tbl"><tr>
+            <td><span class="ck-box">{{ 'X' if c.get('LI02. Punção liquórica: Sim') else '' }}</span> Sim</td>
+            <td><span class="ck-box">{{ 'X' if c.get('LI02. Punção liquórica: Não') else '' }}</span> Não</td>
+        </tr></table>
+    </td>
+    <td class="lbl">LI02.1. Data:</td>
+    <td class="val">{{ c.get('LI02.1. Data da punção', '') }}</td>
+</tr>
+<tr>
+    <td class="lbl">LI02.2. Aspecto:</td>
+    <td class="val" colspan="3">
+        <table class="ck-tbl"><tr>
+            <td><span class="ck-box">{{ 'X' if c.get('LI02.2. Aspecto: Límpido') else '' }}</span> Límpido</td>
+            <td><span class="ck-box">{{ 'X' if c.get('LI02.2. Aspecto: Turvo') else '' }}</span> Turvo</td>
+            <td><span class="ck-box">{{ 'X' if c.get('LI02.2. Aspecto: Hemorrágico') else '' }}</span> Hemorrágico</td>
+            <td><span class="ck-box">{{ 'X' if c.get('LI02.2. Aspecto: Outro') else '' }}</span> Outro</td>
+        </tr></table>
+        Outro: {{ c.get('LI02.2. Outro (especificar)', '') }}
+    </td>
+</tr>
+<tr>
+    <td class="lbl">LI02.3. Bioquímica do líquor:</td>
+    <td class="val" colspan="3"><div class="txt-box">{{ c.get('LI02.3. Análise bioquímica do líquor', '') }}</div></td>
+</tr>
+<tr>
+    <td class="lbl">LI03. Exame de imagem:</td>
+    <td class="val">
+        <table class="ck-tbl"><tr>
+            <td><span class="ck-box">{{ 'X' if c.get('LI03. Exame de imagem: Sim') else '' }}</span> Sim</td>
+            <td><span class="ck-box">{{ 'X' if c.get('LI03. Exame de imagem: Não') else '' }}</span> Não</td>
+        </tr></table>
+    </td>
+    <td class="lbl">&nbsp;</td>
+    <td class="val">&nbsp;</td>
+</tr>
+<tr>
+    <td class="lbl">Exames de imagem:</td>
+    <td class="val" colspan="3"><div class="txt-box">{{ c.get('LI03. Exames de imagem (especificar)', '') }}</div></td>
+</tr>
+</table>
+
+<!-- ============ A7. EXAMES LABORATORIAIS ESPECÍFICOS ============ -->
+<table class="form-tbl avoid-break">
+<tr class="sec-title"><td colspan="4">A7. EXAMES LABORATORIAIS ESPECÍFICOS</td></tr>
+<tr>
+    <td class="lbl">LE01. Exame etiológico:</td>
+    <td class="val" colspan="3">
+        <table class="ck-tbl"><tr>
+            <td><span class="ck-box">{{ 'X' if c.get('LE01. Exame etiológico: Sim') else '' }}</span> Sim</td>
+            <td><span class="ck-box">{{ 'X' if c.get('LE01. Exame etiológico: Não') else '' }}</span> Não</td>
+        </tr></table>
+    </td>
+</tr>
+<tr>
+    <td class="lbl">Sorologia IgM:</td>
+    <td class="val" colspan="3">
+        <table class="ck-tbl"><tr>
+            <td><span class="ck-box">{{ 'X' if c.get('LE01. Sorologia IgM: Realizado') else '' }}</span> Realizado</td>
+            <td><span class="ck-box">{{ 'X' if c.get('LE01. Sorologia IgM: Não realizado') else '' }}</span> Não realizado</td>
+            <td><span class="ck-box">{{ 'X' if c.get('LE01. Sorologia IgM: Reagente') else '' }}</span> Reagente</td>
+            <td><span class="ck-box">{{ 'X' if c.get('LE01. Sorologia IgM: Não reagente') else '' }}</span> Não reagente</td>
+            <td><span class="ck-box">{{ 'X' if c.get('LE01. Sorologia IgM: Inconclusivo') else '' }}</span> Inconclusivo</td>
+        </tr></table>
+    </td>
+</tr>
+<tr>
+    <td class="lbl">NS1:</td>
+    <td class="val" colspan="3">
+        <table class="ck-tbl"><tr>
+            <td><span class="ck-box">{{ 'X' if c.get('LE01. NS1: Realizado') else '' }}</span> Realizado</td>
+            <td><span class="ck-box">{{ 'X' if c.get('LE01. NS1: Não realizado') else '' }}</span> Não realizado</td>
+            <td><span class="ck-box">{{ 'X' if c.get('LE01. NS1: Reagente') else '' }}</span> Reagente</td>
+            <td><span class="ck-box">{{ 'X' if c.get('LE01. NS1: Não reagente') else '' }}</span> Não reagente</td>
+            <td><span class="ck-box">{{ 'X' if c.get('LE01. NS1: Inconclusivo') else '' }}</span> Inconclusivo</td>
+        </tr></table>
+    </td>
+</tr>
+<tr>
+    <td class="lbl">RT-PCR:</td>
+    <td class="val" colspan="3">
+        <table class="ck-tbl"><tr>
+            <td><span class="ck-box">{{ 'X' if c.get('LE01. RT-PCR: Realizado') else '' }}</span> Realizado</td>
+            <td><span class="ck-box">{{ 'X' if c.get('LE01. RT-PCR: Não realizado') else '' }}</span> Não realizado</td>
+            <td><span class="ck-box">{{ 'X' if c.get('LE01. RT-PCR: Detectável') else '' }}</span> Detectável</td>
+            <td><span class="ck-box">{{ 'X' if c.get('LE01. RT-PCR: Não detectável') else '' }}</span> Não detectável</td>
+            <td><span class="ck-box">{{ 'X' if c.get('LE01. RT-PCR: Inconclusivo') else '' }}</span> Inconclusivo</td>
+        </tr></table>
+    </td>
+</tr>
+<tr>
+    <td class="lbl">Imuno-histoquímica:</td>
+    <td class="val" colspan="3">
+        <table class="ck-tbl"><tr>
+            <td><span class="ck-box">{{ 'X' if c.get('LE01. Imuno-histoquímica: Realizado') else '' }}</span> Realizado</td>
+            <td><span class="ck-box">{{ 'X' if c.get('LE01. Imuno-histoquímica: Não realizado') else '' }}</span> Não realizado</td>
+            <td><span class="ck-box">{{ 'X' if c.get('LE01. Imuno-histoquímica: Positivo') else '' }}</span> Positivo</td>
+            <td><span class="ck-box">{{ 'X' if c.get('LE01. Imuno-histoquímica: Negativo') else '' }}</span> Negativo</td>
+            <td><span class="ck-box">{{ 'X' if c.get('LE01. Imuno-histoquímica: Inconclusivo') else '' }}</span> Inconclusivo</td>
+        </tr></table>
+    </td>
+</tr>
+<tr>
+    <td class="lbl">Outra técnica/resultado:</td>
+    <td class="val" colspan="3">{{ c.get('LE01. Outra técnica/resultado', '') }}</td>
+</tr>
+<tr>
+    <td class="lbl">LE02. Isolamento por cultura:</td>
+    <td class="val" colspan="3">
+        <table class="ck-tbl"><tr>
+            <td><span class="ck-box">{{ 'X' if c.get('LE02. Isolamento por cultura: Sim') else '' }}</span> Sim</td>
+            <td><span class="ck-box">{{ 'X' if c.get('LE02. Isolamento por cultura: Não') else '' }}</span> Não</td>
+        </tr></table>
+        Agente isolado: {{ c.get('LE02. Agente isolado (especificar)', '') }}
+    </td>
+</tr>
+<tr>
+    <td class="lbl">LE03. Alíquota guardada:</td>
+    <td class="val" colspan="3">
+        <table class="ck-tbl"><tr>
+            <td><span class="ck-box">{{ 'X' if c.get('LE03. Alíquota guardada em laboratório: Sim') else '' }}</span> Sim</td>
+            <td><span class="ck-box">{{ 'X' if c.get('LE03. Alíquota guardada em laboratório: Não') else '' }}</span> Não</td>
+        </tr></table>
+        Onde: {{ c.get('LE03. Onde', '') }}
+    </td>
+</tr>
+</table>
+
+<!-- ============ A8. ENCERRAMENTO ============ -->
+<table class="form-tbl avoid-break">
+<tr class="sec-title"><td colspan="4">A8. ENCERRAMENTO</td></tr>
+<tr>
+    <td class="lbl">EN01. Caso encerrado:</td>
+    <td class="val">
+        <table class="ck-tbl"><tr>
+            <td><span class="ck-box">{{ 'X' if c.get('EN01. Caso encerrado: Sim') else '' }}</span> Sim</td>
+            <td><span class="ck-box">{{ 'X' if c.get('EN01. Caso encerrado: Não') else '' }}</span> Não</td>
+        </tr></table>
+    </td>
+    <td class="lbl">EN02. Critério:</td>
+    <td class="val">
+        <table class="ck-tbl"><tr>
+            <td><span class="ck-box">{{ 'X' if c.get('EN02. Critério: Laboratorial') else '' }}</span> Laboratorial</td>
+            <td><span class="ck-box">{{ 'X' if c.get('EN02. Critério: Clínico-epidemiológico') else '' }}</span> Clínico-epidemiológico</td>
+        </tr></table>
+    </td>
+</tr>
+<tr>
+    <td class="lbl">EN03. Classificação:</td>
+    <td class="val" colspan="3">
+        <table class="ck-tbl"><tr>
+            <td><span class="ck-box">{{ 'X' if c.get('EN03. Classificação: 10 — Dengue') else '' }}</span> 10 — Dengue</td>
+            <td><span class="ck-box">{{ 'X' if c.get('EN03. Classificação: 11 — Dengue com sinais de alarme') else '' }}</span> 11 — Dengue c/ sinais de alarme</td>
+        </tr></table>
+        <table class="ck-tbl"><tr>
+            <td><span class="ck-box">{{ 'X' if c.get('EN03. Classificação: 12 — Dengue grave') else '' }}</span> 12 — Dengue grave</td>
+            <td><span class="ck-box">{{ 'X' if c.get('EN03. Classificação: Descartado') else '' }}</span> Descartado</td>
+            <td><span class="ck-box">{{ 'X' if c.get('EN03. Classificação: Óbito por outras causas') else '' }}</span> Óbito por outras causas</td>
+            <td><span class="ck-box">{{ 'X' if c.get('EN03. Classificação: Em investigação') else '' }}</span> Em investigação</td>
+        </tr></table>
+    </td>
+</tr>
+<tr>
+    <td class="lbl">EN04. Data do encerramento:</td>
+    <td class="val" colspan="3">{{ c.get('EN04. Data do encerramento', '') }}</td>
+</tr>
+</table>
+
+<!-- ============ A9. OBSERVAÇÕES ============ -->
+<table class="form-tbl avoid-break">
+<tr class="sec-title"><td colspan="4">A9. OBSERVAÇÕES (Anexo A)</td></tr>
+<tr>
+    <td class="val" colspan="4"><div class="txt-box" style="min-height:50pt;">{{ c.get('OBSA. Observações', '') }}</div></td>
+</tr>
+</table>
+
+<!-- ============ A10. INVESTIGAÇÃO ============ -->
+<table class="form-tbl avoid-break">
+<tr class="sec-title"><td colspan="4">A10. INVESTIGAÇÃO (Anexo A)</td></tr>
+<tr>
+    <td class="lbl">Data:</td>
+    <td class="val">{{ c.get('IVA01. Data da investigação', '') }}</td>
+    <td class="lbl">Investigador:</td>
+    <td class="val">{{ c.get('IVA02. Investigador', inv.responsavel or '') }}</td>
+</tr>
+<tr>
+    <td class="lbl">Função/Unidade:</td>
+    <td class="val" colspan="3">{{ c.get('IVA03. Função/Unidade', '') }}</td>
+</tr>
+</table>
+
+<!-- ============================================================ -->
+<!-- ANEXO B — ENTREVISTA DOMICILIAR                               -->
+<!-- ============================================================ -->
+<div class="page-break-before"></div>
+
+<!-- ============ B1. DADOS DE IDENTIFICAÇÃO DO ENTREVISTADO ============ -->
+<table class="form-tbl avoid-break">
+<tr class="sec-title"><td colspan="4">B1. DADOS DE IDENTIFICAÇÃO DO ENTREVISTADO (Anexo B — Entrevista Domiciliar)</td></tr>
+<tr>
+    <td class="lbl">EDI01. ID:</td>
+    <td class="val">{{ c.get('EDI01. ID', '') }}</td>
+    <td class="lbl">EDI02. Nome do entrevistado:</td>
+    <td class="val">{{ c.get('EDI02. Nome do entrevistado', '') }}</td>
+</tr>
+<tr>
+    <td class="lbl">EDI03. Data de nascimento:</td>
+    <td class="val">{{ c.get('EDI03. Data de nascimento', '') }}</td>
+    <td class="lbl">EDI04. Idade:</td>
+    <td class="val">{{ c.get('EDI04. Idade', '') }}
+        <table class="ck-tbl"><tr>
+            <td><span class="ck-box">{{ 'X' if c.get('EDI04. Unidade idade: Dias') else '' }}</span> D</td>
+            <td><span class="ck-box">{{ 'X' if c.get('EDI04. Unidade idade: Meses') else '' }}</span> M</td>
+            <td><span class="ck-box">{{ 'X' if c.get('EDI04. Unidade idade: Anos') else '' }}</span> A</td>
+        </tr></table>
+    </td>
+</tr>
+<tr>
+    <td class="lbl">EDI05. Sexo:</td>
+    <td class="val">
+        <table class="ck-tbl"><tr>
+            <td><span class="ck-box">{{ 'X' if c.get('EDI05. Sexo: Masculino') else '' }}</span> Masculino</td>
+            <td><span class="ck-box">{{ 'X' if c.get('EDI05. Sexo: Feminino') else '' }}</span> Feminino</td>
+        </tr></table>
+    </td>
+    <td class="lbl">EDI06. Parentesco:</td>
+    <td class="val">{{ c.get('EDI06. Grau de parentesco com o caso', '') }}</td>
+</tr>
+<tr>
+    <td class="lbl">EDI07. Município:</td>
+    <td class="val">{{ c.get('EDI07. Município de residência', '') }}</td>
+    <td class="lbl">EDI08. UF:</td>
+    <td class="val">{{ c.get('EDI08. UF', '') }}</td>
+</tr>
+<tr>
+    <td class="lbl">EDI09. Endereço:</td>
+    <td class="val" colspan="3">{{ c.get('EDI09. Endereço', '') }}</td>
+</tr>
+<tr>
+    <td class="lbl">EDI10. Ponto de referência:</td>
+    <td class="val">{{ c.get('EDI10. Ponto de referência', '') }}</td>
+    <td class="lbl">EDI11. Telefone:</td>
+    <td class="val">{{ c.get('EDI11. Telefone', '') }}</td>
+</tr>
+</table>
+
+<!-- ============ B2. ASSISTÊNCIA À SAÚDE ============ -->
+<table class="form-tbl avoid-break">
+<tr class="sec-title"><td colspan="4">B2. ASSISTÊNCIA À SAÚDE</td></tr>
+<tr>
+    <td class="lbl">AS01. Ficou doente antes do óbito?</td>
+    <td class="val" colspan="3">
+        <table class="ck-tbl"><tr>
+            <td><span class="ck-box">{{ 'X' if c.get('AS01. Ficou doente antes do óbito: Sim') else '' }}</span> Sim</td>
+            <td><span class="ck-box">{{ 'X' if c.get('AS01. Ficou doente antes do óbito: Não') else '' }}</span> Não</td>
+            <td><span class="ck-box">{{ 'X' if c.get('AS01. Ficou doente antes do óbito: Não sei') else '' }}</span> Não sei</td>
+        </tr></table>
+        AS01.1. Início dos sintomas: {{ c.get('AS01.1. Data de início dos sintomas', '') }}
+    </td>
+</tr>
+<tr>
+    <td class="lbl" colspan="4" style="background:#f0f0f0;"><b>AS02. Sinais e sintomas:</b></td>
+</tr>
+<tr>
+    <td class="val" colspan="4">
+        <table class="ck-tbl" style="width:100%;">
+        <tr>
+            <td><span class="ck-box">{{ 'X' if c.get('AS02. Sintoma: Febre') else '' }}</span> Febre</td>
+            <td>Início: {{ c.get('AS02. Febre - data de início', '') }}</td>
+            <td>Duração: {{ c.get('AS02. Febre - duração (dias)', '') }} d</td>
+            <td>Máx: {{ c.get('AS02. Febre - temperatura máxima (°C)', '') }} °C</td>
+        </tr>
+        </table>
+        <table class="ck-tbl" style="width:100%;">
+        {% set sintomas_b = ['Hipotermia','Dor articular','Exantema','Prurido','Cefaleia','Dor retroorbitária','Mialgia','Conjuntivite seca','Dor abdominal','Diarreia','Náuseas','Vômitos','Calafrios','Petéquias','Dispneia','Dor de garganta','Faringite','Linfadenopatia','Paresia','Paralisia'] %}
+        {% for s in sintomas_b %}
+        {% if loop.index0 % 4 == 0 %}<tr>{% endif %}
+            <td><span class="ck-box">{{ 'X' if c.get('AS02. Sintoma: ' + s) else '' }}</span> {{ s }}</td>
+        {% if loop.index0 % 4 == 3 or loop.last %}</tr>{% endif %}
+        {% endfor %}
+        <tr>
+            <td><span class="ck-box">{{ 'X' if c.get('AS02. Sintoma: Outros') else '' }}</span> Outros:</td>
+            <td colspan="4">{{ c.get('AS02. Outros (especificar)', '') }}</td>
+        </tr>
+        </table>
+    </td>
+</tr>
+<tr>
+    <td class="lbl">AS03. Medicação sem prescrição:</td>
+    <td class="val" colspan="3">
+        <table class="ck-tbl"><tr>
+            <td><span class="ck-box">{{ 'X' if c.get('AS03. Medicação sem prescrição: Sim') else '' }}</span> Sim</td>
+            <td><span class="ck-box">{{ 'X' if c.get('AS03. Medicação sem prescrição: Não') else '' }}</span> Não</td>
+        </tr></table>
+        <div class="txt-box" style="min-height:30pt;">{{ c.get('AS03. Medicamentos (classe, medicamento/dose, início, término)', '') }}</div>
+    </td>
+</tr>
+<tr>
+    <td class="lbl">AS04. Procurou atendimento médico:</td>
+    <td class="val">
+        <table class="ck-tbl"><tr>
+            <td><span class="ck-box">{{ 'X' if c.get('AS04. Procurou atendimento médico: Sim') else '' }}</span> Sim</td>
+            <td><span class="ck-box">{{ 'X' if c.get('AS04. Procurou atendimento médico: Não') else '' }}</span> Não</td>
+        </tr></table>
+    </td>
+    <td class="lbl">AS05. Quantos serviços:</td>
+    <td class="val">{{ c.get('AS05. Quantos serviços de saúde procurou', '') }}</td>
+</tr>
+<tr>
+    <td class="lbl">AS31. Descrição dos atendimentos:</td>
+    <td class="val" colspan="3"><div class="txt-box" style="min-height:50pt;">{{ c.get('AS31. Descrição dos atendimentos', '') }}</div></td>
+</tr>
+</table>
+
+<!-- ============ B3. CONTACTANTES ============ -->
+<table class="form-tbl avoid-break">
+<tr class="sec-title"><td colspan="4">B3. CONTACTANTES</td></tr>
+<tr>
+    <td class="lbl">C01. Alguém que morava com o caso adoeceu?</td>
+    <td class="val" colspan="3">
+        <table class="ck-tbl"><tr>
+            <td><span class="ck-box">{{ 'X' if c.get('C01. Alguém que morava com o caso adoeceu: Sim') else '' }}</span> Sim</td>
+            <td><span class="ck-box">{{ 'X' if c.get('C01. Alguém que morava com o caso adoeceu: Não') else '' }}</span> Não</td>
+        </tr></table>
+        C02. Quantas pessoas adoeceram: {{ c.get('C02. Quantas pessoas adoeceram', '') }}
+    </td>
+</tr>
+<tr>
+    <td class="val" colspan="4">
+        <table class="ck-tbl" style="width:100%;">
+        {% set contactantes = ['Febre','Cefaleia','Mialgia','Artralgia','Artrite','Edema de membros','Tenossinovite','Exantema','Sangramento de mucosa','Prostração','Coriza','Diarreia','Tosse','Vômitos','Insuficiência respiratória','Dor abdominal','Conjuntivite','Sonolência','Linfadenopatia','Irritabilidade','Hipotensão postural ou lipotimia'] %}
+        {% for s in contactantes %}
+        {% if loop.index0 % 4 == 0 %}<tr>{% endif %}
+            <td><span class="ck-box">{{ 'X' if c.get('C03. Sintoma de contactante: ' + s) else '' }}</span> {{ s }}</td>
+        {% if loop.index0 % 4 == 3 or loop.last %}</tr>{% endif %}
+        {% endfor %}
+        <tr>
+            <td>Outros:</td>
+            <td colspan="4">{{ c.get('C03. Outros (especificar)', '') }}</td>
+        </tr>
+        </table>
+    </td>
+</tr>
+</table>
+
+<!-- ============ B4. OBSERVAÇÕES ============ -->
+<table class="form-tbl avoid-break">
+<tr class="sec-title"><td colspan="4">B4. OBSERVAÇÕES (Anexo B)</td></tr>
+<tr>
+    <td class="val" colspan="4"><div class="txt-box" style="min-height:50pt;">{{ c.get('OBSB. Observações', '') }}</div></td>
+</tr>
+</table>
+
+<!-- ============ B5. INVESTIGAÇÃO ============ -->
+<table class="form-tbl avoid-break">
+<tr class="sec-title"><td colspan="4">B5. INVESTIGAÇÃO (Anexo B)</td></tr>
+<tr>
+    <td class="lbl">I01. Data:</td>
+    <td class="val">{{ c.get('IVB01. Data da investigação', '') }}</td>
+    <td class="lbl">I02. Investigador:</td>
+    <td class="val">{{ c.get('IVB02. Investigador', inv.responsavel or '') }}</td>
+</tr>
+</table>
+
+<!-- ============ RODAPÉ ============ -->
+<table class="form-tbl" style="margin-top:8pt;">
+<tr class="rodape">
+    <td colspan="4">
+        Ficha gerada em {{ now.strftime('%d/%m/%Y às %H:%M') if now else '' }}
+        — Sistema de Informações de Óbito — Prefeitura de Goianira
+        — Protocolo MS/SVS 2016 (Anexos A e B)
+    </td>
+</tr>
+</table>
+
+</body>
+</html>
