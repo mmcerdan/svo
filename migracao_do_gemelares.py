@@ -164,7 +164,6 @@ def main():
         print('=== Validação pós-migração ===')
         from app.models import Obito, Usuario
         from datetime import date
-        from werkzeug.security import generate_password_hash
         from sqlalchemy import inspect as sa_inspect
 
         # Verifica se a coluna causas_morte_cids existe no banco
@@ -173,18 +172,21 @@ def main():
         tem_jsonb = 'causas_morte_cids' in cols_obitos
         print(f'Coluna causas_morte_cids presente: {tem_jsonb}')
 
-        # Cria usuário de teste se não existir
-        user = Usuario.query.filter_by(usuario='teste_migracao').first()
+        # Usa usuário existente; só cria temporário se não houver nenhum
+        user = Usuario.query.first()
+        user_temporario = False
         if not user:
+            from werkzeug.security import generate_password_hash
             user = Usuario(
                 nome='Teste Migração',
                 usuario='teste_migracao',
                 cargo='Admin',
-                senha_hash=generate_password_hash('teste1234'),
-                ativo=True,
+                senha_hash=generate_password_hash(''),
+                ativo=False,
             )
             db.session.add(user)
             db.session.commit()
+            user_temporario = True
 
         # Tenta criar dois óbitos com a mesma DO
         do_teste = 'DO-TESTE-GEMELOS-001'
@@ -214,6 +216,8 @@ def main():
 
         # Limpa dados de teste
         Obito.query.filter_by(numero_dob=do_teste).delete()
+        if user_temporario:
+            db.session.delete(user)
         db.session.commit()
         print('Dados de teste removidos.')
 
