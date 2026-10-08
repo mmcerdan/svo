@@ -10,7 +10,7 @@ Resolver as pendências mapeadas na auditoria da v1.1 **sem quebrar o que já fu
 
 1. **Auditoria read-only antes** — cada etapa começa com análise do estado atual + suíte de testes verde
 2. **Backup antes de mudar** — `pg_dump` + `git tag` antes de qualquer alteração em produção
-3. **Testes verdes como gate** — nada sobe com teste vermelho novo (baseline Etapa 1: **105 ✅ / 0 ❌ / 0 erros**)
+3. **Testes verdes como gate** — nada sobe com teste vermelho novo (baseline Etapa 2b: **126 ✅ / 0 ❌ / 0 erros**)
 4. **Rollback documentado** — cada etapa tem caminho de volta testado
 5. **Deploy em janela** — preferencialmente horário comercial, com aviso aos usuários
 6. **Uma etapa por vez** — só iniciar a próxima após validação da anterior
@@ -66,11 +66,11 @@ Resolver as pendências mapeadas na auditoria da v1.1 **sem quebrar o que já fu
 - [ ] `SESSION_COOKIE_SECURE=True` (`config.py:40`) + HSTS
 - [ ] Firewall: abrir 443/tcp
 
-**2b. Perfis com permissão real**
-- [ ] Distinguir Admin × Supervisor (hoje idênticos, `security.py:6-20`)
-- [ ] Dar efeito aos cargos Investigador/Enfermeira (hoje decorativos)
-- [ ] Regra de dono: edita/exclui só próprio registro (ou por perfil)
-- [ ] Migrar checks avulsos `current_user.is_admin()` para decoradores
+**2b. Perfis com permissão real** (concluído 08/10)
+- [x] Distinguir Admin × Supervisor — Admin: tudo; Supervisor: só operação (sem usuários/auditoria)
+- [x] Dar efeito aos cargos Investigador/Enfermeira/Usuário — criam/editam/finalizam; sem exclusão
+- [x] Regra de dono: operacionais editam/excluem só o próprio registro; Admin/Supervisor editam/excluem tudo
+- [x] Migrar checks avulsos `current_user.is_admin()` para decoradores (`obitos.py` estabelecimentos → `@supervisor_required`)
 
 **Critério de aceite:** HTTPS com certificado válido; teste de permissão automatizado por cargo; rollback = tag git + conf nginx versionada.
 
@@ -113,7 +113,7 @@ Resolver as pendências mapeadas na auditoria da v1.1 **sem quebrar o que já fu
 
 Executado antes de cada etapa e após cada deploy:
 
-1. **Suíte local:** `make test` (ou `python -m pytest tests/ -q --ignore=tests/e2e`) → deve bater com a baseline (105/0/0)
+1. **Suíte local:** `make test` (ou `python -m pytest tests/ -q --ignore=tests/e2e`) → deve bater com a baseline (126/0/0)
 2. **Saúde em produção:** `GET /health`, todas as rotas principais HTTP 200
 3. **Integridade do banco:** contagens (obitos, investigacoes, campos), FKs órfãs, índices
 4. **Smoke autenticado:** login, lista, detalhe, impressão de fichas, busca CID
@@ -137,3 +137,4 @@ Executado antes de cada etapa e após cada deploy:
 | 08/10/2026 | Etapa 0 local concluída: suíte 81/0/0, Alembic baseline `4f239821b7c0`, deploy.sh em `flask db upgrade`, Makefile |
 | 08/10/2026 | Etapa 0 validada em produção: pull `04053d5`, `flask db current` = `4f239821b7c0 (head)` (PG), suíte 81/0/0 no servidor, smoke 200, journal limpo (backup `obito_db_pre_etapa0_20261008_110337.sql`) |
 | 08/10/2026 | Etapa 1 concluída: suíte 105/0/0 (+24 testes), flag `VALIDACAO_FICHA` (padrão `aviso`), banner de pendências, consistência ficha × óbito, CID da lista só avisa; deploy produção pull `4e3d3d8`, suíte 105/0/0 no servidor, smoke 302/200/200, journal limpo (backup `obito_db_pre_etapa1_20261008_125413.sql`) |
+| 08/10/2026 | Etapa 2b concluída (perfis): suíte 126/0/0 (+21 testes), Admin ≠ Supervisor (usuários/auditoria = Admin), dono na edição, exclusão só Admin/Supervisor, checks avulsos migrados p/ decoradores; deploy produção pull `b6dfa92`, suíte 126/0/0 no servidor, smoke 302/200/200, journal limpo (backup `obito_db_pre_etapa2b_20261008_133431.sql`); rollback = `git revert b6dfa92` + deploy; HTTPS (2a) pendente |
