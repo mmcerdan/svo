@@ -118,26 +118,16 @@ else
     log ".env já existe"
 fi
 
-# Migrações / cria tabelas
-log "Criando tabelas..."
+# Migracoes (Alembic)
+log "Aplicando migracoes (Alembic)..."
 cd "$APP_DIR"
-sudo -u "$APP_USER" FLASK_ENV=production "$VENV_DIR/bin/python" -c "
-from app import create_app
-from app.extensions import db
-app = create_app('production')
-with app.app_context():
-    db.create_all()
-    from app.models import Usuario
-    admin = Usuario.query.filter_by(usuario='admin').first()
-    if not admin:
-        admin = Usuario(nome='Administrador', usuario='admin', cargo='Admin', ativo=True)
-        admin.set_senha('admin123')
-        db.session.add(admin)
-        db.session.commit()
-        print('Admin criado com sucesso')
-    else:
-        print('Admin ja existe')
-"
+USUARIOS=$(sudo -u postgres psql -d obito_db -tAc "SELECT count(*) FROM information_schema.tables WHERE table_schema='public' AND table_name='usuarios'" 2>/dev/null || echo 0)
+ALEMBIC=$(sudo -u postgres psql -d obito_db -tAc "SELECT count(*) FROM information_schema.tables WHERE table_schema='public' AND table_name='alembic_version'" 2>/dev/null || echo 0)
+if [[ "$USUARIOS" -gt 0 && "$ALEMBIC" -eq 0 ]]; then
+    log "Banco pre-Alembic detectado - marcando baseline como head"
+    sudo -u "$APP_USER" FLASK_APP=run:app FLASK_ENV=production FLASK_SKIP_CREATE_ALL=1 "$VENV_DIR/bin/flask" db stamp head
+fi
+sudo -u "$APP_USER" FLASK_APP=run:app FLASK_ENV=production FLASK_SKIP_CREATE_ALL=1 "$VENV_DIR/bin/flask" db upgrade
 
 # Gunicorn logs
 mkdir -p /var/log/gunicorn

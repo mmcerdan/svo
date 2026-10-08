@@ -17,6 +17,9 @@ from werkzeug.utils import secure_filename
 bp = Blueprint('investigacoes', __name__, url_prefix='/investigacoes')
 
 def _validar_csrf():
+    from flask import current_app
+    if not current_app.config.get('WTF_CSRF_ENABLED', True):
+        return
     from flask_wtf.csrf import validate_csrf
     token = request.form.get('csrf_token', '')
     try:

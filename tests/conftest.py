@@ -36,6 +36,9 @@ def db_session(app):
         yield db
         db.session.rollback()
         db.drop_all()
+        # Recria o schema: testes que usam só `client` (sem db_session)
+        # dependem das tabelas existirem após o teardown
+        db.create_all()
 
 @pytest.fixture
 def admin_user(db_session):

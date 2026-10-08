@@ -10,7 +10,7 @@ Resolver as pendências mapeadas na auditoria da v1.1 **sem quebrar o que já fu
 
 1. **Auditoria read-only antes** — cada etapa começa com análise do estado atual + suíte de testes verde
 2. **Backup antes de mudar** — `pg_dump` + `git tag` antes de qualquer alteração em produção
-3. **Testes verdes como gate** — nada sobe com teste vermelho novo (baseline v1.1: 57 ✅ / 1 ❌ / 23 erros conhecidos)
+3. **Testes verdes como gate** — nada sobe com teste vermelho novo (baseline Etapa 0: **81 ✅ / 0 ❌ / 0 erros**)
 4. **Rollback documentado** — cada etapa tem caminho de volta testado
 5. **Deploy em janela** — preferencialmente horário comercial, com aviso aos usuários
 6. **Uma etapa por vez** — só iniciar a próxima após validação da anterior
@@ -37,12 +37,12 @@ Resolver as pendências mapeadas na auditoria da v1.1 **sem quebrar o que já fu
 ### Etapa 0 — Fundação verde (13–16/10)
 **Por quê:** sem baseline verde e sem migrações versionadas, cada mudança seguinte é um risco desnecessário.
 
-- [ ] Corrigir testes desatualizados de DO duplicada (`tests/test_obitos.py:39-44,88-99`, `test_validators.py:38-42`) — alinhar à regra de gêmeos da v1.1
-- [ ] Resolver erros JSONB/SQLite nos testes (23 errors) — isolar tipo JSONB em testes ou fixture compatível
-- [ ] Investigar/decidir sobre o teste `test_infantil_fetal_wigglesworth_exato_um` (1 failed)
-- [ ] Ativar **Flask-Migrate/Alembic** (já no requirements): `flask db init` + `migrate` do schema atual como baseline
-- [ ] Script `deploy.sh` passa a rodar `flask db upgrade` em vez de `db.create_all()`
-- [ ] CI local: comando único `make test` (ou script) rodando suíte completa
+- [x] Corrigir testes desatualizados de DO duplicada (`tests/test_obitos.py:39-44,88-99`, `test_validators.py:38-42`) — alinhar à regra de gêmeos da v1.1
+- [x] Resolver erros JSONB/SQLite nos testes (23 errors) — `JSON().with_variant(JSONB, 'postgresql')` no model
+- [x] Investigar/decidir sobre o teste `test_infantil_fetal_wigglesworth_exato_um` (1 failed) — teste incompleto (faltava SEADE); validador correto, teste ajustado
+- [x] Ativar **Flask-Migrate/Alembic** (já no requirements): `flask db init` + baseline `4f239821b7c0` ("baseline v1.1") + stamp no dev local
+- [x] Script `deploy.sh` passa a rodar `flask db upgrade` em vez de `db.create_all()` (stamp automático para banco pré-Alembic)
+- [x] CI local: comando único `make test` (Makefile) rodando suíte completa
 
 **Critério de aceite:** `pytest` 100% verde; `flask db current` mostra revisão ativa; produção inalterada.
 
@@ -113,7 +113,7 @@ Resolver as pendências mapeadas na auditoria da v1.1 **sem quebrar o que já fu
 
 Executado antes de cada etapa e após cada deploy:
 
-1. **Suíte local:** `python -m pytest tests/ -q --ignore=tests/e2e` → comparar com baseline (57/1/23)
+1. **Suíte local:** `make test` (ou `python -m pytest tests/ -q --ignore=tests/e2e`) → deve bater com a baseline (81/0/0)
 2. **Saúde em produção:** `GET /health`, todas as rotas principais HTTP 200
 3. **Integridade do banco:** contagens (obitos, investigacoes, campos), FKs órfãs, índices
 4. **Smoke autenticado:** login, lista, detalhe, impressão de fichas, busca CID
@@ -134,3 +134,4 @@ Executado antes de cada etapa e após cada deploy:
 | Data | Alteração |
 |------|-----------|
 | 08/10/2026 | Criação do cronograma (pós-auditoria v1.1) |
+| 08/10/2026 | Etapa 0 local concluída: suíte 81/0/0, Alembic baseline `4f239821b7c0`, deploy.sh em `flask db upgrade`, Makefile |

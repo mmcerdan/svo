@@ -36,12 +36,13 @@ class TestObitoValidators:
         assert ok is False
         assert 'anterior' in msg
     
-    def test_numero_dob_unico(self, db_session, sample_obito):
+    def test_numero_dob_gemeos_permitido(self, db_session, sample_obito):
+        # v1.1: óbitos de gêmeos compartilham a mesma DO — nunca bloqueia
         ok, msg = validar_numero_dob('DO-2024-0001', sample_obito.id)
         assert ok is True
-        
+
         ok, msg = validar_numero_dob('DO-2024-0001')
-        assert ok is False
+        assert ok is True
 
 class TestObitoService:
     """Testes do ObitoService."""
@@ -85,7 +86,8 @@ class TestObitoService:
         assert any('CID' in e for e in erros)
         assert obito is None
     
-    def test_criar_obito_dob_duplicado(self, db_session, admin_user, sample_obito):
+    def test_criar_obito_dob_duplicada_permitida(self, db_session, admin_user, sample_obito):
+        # v1.1: DO duplicada aceita (gêmeos)
         dados = {
             'nome': 'Outro',
             'data_obito': date(2024, 1, 15),
@@ -96,7 +98,9 @@ class TestObitoService:
         admin = db_session.session.get(Usuario, admin_user.id)
         obito, erros = ObitoService.criar(admin, dados)
         
-        assert len(erros) > 0
+        assert len(erros) == 0
+        assert obito is not None
+        assert obito.numero_dob == sample_obito.numero_dob
 
 class TestObitoViews:
     """Testes das views de obito (integration)."""

@@ -1,5 +1,6 @@
 from app.extensions import db
 from datetime import datetime, date
+from sqlalchemy import JSON
 from sqlalchemy.dialects.postgresql import JSONB
 
 class Obito(db.Model):
@@ -14,7 +15,7 @@ class Obito(db.Model):
     numero_dob = db.Column(db.String(50), index=True)  # sem unique: gêmeos compartilham a mesma DO
     causa_morte = db.Column(db.Text)
     causa_morte_cid = db.Column(db.String(10), index=True)
-    causas_morte_cids = db.Column(JSONB, default=list)  # Lista de CIDs: [{"cid": "P968", "descricao": "..."}, ...]
+    causas_morte_cids = db.Column(JSON().with_variant(JSONB(), 'postgresql'), default=list)  # Lista de CIDs: [{"cid": "P968", "descricao": "..."}, ...]
     local_obito = db.Column(db.String(50))
     municipio_ocorrencia = db.Column(db.String(100))
     endereco = db.Column(db.Text)

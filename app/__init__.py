@@ -75,17 +75,20 @@ def create_app(config_name=None):
             response.headers['Strict-Transport-Security'] = 'max-age=31536000; includeSubDomains'
         return response
     
-    # Cria tabelas
+    # Cria tabelas (pulado durante comandos Alembic: FLASK_SKIP_CREATE_ALL=1)
     with app.app_context():
         from app.extensions import db
-        db.create_all()
+        from sqlalchemy import inspect
+        if os.environ.get('FLASK_SKIP_CREATE_ALL') != '1':
+            db.create_all()
         # Cria admin padrão
-        admin = Usuario.query.filter_by(usuario='admin').first()
-        if not admin:
-            admin = Usuario(nome='Administrador', usuario='admin', cargo='Admin', ativo=True)
-            admin.set_senha(os.environ.get('ADMIN_PASSWORD', 'admin123'))
-            db.session.add(admin)
-            db.session.commit()
-            app.logger.info('Usuário admin criado')
+        if inspect(db.engine).has_table('usuarios'):
+            admin = Usuario.query.filter_by(usuario='admin').first()
+            if not admin:
+                admin = Usuario(nome='Administrador', usuario='admin', cargo='Admin', ativo=True)
+                admin.set_senha(os.environ.get('ADMIN_PASSWORD', 'admin123'))
+                db.session.add(admin)
+                db.session.commit()
+                app.logger.info('Usuário admin criado')
     
     return app

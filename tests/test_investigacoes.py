@@ -5,6 +5,32 @@ from app.services.investigacao_service import InvestigacaoService
 from app.utils.campos import get_campos_padrao_investigacao, get_tipo_campo, extrair_opcao
 from app.utils.validators import ValidadorInvestigacao
 
+# Obrigatórios do MIF para montar um form completo válido (como a tela real envia)
+_OBRIGATORIOS_MIF = {
+    'Nome da falecida': 'Teste',
+    'Nº da DO': 'DO-001',
+    'Data do óbito': '2024-01-01',
+    'Zona: Urbana': 'X',
+    'Grávida no momento do óbito? (Não sabe)': 'X',
+}
+
+
+def _montar_form_completo(investigacao, marcados=None):
+    """Monta form com todos os campos da investigação + obrigatórios MIF preenchidos.
+
+    marcados: dict {nome_campo: 'X'} para checkboxes adicionais.
+    """
+    form = {f'campo_{c.id}': c.valor for c in investigacao.campos}
+    for c in investigacao.campos:
+        if c.nome_campo in _OBRIGATORIOS_MIF:
+            form[f'campo_{c.id}'] = _OBRIGATORIOS_MIF[c.nome_campo]
+    if marcados:
+        for nome, valor in marcados.items():
+            for c in investigacao.campos:
+                if c.nome_campo == nome:
+                    form[f'campo_{c.id}'] = valor
+    return form
+
 class TestCamposUtils:
     """Testes dos utilitários de campos."""
     
@@ -76,6 +102,7 @@ class TestValidadorInvestigacao:
             'Sexo: Masculino': 'X',
             'Wigglesworth: W1': 'X',
             'Wigglesworth: W2': '',
+            'SEADE: S1': 'X',
         }
         erros = ValidadorInvestigacao.validar('INFANTIL_FETAL', campos)
         assert len(erros) == 0
@@ -204,13 +231,18 @@ class TestInvestigacaoService:
         from app.models import Usuario
         admin = db_session.session.get(Usuario, admin_user.id)
         
-        # Simula formulário com checkboxes
-        form_data = {
-            'campo_1': 'X',  # Assumindo primeiro campo
-        }
+        # Checkbox livre (fora dos grupos exclusivos Zona/Grávida)
+        checkbox = next(
+            c for c in sample_investigacao.campos
+            if get_tipo_campo(c.nome_campo) == 'checkbox'
+            and c.nome_campo not in _OBRIGATORIOS_MIF
+            and not c.nome_campo.startswith(('Zona:', 'Grávida'))
+        )
+        form_data = _montar_form_completo(sample_investigacao, {checkbox.nome_campo: 'X'})
         
         erros = InvestigacaoService.atualizar_campos(sample_investigacao, admin, form_data)
         assert len(erros) == 0
+        assert checkbox.valor == 'X'
 
 class TestInvestigacaoViews:
     """Testes das views de investigação (integration)."""
@@ -225,15 +257,15 @@ class TestInvestigacaoViews:
         assert b'MIF' in response.data or b'Mulher' in response.data
     
     def test_salvar_campos_ajax(self, auth_client, sample_investigacao):
-        # Pega primeiro campo checkbox
-        campo = sample_investigacao.campos.first()
-        if campo:
-            response = auth_client.post(
-                f'/investigacoes/{sample_investigacao.id}/salvar-campos-ajax',
-                data={f'campo_{campo.id}': 'X'},
-                headers={'X-Requested-With': 'XMLHttpRequest'}
-            )
-            assert response.status_code == 200
+        # Envia o form completo como a tela real faz
+        form_data = _montar_form_completo(sample_investigacao)
+        response = auth_client.post(
+            f'/investigacoes/{sample_investigacao.id}/salvar-campos-ajax',
+            data=form_data,
+            headers={'X-Requested-With': 'XMLHttpRequest'}
+        )
+        assert response.status_code == 200
+        assert response.get_json()['sucesso'] is True
     
     def test_finalizar_via_post(self, auth_client, sample_investigacao):
         response = auth_client.post(
