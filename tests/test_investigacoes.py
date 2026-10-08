@@ -193,6 +193,68 @@ class TestValidadorInvestigacao:
         erros_ok = ValidadorInvestigacao.validar('DENGUE', campos_ok)
         assert len(erros_ok) == 0
 
+class TestValidarConsistencia:
+    """Testes da consistência ficha × óbito (alertas, nunca bloqueiam)."""
+
+    @staticmethod
+    def _obito_fake(**kwargs):
+        from types import SimpleNamespace
+        base = dict(numero_dob='DO-2024-0001', data_obito=date(2024, 1, 15),
+                    nome='João da Silva')
+        base.update(kwargs)
+        return SimpleNamespace(**base)
+
+    def test_do_divergente_gera_alerta(self):
+        alertas = ValidadorInvestigacao.validar_consistencia(
+            'MIF', {'Nº da DO': 'DO-9999'}, self._obito_fake())
+        assert len(alertas) == 1
+        assert 'DO' in alertas[0]
+
+    def test_do_igual_sem_alerta(self):
+        alertas = ValidadorInvestigacao.validar_consistencia(
+            'MIF', {'Nº da DO': 'do-2024-0001'}, self._obito_fake())
+        assert alertas == []
+
+    def test_data_divergente_gera_alerta(self):
+        alertas = ValidadorInvestigacao.validar_consistencia(
+            'MIF', {'Data do óbito': '20/01/2024'}, self._obito_fake())
+        assert len(alertas) == 1
+        assert 'data' in alertas[0].lower()
+
+    def test_data_igual_sem_alerta(self):
+        alertas = ValidadorInvestigacao.validar_consistencia(
+            'MIF', {'Data do óbito': '15/01/2024'}, self._obito_fake())
+        assert alertas == []
+
+    def test_nome_divergente_gera_alerta(self):
+        alertas = ValidadorInvestigacao.validar_consistencia(
+            'MIF', {'Nome da falecida': 'Maria'}, self._obito_fake())
+        assert len(alertas) == 1
+        assert 'nome' in alertas[0].lower()
+
+    def test_nome_com_espacos_diferentes_sem_alerta(self):
+        alertas = ValidadorInvestigacao.validar_consistencia(
+            'MIF', {'Nome da falecida': '  João   da  Silva '}, self._obito_fake())
+        assert alertas == []
+
+    def test_todos_divergentes(self):
+        alertas = ValidadorInvestigacao.validar_consistencia(
+            'MIF', {'Nº da DO': 'DO-X', 'Data do óbito': '01/02/2024',
+                    'Nome do falecido': 'Outro'}, self._obito_fake())
+        assert len(alertas) == 3
+
+    def test_sem_obito_vinculado(self):
+        alertas = ValidadorInvestigacao.validar_consistencia(
+            'MIF', {'Nº da DO': 'DO-X'}, None)
+        assert alertas == []
+
+    def test_campos_vazios_sem_alerta(self):
+        alertas = ValidadorInvestigacao.validar_consistencia(
+            'MIF', {'Nº da DO': '', 'Data do óbito': '',
+                    'Nome da falecida': ''}, self._obito_fake())
+        assert alertas == []
+
+
 class TestInvestigacaoService:
     """Testes do InvestigacaoService."""
     
@@ -244,6 +306,73 @@ class TestInvestigacaoService:
         assert len(erros) == 0
         assert checkbox.valor == 'X'
 
+    def test_pendencias_ficha_vazia(self, db_session, sample_investigacao):
+        validacao, alertas = InvestigacaoService.pendencias(sample_investigacao)
+        assert len(validacao) > 0
+        # campos vazios não geram divergência com o óbito
+        assert alertas == []
+
+    def test_pendencias_ficha_completa_divergente(self, db_session, sample_investigacao):
+        for c in sample_investigacao.campos:
+            if c.nome_campo in _OBRIGATORIOS_MIF:
+                c.valor = _OBRIGATORIOS_MIF[c.nome_campo]
+        db_session.session.commit()
+        validacao, alertas = InvestigacaoService.pendencias(sample_investigacao)
+        assert validacao == []
+        assert any('DO' in a for a in alertas)
+        assert any('data' in a.lower() for a in alertas)
+        assert any('nome' in a.lower() for a in alertas)
+
+    def test_finalizar_modo_aviso_ficha_vazia_finaliza(self, db_session, sample_investigacao, admin_user):
+        from app.models import Usuario
+        admin = db_session.session.get(Usuario, admin_user.id)
+
+        erros = InvestigacaoService.finalizar(sample_investigacao, admin, 'Conclusão do caso.')
+        assert erros == []
+        assert sample_investigacao.status == 'CONCLUIDA'
+
+    def test_finalizar_modo_bloqueio_ficha_vazia(self, db_session, sample_investigacao, admin_user, app):
+        from app.models import Usuario
+        admin = db_session.session.get(Usuario, admin_user.id)
+        app.config['VALIDACAO_FICHA'] = 'bloqueio'
+        try:
+            erros = InvestigacaoService.finalizar(sample_investigacao, admin, 'Conclusão do caso.')
+            assert len(erros) > 0
+            assert sample_investigacao.status != 'CONCLUIDA'
+        finally:
+            app.config['VALIDACAO_FICHA'] = 'aviso'
+
+    def test_finalizar_modo_bloqueio_ficha_completa(self, db_session, sample_investigacao, admin_user, app):
+        from app.models import Usuario
+        admin = db_session.session.get(Usuario, admin_user.id)
+        for c in sample_investigacao.campos:
+            if c.nome_campo in _OBRIGATORIOS_MIF:
+                c.valor = _OBRIGATORIOS_MIF[c.nome_campo]
+        db_session.session.commit()
+        app.config['VALIDACAO_FICHA'] = 'bloqueio'
+        try:
+            erros = InvestigacaoService.finalizar(sample_investigacao, admin, 'Conclusão do caso.')
+            assert erros == []
+            assert sample_investigacao.status == 'CONCLUIDA'
+        finally:
+            app.config['VALIDACAO_FICHA'] = 'aviso'
+
+    def test_finalizar_modo_bloqueio_divergencia_nao_bloqueia(self, db_session, sample_investigacao, admin_user, app):
+        # Divergências ficha × óbito são alertas: mesmo em modo bloqueio não impedem
+        from app.models import Usuario
+        admin = db_session.session.get(Usuario, admin_user.id)
+        for c in sample_investigacao.campos:
+            if c.nome_campo in _OBRIGATORIOS_MIF:
+                c.valor = _OBRIGATORIOS_MIF[c.nome_campo]
+        db_session.session.commit()
+        app.config['VALIDACAO_FICHA'] = 'bloqueio'
+        try:
+            erros = InvestigacaoService.finalizar(sample_investigacao, admin, 'Conclusão do caso.')
+            assert erros == []
+            assert sample_investigacao.status == 'CONCLUIDA'
+        finally:
+            app.config['VALIDACAO_FICHA'] = 'aviso'
+
 class TestInvestigacaoViews:
     """Testes das views de investigação (integration)."""
     
@@ -275,3 +404,43 @@ class TestInvestigacaoViews:
         )
         assert response.status_code == 200
         assert b'Conclu' in response.data
+
+    def test_detalhe_mostra_pendencias(self, auth_client, sample_investigacao):
+        response = auth_client.get(f'/investigacoes/{sample_investigacao.id}')
+        assert response.status_code == 200
+        assert 'Antes de finalizar' in response.data.decode('utf-8')
+
+    def test_detalhe_sem_banner_apos_finalizar(self, auth_client, sample_investigacao):
+        auth_client.post(
+            f'/investigacoes/{sample_investigacao.id}/finalizar',
+            data={'conclusao': 'Caso concluído.'},
+            follow_redirects=True
+        )
+        response = auth_client.get(f'/investigacoes/{sample_investigacao.id}')
+        assert 'Antes de finalizar' not in response.data.decode('utf-8')
+
+    def test_finalizar_via_post_modo_bloqueio(self, auth_client, sample_investigacao, app):
+        app.config['VALIDACAO_FICHA'] = 'bloqueio'
+        try:
+            response = auth_client.post(
+                f'/investigacoes/{sample_investigacao.id}/finalizar',
+                data={'conclusao': 'Caso concluído via teste.'},
+                follow_redirects=True
+            )
+            assert response.status_code == 200
+            texto = response.data.decode('utf-8')
+            assert 'Campo obrigatório' in texto
+            assert 'Antes de finalizar' in texto
+        finally:
+            app.config['VALIDACAO_FICHA'] = 'aviso'
+
+    def test_nova_investigacao_mostra_avisos(self, auth_client, sample_obito):
+        response = auth_client.post(
+            f'/investigacoes/{sample_obito.id}/nova',
+            data={'tipo': 'MIF', 'status': 'AGUARDANDO'},
+            follow_redirects=True
+        )
+        assert response.status_code == 200
+        texto = response.data.decode('utf-8')
+        assert 'Investigação criada com sucesso' in texto
+        assert 'Antes de finalizar' in texto

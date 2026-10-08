@@ -93,6 +93,9 @@ def nova(obito_id):
         
         db.session.commit()
         flash('Investigação criada com sucesso!', 'success')
+        validacao, alertas = InvestigacaoService.pendencias(inv)
+        for aviso in validacao + alertas:
+            flash(aviso, 'warning')
         return redirect(url_for('investigacoes.detalhe', id=inv.id))
     
     form = InvestigacaoForm()
@@ -125,7 +128,11 @@ def detalhe(id):
     if not inv:
         flash('Investigação não encontrada.', 'danger')
         return redirect(url_for('investigacoes.lista'))
-    return render_template('investigacoes/detalhe.html', inv=inv)
+    pendencias, alertas = [], []
+    if inv.status != 'CONCLUIDA':
+        pendencias, alertas = InvestigacaoService.pendencias(inv)
+    return render_template('investigacoes/detalhe.html', inv=inv,
+                           pendencias=pendencias, alertas=alertas)
 
 @bp.route('/<int:id>/imprimir')
 @login_required
@@ -226,6 +233,12 @@ def finalizar(id):
             flash(erro, 'danger')
     else:
         flash('Investigação concluída com sucesso!', 'success')
+        validacao, alertas = InvestigacaoService.pendencias(inv)
+        if current_app.config.get('VALIDACAO_FICHA') == 'aviso':
+            for aviso in validacao:
+                flash(aviso, 'warning')
+        for alerta in alertas:
+            flash(alerta, 'warning')
     
     return redirect(url_for('investigacoes.detalhe', id=inv.id))
 

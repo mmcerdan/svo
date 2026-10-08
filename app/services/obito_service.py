@@ -69,6 +69,18 @@ class ObitoService:
         return obito, []
 
     @staticmethod
+    def avisos_causas_cids(dados: dict) -> List[str]:
+        """Avisa sobre CIDs inválidos na lista de causas da morte (não bloqueia)."""
+        avisos = []
+        for item in dados.get('causas_morte_cids') or []:
+            if not isinstance(item, dict):
+                continue
+            cod = str(item.get('codigo') or item.get('cid') or '').strip().upper()
+            if cod and not validar_cid10(cod):
+                avisos.append(f'CID-10 inválido na lista de causas: {cod}. Formato esperado: A00.0 ou A00')
+        return avisos
+
+    @staticmethod
     def atualizar(obito: Obito, usuario: Usuario, dados: dict) -> List[str]:
         """Atualiza óbito existente."""
         erros = []

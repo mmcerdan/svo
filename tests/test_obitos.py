@@ -102,6 +102,44 @@ class TestObitoService:
         assert obito is not None
         assert obito.numero_dob == sample_obito.numero_dob
 
+class TestAvisosCausasCids:
+    """Avisos de CID-10 inválido na lista de causas (não bloqueia)."""
+
+    def test_cids_invalidos_geram_aviso(self):
+        dados = {'causas_morte_cids': [
+            {'codigo': 'XYZ', 'descricao': ''},
+            {'codigo': 'I21.9', 'descricao': ''},
+            {'codigo': '1234', 'descricao': ''},
+        ]}
+        avisos = ObitoService.avisos_causas_cids(dados)
+        assert len(avisos) == 2
+        assert any('XYZ' in a for a in avisos)
+        assert any('1234' in a for a in avisos)
+
+    def test_cids_validos_sem_aviso(self):
+        dados = {'causas_morte_cids': [
+            {'codigo': 'I21.9', 'descricao': ''},
+            {'codigo': 'a00', 'descricao': ''},
+        ]}
+        assert ObitoService.avisos_causas_cids(dados) == []
+
+    def test_lista_vazia_sem_aviso(self):
+        assert ObitoService.avisos_causas_cids({}) == []
+        assert ObitoService.avisos_causas_cids({'causas_morte_cids': []}) == []
+
+    def test_criar_obito_com_cid_lista_invalida_nao_bloqueia(self, db_session, admin_user):
+        dados = {
+            'nome': 'Teste Lista CID',
+            'data_obito': date(2024, 1, 15),
+            'numero_dob': 'DO-2024-0077',
+            'causas_morte_cids': [{'codigo': 'ABC123', 'descricao': ''}],
+        }
+        from app.models import Usuario
+        admin = db_session.session.get(Usuario, admin_user.id)
+        obito, erros = ObitoService.criar(admin, dados)
+        assert erros == []
+        assert obito is not None
+
 class TestObitoViews:
     """Testes das views de obito (integration)."""
     
@@ -131,3 +169,20 @@ class TestObitoViews:
         
         assert response.status_code == 200
         assert 'Investiga' in response.data.decode('utf-8')
+
+    def test_editar_obito_avisa_cid_lista_invalida(self, auth_client, sample_obito):
+        response = auth_client.post(f'/obitos/{sample_obito.id}/editar', data={
+            'nome': 'João da Silva',
+            'data_nascimento': '1950-01-01',
+            'data_obito': '2024-01-15',
+            'sexo': 'M',
+            'numero_dob': 'DO-2024-0001',
+            'causa_morte_cid': 'I21.9',
+            'local_obito': 'HOSPITAL',
+            'causas_morte_cids-0-codigo': 'XYZ99',
+            'causas_morte_cids-0-descricao': 'Teste',
+        }, follow_redirects=True)
+        assert response.status_code == 200
+        texto = response.data.decode('utf-8')
+        assert 'Óbito atualizado com sucesso' in texto
+        assert 'CID-10 inválido' in texto

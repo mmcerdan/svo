@@ -1,5 +1,5 @@
 import re
-from datetime import date
+from datetime import date, datetime
 from typing import Optional, Tuple
 from wtforms.validators import ValidationError
 
@@ -34,6 +34,20 @@ def validar_numero_dob(numero_dob: str, obito_id: Optional[int] = None) -> Tuple
         return True, ''
     # Não bloqueia: gêmeos usam a mesma DO. Mantido por compatibilidade.
     return True, ''
+
+
+def _parse_data_campo(valor: str) -> Optional[date]:
+    """Converte string de data da ficha (dd/mm/aaaa, dd-mm-aaaa ou aaaa-mm-dd)."""
+    for fmt in ('%d/%m/%Y', '%d-%m-%Y', '%Y-%m-%d'):
+        try:
+            return datetime.strptime(valor.strip(), fmt).date()
+        except (ValueError, AttributeError):
+            continue
+    return None
+
+
+def _normalizar_nome_comparacao(texto: str) -> str:
+    return ' '.join(texto.split()).casefold()
 
 class ValidadorInvestigacao:
     """Validadores específicos por tipo de investigação."""
@@ -235,6 +249,47 @@ class ValidadorInvestigacao:
         'C01. Alguém que morava com o caso adoeceu',
     ]
     
+    # Campos da ficha que devem bater com o óbito vinculado (para alertas de consistência)
+    CAMPOS_CONSISTENCIA_NOME = (
+        'Nome da falecida', 'Nome do falecido', 'Nome da criança',
+        'DI03. Nome do paciente',
+    )
+
+    @classmethod
+    def validar_consistencia(cls, tipo: str, campos: dict, obito) -> list[str]:
+        """Compara campos da ficha com o óbito vinculado. Retorna alertas (não bloqueia)."""
+        alertas = []
+        if obito is None:
+            return alertas
+
+        dob_ficha = (campos.get('Nº da DO') or '').strip()
+        dob_obito = (obito.numero_dob or '').strip() if obito.numero_dob else ''
+        if dob_ficha and dob_obito and dob_ficha.casefold() != dob_obito.casefold():
+            alertas.append(
+                f'Divergência de Nº da DO: ficha "{dob_ficha}" × óbito "{dob_obito}".'
+            )
+
+        data_ficha = _parse_data_campo(campos.get('Data do óbito') or '')
+        if data_ficha and obito.data_obito and data_ficha != obito.data_obito:
+            alertas.append(
+                f'Divergência de data do óbito: ficha {data_ficha.strftime("%d/%m/%Y")} '
+                f'× óbito {obito.data_obito.strftime("%d/%m/%Y")}.'
+            )
+
+        nome_ficha = ''
+        for chave in cls.CAMPOS_CONSISTENCIA_NOME:
+            valor = (campos.get(chave) or '').strip()
+            if valor:
+                nome_ficha = valor
+                break
+        if nome_ficha and obito.nome and _normalizar_nome_comparacao(nome_ficha) != \
+                _normalizar_nome_comparacao(obito.nome):
+            alertas.append(
+                f'Divergência de nome: ficha "{nome_ficha}" × óbito "{obito.nome}".'
+            )
+
+        return alertas
+
     @classmethod
     def validar(cls, tipo: str, campos: dict) -> list[str]:
         """Retorna lista de erros de validação."""

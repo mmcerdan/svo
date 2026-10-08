@@ -196,6 +196,16 @@ class InvestigacaoService:
         return []
 
     @staticmethod
+    def pendencias(investigacao: Investigacao) -> Tuple[List[str], List[str]]:
+        """Retorna (erros de validação, alertas de consistência ficha × óbito)."""
+        campos = {c.nome_campo: c.valor for c in investigacao.campos}
+        validacao = ValidadorInvestigacao.validar(investigacao.tipo, campos)
+        alertas = ValidadorInvestigacao.validar_consistencia(
+            investigacao.tipo, campos, investigacao.obito
+        )
+        return validacao, alertas
+
+    @staticmethod
     def finalizar(investigacao: Investigacao, usuario, conclusao: str) -> List[str]:
         """Finaliza investigação (status = CONCLUIDA)."""
         if investigacao.status == 'CONCLUIDA':
@@ -203,6 +213,11 @@ class InvestigacaoService:
         
         if not conclusao or not conclusao.strip():
             return ['Conclusão é obrigatória para finalizar.']
+        
+        if current_app.config.get('VALIDACAO_FICHA') == 'bloqueio':
+            validacao, _ = InvestigacaoService.pendencias(investigacao)
+            if validacao:
+                return validacao
         
         antes = serialize_model(investigacao)
         

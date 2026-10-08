@@ -24,6 +24,11 @@ class Config:
     
     # Pagination
     ITEMS_PER_PAGE = 20
+
+    # Validação da ficha na finalização: 'aviso' (só alerta) | 'bloqueio' (impede finalizar)
+    VALIDACAO_FICHA = os.environ.get('VALIDACAO_FICHA', 'aviso')
+    if VALIDACAO_FICHA not in ('aviso', 'bloqueio'):
+        VALIDACAO_FICHA = 'aviso'
     
     # CID-10 Validation (simplified - in production use proper library)
     CID10_REGEX = r'^[A-TV-Z][0-9]{2}(\.[0-9A-TV-Z]{1,4})?$'

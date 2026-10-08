@@ -67,11 +67,18 @@ def novo():
                 flash(erro, 'danger')
             return render_template('obitos/form.html', form=form, titulo='Novo Óbito')
         
+        avisos_cids = ObitoService.avisos_causas_cids(dados_obito)
+        
         if inv:
             flash('Óbito cadastrado com investigação!', 'success')
+            validacao, alertas = InvestigacaoService.pendencias(inv)
+            for aviso in avisos_cids + validacao + alertas:
+                flash(aviso, 'warning')
             return redirect(url_for('investigacoes.detalhe', id=inv.id))
         
         flash('Óbito cadastrado com sucesso!', 'success')
+        for aviso in avisos_cids:
+            flash(aviso, 'warning')
         return redirect(url_for('obitos.detalhe', id=obito.id))
     
     if request.method == 'POST' and not form.validate():
@@ -141,6 +148,8 @@ def editar(id):
         
         db.session.commit()
         flash('Óbito atualizado com sucesso!', 'success')
+        for aviso in ObitoService.avisos_causas_cids(dados):
+            flash(aviso, 'warning')
         return redirect(url_for('obitos.detalhe', id=obito.id))
     
     if request.method == 'POST' and not form.validate():
