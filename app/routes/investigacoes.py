@@ -6,7 +6,7 @@ from app.services.investigacao_service import InvestigacaoService
 from app.utils.audit import audit_log, serialize_model
 from app.utils.campos import get_campos_padrao_investigacao, get_tipo_campo, get_grupo_campo, agrupar_campos
 from app.utils.validators import ValidadorInvestigacao
-from app.utils.security import validate_file_upload
+from app.utils.security import validate_file_upload, supervisor_required, exigir_dono
 from app.utils.campos import agrupar_campos as agrupar_campos_util
 from datetime import datetime, date
 import uuid
@@ -191,6 +191,7 @@ def editar(id):
     if not inv:
         flash('Investigação não encontrada.', 'danger')
         return redirect(url_for('investigacoes.lista'))
+    exigir_dono(inv.usuario_id)
     
     if request.method == 'POST':
         form = InvestigacaoForm(request.form)
@@ -224,6 +225,7 @@ def finalizar(id):
     if not inv:
         flash('Investigação não encontrada.', 'danger')
         return redirect(url_for('investigacoes.lista'))
+    exigir_dono(inv.usuario_id)
     
     conclusao = request.form.get('conclusao', '').strip()
     erros = InvestigacaoService.finalizar(inv, current_user, conclusao)
@@ -249,6 +251,7 @@ def salvar_campos(id):
     inv = db.session.get(Investigacao, id)
     if not inv:
         return jsonify({'erro': 'Investigação não encontrada'}), 404
+    exigir_dono(inv.usuario_id)
     
     erros = InvestigacaoService.atualizar_campos(inv, current_user, request.form)
     if erros:
@@ -271,6 +274,7 @@ def anexar_arquivo(id):
     if not inv:
         flash('Investigação não encontrada.', 'danger')
         return redirect(url_for('investigacoes.lista'))
+    exigir_dono(inv.usuario_id)
     
     if 'arquivo' not in request.files:
         flash('Nenhum arquivo selecionado.', 'danger')
@@ -314,6 +318,7 @@ def download_anexo(nome_arquivo):
 
 @bp.route('/anexos/<int:id>/excluir', methods=['POST'])
 @login_required
+@supervisor_required
 def excluir_anexo(id):
     _validar_csrf()
     anexo = db.session.get(Anexo, id)
@@ -343,6 +348,7 @@ def salvar_campos_ajax(id):
     inv = db.session.get(Investigacao, id)
     if not inv:
         return jsonify({'erro': 'Investigação não encontrada'}), 404
+    exigir_dono(inv.usuario_id)
     
     erros = InvestigacaoService.atualizar_campos(inv, current_user, request.form)
     if erros:

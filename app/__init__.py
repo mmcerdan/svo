@@ -26,6 +26,11 @@ def create_app(config_name=None):
     def inject_now():
         from datetime import datetime
         return {'now': datetime.now(), 'get_tipo_campo': get_tipo_campo, 'agrupar_campos': agrupar_campos}
+
+    @app.context_processor
+    def inject_permissoes():
+        from app.utils.security import pode_editar, pode_excluir
+        return {'pode_editar': pode_editar, 'pode_excluir': pode_excluir}
     
     # Login manager
     from app.extensions import login_manager

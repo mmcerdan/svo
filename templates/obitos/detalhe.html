@@ -6,12 +6,15 @@
         <a href="{{ url_for('obitos.lista') }}" class="btn btn-outline-secondary btn-sm">
             <i class="bi bi-arrow-left"></i> Voltar
         </a>
+        {% if pode_editar(obito.usuario_id) %}
         <a href="{{ url_for('obitos.editar', id=obito.id) }}" class="btn btn-warning btn-sm">
             <i class="bi bi-pencil"></i> Editar
         </a>
+        {% endif %}
         <a href="{{ url_for('investigacoes.nova', obito_id=obito.id) }}" class="btn btn-success btn-sm">
             <i class="bi bi-plus-lg"></i> Nova Investigação
         </a>
+        {% if pode_excluir() %}
         <form method="POST" action="{{ url_for('obitos.excluir', id=obito.id) }}" style="display:inline"
               onsubmit="return confirm('Excluir permanentemente este óbito e todas as investigações relacionadas?')">
             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
@@ -19,6 +22,7 @@
                 <i class="bi bi-trash"></i> Excluir
             </button>
         </form>
+        {% endif %}
     </div>
 </div>
 

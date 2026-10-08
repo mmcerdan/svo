@@ -3,10 +3,17 @@ from flask import request, abort, current_app
 from flask_login import current_user
 import re
 
+CARGOS_GESTAO = ('Admin', 'Supervisor')
+
+
+def _cargo():
+    return current_user.cargo if current_user.is_authenticated else ''
+
+
 def admin_required(f):
     @wraps(f)
     def decorated(*args, **kwargs):
-        if not current_user.is_authenticated or current_user.cargo not in ('Admin', 'Supervisor'):
+        if not current_user.is_authenticated or _cargo() != 'Admin':
             abort(403, description='Acesso restrito a administradores.')
         return f(*args, **kwargs)
     return decorated
@@ -14,10 +21,30 @@ def admin_required(f):
 def supervisor_required(f):
     @wraps(f)
     def decorated(*args, **kwargs):
-        if not current_user.is_authenticated or current_user.cargo not in ('Admin', 'Supervisor'):
+        if not current_user.is_authenticated or _cargo() not in CARGOS_GESTAO:
             abort(403, description='Acesso restrito a supervisores.')
         return f(*args, **kwargs)
     return decorated
+
+
+def pode_editar(usuario_id) -> bool:
+    """Gestores (Admin/Supervisor) editam tudo; demais cargos, só o próprio registro."""
+    if not current_user.is_authenticated:
+        return False
+    if _cargo() in CARGOS_GESTAO:
+        return True
+    return usuario_id == current_user.id
+
+
+def pode_excluir() -> bool:
+    """Exclusão restrita a Admin/Supervisor."""
+    return current_user.is_authenticated and _cargo() in CARGOS_GESTAO
+
+
+def exigir_dono(usuario_id):
+    """Aborta 403 se o usuário logado não puder editar o registro."""
+    if not pode_editar(usuario_id):
+        abort(403, description='Acesso restrito: registro de outro usuário.')
 
 def sanitize_input(text: str, max_length: int = 5000) -> str:
     """Sanitiza entrada de texto para prevenir XSS."""

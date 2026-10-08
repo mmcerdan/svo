@@ -6,6 +6,7 @@ from app.services.obito_service import ObitoService
 from app.services.investigacao_service import InvestigacaoService
 from app.utils.audit import audit_log
 from app.utils.campos import get_campos_padrao_investigacao, agrupar_campos_list
+from app.utils.security import supervisor_required, exigir_dono
 from app.models import Estabelecimento, CID
 from datetime import datetime, date
 
@@ -104,6 +105,7 @@ def editar(id):
     if not obito:
         flash('Óbito não encontrado.', 'danger')
         return redirect(url_for('obitos.lista'))
+    exigir_dono(obito.usuario_id)
     
     form = ObitoForm(request.form if request.method == 'POST' else None, obj=obito)
     form.estabelecimento_id.choices = [(0, 'Selecione...')] + [(e.id, f"{e.nome} ({e.municipio})") for e in Estabelecimento.query.filter_by(ativo=True).order_by(Estabelecimento.nome).all()]
@@ -161,6 +163,7 @@ def editar(id):
 
 @bp.route('/<int:id>/excluir', methods=['POST'])
 @login_required
+@supervisor_required
 def excluir(id):
     obito = ObitoService.buscar_por_id(id)
     if not obito:
@@ -228,11 +231,8 @@ def api_estabelecimentos():
 
 @bp.route('/api/estabelecimentos', methods=['POST'])
 @login_required
+@supervisor_required
 def api_estabelecimento_criar():
-    from app.utils.security import admin_required
-    if not current_user.is_admin():
-        return jsonify({'erro': 'Acesso negado'}), 403
-    
     data = request.get_json() or {}
     required = ['nome']
     for field in required:
@@ -255,11 +255,8 @@ def api_estabelecimento_criar():
 
 @bp.route('/api/estabelecimentos/<int:id>', methods=['PUT'])
 @login_required
+@supervisor_required
 def api_estabelecimento_atualizar(id):
-    from app.utils.security import admin_required
-    if not current_user.is_admin():
-        return jsonify({'erro': 'Acesso negado'}), 403
-    
     estab = db.session.get(Estabelecimento, id)
     if not estab:
         return jsonify({'erro': 'Não encontrado'}), 404

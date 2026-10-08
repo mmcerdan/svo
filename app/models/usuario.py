@@ -26,4 +26,7 @@ class Usuario(UserMixin, db.Model):
         return f'<Usuario {self.usuario}>'
 
     def is_admin(self):
+        return self.cargo == 'Admin'
+
+    def is_gestao(self):
         return self.cargo in ('Admin', 'Supervisor')
