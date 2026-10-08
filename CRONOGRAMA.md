@@ -10,7 +10,7 @@ Resolver as pendências mapeadas na auditoria da v1.1 **sem quebrar o que já fu
 
 1. **Auditoria read-only antes** — cada etapa começa com análise do estado atual + suíte de testes verde
 2. **Backup antes de mudar** — `pg_dump` + `git tag` antes de qualquer alteração em produção
-3. **Testes verdes como gate** — nada sobe com teste vermelho novo (baseline Etapa 0: **81 ✅ / 0 ❌ / 0 erros**)
+3. **Testes verdes como gate** — nada sobe com teste vermelho novo (baseline Etapa 1: **105 ✅ / 0 ❌ / 0 erros**)
 4. **Rollback documentado** — cada etapa tem caminho de volta testado
 5. **Deploy em janela** — preferencialmente horário comercial, com aviso aos usuários
 6. **Uma etapa por vez** — só iniciar a próxima após validação da anterior
@@ -49,13 +49,13 @@ Resolver as pendências mapeadas na auditoria da v1.1 **sem quebrar o que já fu
 ### Etapa 1 — Validações de negócio (19–23/10)
 **Por quê:** hoje a validação só roda ao salvar campos — dá para criar e finalizar ficha vazia (`investigacao_service.py:91-141,198-219`).
 
-- [ ] Validar `ValidadorInvestigacao` na **criação** da investigação (modo aviso)
-- [ ] Validar na **finalização** — exigir campos obrigatórios (modo aviso → bloqueio após validação com usuários)
-- [ ] Consistência ficha × óbito (DO, datas, nome divergentes → alerta)
-- [ ] Validar CID-10 em `causas_morte_cids` (`obito_service.py:53`)
-- [ ] Testes unitários para cada nova regra
+- [x] Validar `ValidadorInvestigacao` na **criação** da investigação (modo aviso)
+- [x] Validar na **finalização** — flag `VALIDACAO_FICHA` (`aviso` padrão → `bloqueio` após validação com usuários)
+- [x] Consistência ficha × óbito (DO, datas, nome divergentes → alerta — nunca bloqueia)
+- [x] Validar CID-10 em `causas_morte_cids` (só aviso, não bloqueia)
+- [x] Testes unitários para cada nova regra
 
-**Critério de aceite:** ficha vazia não finaliza (com aviso claro na UI); testes verdes; rollback = flag de config.
+**Critério de aceite:** avisos claros na UI (banner "Antes de finalizar" + flashes) e modo bloqueio pronto por flag de config (rollback = trocar `VALIDACAO_FICHA` no `.env`); testes verdes.
 
 ### Etapa 2 — HTTPS + Perfis (26/10–06/11)
 **Por quê:** sistema em uso — segurança operacional (2a semana: permissões).
@@ -113,7 +113,7 @@ Resolver as pendências mapeadas na auditoria da v1.1 **sem quebrar o que já fu
 
 Executado antes de cada etapa e após cada deploy:
 
-1. **Suíte local:** `make test` (ou `python -m pytest tests/ -q --ignore=tests/e2e`) → deve bater com a baseline (81/0/0)
+1. **Suíte local:** `make test` (ou `python -m pytest tests/ -q --ignore=tests/e2e`) → deve bater com a baseline (105/0/0)
 2. **Saúde em produção:** `GET /health`, todas as rotas principais HTTP 200
 3. **Integridade do banco:** contagens (obitos, investigacoes, campos), FKs órfãs, índices
 4. **Smoke autenticado:** login, lista, detalhe, impressão de fichas, busca CID
@@ -136,3 +136,4 @@ Executado antes de cada etapa e após cada deploy:
 | 08/10/2026 | Criação do cronograma (pós-auditoria v1.1) |
 | 08/10/2026 | Etapa 0 local concluída: suíte 81/0/0, Alembic baseline `4f239821b7c0`, deploy.sh em `flask db upgrade`, Makefile |
 | 08/10/2026 | Etapa 0 validada em produção: pull `04053d5`, `flask db current` = `4f239821b7c0 (head)` (PG), suíte 81/0/0 no servidor, smoke 200, journal limpo (backup `obito_db_pre_etapa0_20261008_110337.sql`) |
+| 08/10/2026 | Etapa 1 concluída: suíte 105/0/0 (+24 testes), flag `VALIDACAO_FICHA` (padrão `aviso`), banner de pendências, consistência ficha × óbito, CID da lista só avisa; deploy produção pull `4e3d3d8`, suíte 105/0/0 no servidor, smoke 302/200/200, journal limpo (backup `obito_db_pre_etapa1_20261008_125413.sql`) |
