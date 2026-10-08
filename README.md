@@ -12,6 +12,7 @@ Sistema para registro, investigação e relatórios de óbitos (SVO - Sistema de
 - **INFANTIL_FETAL** - Óbito Infantil/Fetal (IF5 - Ficha Oficial MS)
 - **MAL_DEFINIDA** - Causa Mal Definida
 - **INFANTIL** - Óbito Infantil
+- **DENGUE** - Investigação de Dengue/Arbovírus (Anexo A + Anexo B, ficha MS/SVS 2016)
 
 ### Módulos Principais
 1. **Cadastro de Óbitos** - Registro completo com dados do falecido, mãe, pai, causa CID-10
@@ -55,7 +56,7 @@ EOF
 cd /opt
 git clone https://github.com/mmcerdan/svo.git sistema-obito
 cd sistema-obito
-git checkout v1.0  # ou main para versão atual
+git checkout v1.1  # ou main para versão atual
 ```
 
 ### 4. Ambiente Virtual e Dependências
@@ -341,13 +342,38 @@ sistema-obito/
 
 ## 📝 Versionamento
 
-- **Tag v1.0** - Versão estável em produção (25/09/2026)
+| Tag | Data | Situação |
+|-----|------|----------|
+| **v1.1** | 08/10/2026 | Versão atual — em produção |
+| v1.0 | 25/09/2026 | Primeira versão estável |
+
 - Branch `main` - Desenvolvimento contínuo
 - Backups em `/opt/backups/` no servidor
 
+### 🆕 Novidades da v1.1 (08/10/2026)
+
+**1. Nova ficha DENGUE (Arbovírus)**
+- Ficha completa de investigação de dengue conforme Anexo A (prontuário) + Anexo B (entrevista domiciliar) da MS/SVS 2016
+- 372 campos (271 checkboxes + 101 textareas) organizados em 172 grupos
+- Template de impressão A4 próprio (`imprimir_dengue.html`) no padrão das fichas SIM
+- Validações: sexo obrigatório, ~40 grupos mutuamente exclusivos, regra EN01→EN02/EN03
+- Auto-preenchimento a partir do óbito vinculado (nome, nascimento, mãe, endereço)
+- Tipo selecionável ao criar investigação: **"Dengue (Arbovírus)"**
+
+**2. Óbitos de gêmeos com a mesma DO**
+- Removida a restrição UNIQUE de `obitos.numero_dob` (índice simples para busca)
+- Validação de DO duplicada deixou de bloquear — gêmeos compartilham a mesma declaração
+- Script `migracao_do_gemelares.py` aplicado em produção
+
+**3. Correções e melhorias**
+- Migração de DO validada com dados reais em produção (backup pré-migração em `/opt/backups/`)
+- Suíte de testes: 57 testes passando (baseline inalterado vs v1.0)
+
+**Pendências conhecidas:** ver [CRONOGRAMA.md](CRONOGRAMA.md)
+
 ```bash
-# Voltar para v1.0
-git checkout v1.0
+# Voltar para uma versão específica
+git checkout v1.1
 
 # Ver tags
 git tag -l
