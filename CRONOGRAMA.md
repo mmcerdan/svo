@@ -135,3 +135,4 @@ Executado antes de cada etapa e após cada deploy:
 |------|-----------|
 | 08/10/2026 | Criação do cronograma (pós-auditoria v1.1) |
 | 08/10/2026 | Etapa 0 local concluída: suíte 81/0/0, Alembic baseline `4f239821b7c0`, deploy.sh em `flask db upgrade`, Makefile |
+| 08/10/2026 | Etapa 0 validada em produção: pull `04053d5`, `flask db current` = `4f239821b7c0 (head)` (PG), suíte 81/0/0 no servidor, smoke 200, journal limpo (backup `obito_db_pre_etapa0_20261008_110337.sql`) |
